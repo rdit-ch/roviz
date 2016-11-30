@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/usercore">
+        <file>res/default_image.png</file>
+        <file>res/start.png</file>
+        <file>res/restart.png</file>
+        <file>res/pause.png</file>
+        <file>res/unpause.png</file>
+        <file>res/stop.png</file>
+        <file>res/new_tab.png</file>
+    </qresource>
+</RCC>

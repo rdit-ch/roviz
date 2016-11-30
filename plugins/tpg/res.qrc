@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_TPG.png</file>
+        <file>test_pattern.png</file>
+    </qresource>
+</RCC>

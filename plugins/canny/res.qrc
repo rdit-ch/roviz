@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_Canny.png</file>
+    </qresource>
+</RCC>

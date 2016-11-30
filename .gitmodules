@@ -1,0 +1,3 @@
+[submodule "itemframework"]
+	path = itemframework
+	url = https://github.com/rdit-ch/itemframework.git

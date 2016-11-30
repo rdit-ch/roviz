@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_CvCamera.png</file>
+    </qresource>
+</RCC>

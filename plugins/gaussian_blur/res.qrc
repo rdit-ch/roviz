@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_GaussianBlur.png</file>
+    </qresource>
+</RCC>

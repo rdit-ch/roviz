@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_Sobel.png</file>
+    </qresource>
+</RCC>
