@@ -1,6 +1,10 @@
 
 #include "gui/dock_widget_signaling.h"
 
+#include <QWidget>
+#include <QCloseEvent>
+#include <QShowEvent>
+
 DockWidgetSignaling::DockWidgetSignaling(QString title, QWidget *parent)
     : QDockWidget(title, parent)
 {

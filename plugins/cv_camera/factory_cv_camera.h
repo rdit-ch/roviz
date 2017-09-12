@@ -2,7 +2,6 @@
 #define FACTORY_CVCAMERA_H
 
 #include "plugin/interface_factory.h"
-#include "core/abstract_robot_item.h"
 
 class FactoryCvCamera : public InterfaceFactory
 {

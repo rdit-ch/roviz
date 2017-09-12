@@ -24,4 +24,3 @@ struct USERCORE_EXPORT LinkerHelper
 };
 
 #endif // USERCORE_H
-

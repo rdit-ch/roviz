@@ -2,15 +2,18 @@
 #include "tig_item.h"
 
 TIGItem::TIGItem()
-    : PortableItem("Test Image Generator")
+    : RovizItem("Test Image Generator")
 {
-    PORTABLE_INIT(TIG);
+    ROVIZ_INIT_ITEM(TIG);
 
-    this->is_gray = false;
+    this->output = this->addOutput<Image>("Output");
 
-    this->output = this->addImageOutput("Output");
-    this->addConfig("Image Path", &this->img_path);
-    this->addConfig("Load as grayscale", &this->is_gray);
+    this->conf_load_grey = this->addConfig<bool>("Load Image as greyscale", true, true);
+    this->conf_path = this->addConfig<FilePath>("Path to the image",
+                                               {""},
+                                               FilePath::ExistingFile,
+                                               "All Files (*)",
+                                               true);
 }
 
 TIGItem::~TIGItem()
@@ -20,15 +23,15 @@ TIGItem::~TIGItem()
 
 void TIGItem::thread()
 {
-    this->img = PortableImage(cv::imread(this->img_path,
-                                         this->is_gray ?
-                                             CV_LOAD_IMAGE_GRAYSCALE
-                                           :
-                                             CV_LOAD_IMAGE_COLOR));
+    this->img = Image(cv::imread(this->conf_path.value().front(),
+                                 this->conf_load_grey.value() ?
+                                     CV_LOAD_IMAGE_GRAYSCALE
+                                   :
+                                     CV_LOAD_IMAGE_COLOR));
 
     while(this->wait())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        this->pushImageOut(this->img, this->output);
+        this->pushOut(this->img, this->output);
     }
 }

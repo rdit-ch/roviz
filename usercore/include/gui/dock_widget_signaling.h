@@ -2,15 +2,18 @@
 #define DOCKWIDGETSIGNALING_H
 
 #include <QDockWidget>
-#include <QCloseEvent>
-#include <QShowEvent>
+#include <QString>
+
+class QWidget;
+class QCloseEvent;
+class QShowEvent;
 
 /**
  * @brief QDockWidget that emits signals
  *
  * This is a normal QDockWidget, but it emits signals when closed/shown.
  *
- * \ingroup robot_framework
+ * \sa SharedWindow
  */
 class DockWidgetSignaling : public QDockWidget
 {

@@ -2,7 +2,6 @@
 #define FACTORY_SOBEL_H
 
 #include "plugin/interface_factory.h"
-#include "core/abstract_robot_item.h"
 
 class FactorySobel : public InterfaceFactory
 {

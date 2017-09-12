@@ -1,20 +1,20 @@
 #ifndef GRAYCONV_ITEM_H
 #define GRAYCONV_ITEM_H
 
-#include "portable/portable_item.h"
-#include "portable/portable_image_mutable.h"
+#include "core/roviz_item.h"
+#include "streams/image_m.h"
 
 /**
  * @brief Converts an RGB image to grayscale
  *
  * \ingroup robot_plugins
  */
-class GrayConvItem : public PortableItem
+class GrayConvItem : public RovizItem
 {
     Q_OBJECT
 
 public:
-    PORTABLE_INVOKABLE GrayConvItem();
+    ROVIZ_INVOKABLE GrayConvItem();
     ~GrayConvItem();
 
 protected:
@@ -22,14 +22,14 @@ protected:
     void thread(void) override;
 
 private:
-    void *output;
-    void *input;
+    Output output;
+    Input input;
 
-    static PortableImage fromRGB(PortableImage in, int depth);
-    static PortableImage fromRGB555(PortableImage in);
-    static PortableImage fromRGB888(PortableImage in);
-    static PortableImage fromYUV422(PortableImage in);
-    static PortableImage fromYUV422_Flipped(PortableImage in);
+    static Image fromRGB(Image in, int depth);
+    static Image fromRGB555(Image in);
+    static Image fromRGB888(Image in);
+    static Image fromYUV422(Image in);
+    static Image fromYUV422_Flipped(Image in);
 };
 
 #endif // GRAYCONV_ITEM_H

@@ -1,20 +1,20 @@
 #ifndef SUBTRACTOR_ITEM_H
 #define SUBTRACTOR_ITEM_H
 
-#include "portable/portable_item.h"
-#include "portable/portable_image_mutable.h"
+#include "core/roviz_item.h"
+#include "streams/image_m.h"
 
 /**
  * @brief Subtracts two images
  *
  * \ingroup robot_plugins
  */
-class SubtractorItem : public PortableItem
+class SubtractorItem : public RovizItem
 {
     Q_OBJECT
 
 public:
-    PORTABLE_INVOKABLE SubtractorItem();
+    ROVIZ_INVOKABLE SubtractorItem();
     ~SubtractorItem();
 
 protected:
@@ -22,8 +22,8 @@ protected:
     void thread(void) override;
 
 private:
-    void *input1, *input2;
-    void *output;
+    Input input1, input2;
+    Output output;
 };
 
 #endif // SUBTRACTOR_ITEM_H

@@ -1,1 +1,1 @@
-include(../itemframework/pri/starter.pri)
+include(../itemframework/itemframework/pri/starter.pri)

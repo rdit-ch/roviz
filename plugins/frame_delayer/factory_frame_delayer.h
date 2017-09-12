@@ -2,7 +2,6 @@
 #define FACTORY_FRAMEDELAYER_H
 
 #include "plugin/interface_factory.h"
-#include "core/abstract_robot_item.h"
 
 class FactoryFrameDelayer : public InterfaceFactory
 {

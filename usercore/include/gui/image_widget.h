@@ -1,24 +1,30 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <QObject>
-#include <QWidget>
-#include <QLabel>
-#include <QPixmap>
+#include <QRectF>
 #include <QImage>
-#include <QResizeEvent>
-#include "core/robot_core.h"
-#include "portable/portable_image.h"
+#include <QLabel>
+#include "core/export_handling.h"
+#include "streams/image.h"
+#include "streams/stream_object.h"
 
+class QWidget;
+class QPaintEvent;
+class QResizeEvent;
+
+// TODO Use native OpenGL, implement BGR display for OpenCV, just switching to
+// QOpenGLWidget doesn't seem to work, don't know why.
 /**
  * @brief A widget to show images
  *
  * This widget automatically scales the image it is supposed to display to the
  * correct size.
  *
- * \ingroup robot_framework
+ * \sa Image
+ * \sa StreamObject
+ * \sa Stream
  */
-class ROBOTCORE_EXPORT ImageWidget : public QLabel
+class ROVIZ_EXPORT_CLASS ImageWidget : public QLabel
 {
 Q_OBJECT
 
@@ -26,28 +32,28 @@ public:
     ImageWidget(QWidget *parent = nullptr);
 
     /**
-     * @brief Set the image that the widget should display
-     * @param img
-     */
-    void setImage(const PortableImage img);
-
-    /**
      * @brief Reset the widget to make it show the default image again
      */
     void reset(void);
 
 protected:
-    void resizeEvent(QResizeEvent *) override;
+    void paintEvent(QPaintEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
+public slots:
+    void newObject(StreamObject obj);
 
 private:
-    QPixmap original, default_pix;
-    PortableImage image;
+    QImage image_qt;
+    Image image; // To keep a reference, prevents deletion
+    QRectF image_rect;
 
-private slots:
-    void setPixmapSlot(QImage img);
-
-signals:
-    void setPixmapSignal(QImage img);
+    /**
+     * @brief Recalculates the image dimensions after a resize
+     * @param w The new width of the bounding rect
+     * @param h The new height of the bounding rect
+     */
+    void recalcImageRect(double w, double h);
 };
 
 #endif // IMAGEWIDGET_H

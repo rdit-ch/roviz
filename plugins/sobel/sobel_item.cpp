@@ -2,12 +2,12 @@
 #include "sobel_item.h"
 
 SobelItem::SobelItem()
-    : PortableItem("Sobel")
+    : RovizItem("Sobel")
 {
-    PORTABLE_INIT(Sobel);
+    ROVIZ_INIT_ITEM(Sobel);
 
-    this->input = this->addImageInput("Input");
-    this->output = this->addImageOutput("Output");
+    this->input = this->addInput<Image>("Input");
+    this->output = this->addOutput<Image>("Output");
 }
 
 SobelItem::~SobelItem()
@@ -17,25 +17,25 @@ SobelItem::~SobelItem()
 
 void SobelItem::thread()
 {
-    while(this->waitForImage(this->input))
+    while(this->waitForInput(this->input))
     {
         cv::Mat out, grad_x, grad_y, abs_grad_x, abs_grad_y;
-        PortableImage in = this->nextImage(this->input);
+        Image in = this->next<Image>(this->input);
 
-        if(in.format() != PortableImage::Gray8)
+        if(in.format() != Image::Gray8)
             continue;
 
         // Gradient X
-        Sobel(in.toCv(), grad_x, CV_16S, 1, 0, 3);
-        convertScaleAbs(grad_x, abs_grad_x);
+        cv::Sobel(in.toCv(), grad_x, CV_16S, 1, 0, 3);
+        cv::convertScaleAbs(grad_x, abs_grad_x);
 
         // Gradient Y
-        Sobel(in.toCv(), grad_y, CV_16S, 0, 1, 3);
-        convertScaleAbs(grad_y, abs_grad_y);
+        cv::Sobel(in.toCv(), grad_y, CV_16S, 0, 1, 3);
+        cv::convertScaleAbs(grad_y, abs_grad_y);
 
         // Total Gradient (approximate)
-        addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, out);
+        cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, out);
 
-        this->pushImageOut(PortableImage(out), this->output);
+        this->pushOut(Image(out), this->output);
     }
 }

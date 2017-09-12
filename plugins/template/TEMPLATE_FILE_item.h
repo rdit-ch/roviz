@@ -18,8 +18,8 @@ protected:
     void thread(void) override;
 
 private:
-    void *input;
-    void *output;
+    ImageInput input;
+    ImageOutput output;
 };
 
 #endif // TEMPLATE_UPPER_ITEM_H

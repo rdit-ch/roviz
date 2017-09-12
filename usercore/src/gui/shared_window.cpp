@@ -1,6 +1,24 @@
 
 #include "gui/shared_window.h"
 
+#include <QObject>
+#include <QWidget>
+#include <QString>
+#include <QStringList>
+#include <QSize>
+#include <QRect>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QDockWidget>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QTabBar>
+#include <QToolButton>
+#include <QCloseEvent>
+#include "helper/settings_scope.h"
+#include "backend_dev/roviz_item_dev_base.h"
+#include "gui/dock_widget_signaling.h"
+
 QMap<SettingsScope*, SharedWindow*> SharedWindow::inst;
 
 SharedWindow::SharedWindow(QWidget *parent)
@@ -85,6 +103,10 @@ SharedWindow::SharedWindow(QWidget *parent)
             this, &SharedWindow::tabMoved);
     connect(this->tab, &QTabBar::tabBarDoubleClicked,
             this, &SharedWindow::tabStartRename);
+
+    // That's probably the only place that gets called only once in the
+    // beginning  without adding a new class/function.
+    qRegisterMetaType<StreamObject>();
 }
 
 bool SharedWindow::allChildrenClosed()
@@ -105,10 +127,10 @@ void SharedWindow::start()
 {
     if(this->running)
     {
-        for(AbstractRobotItem *item : this->parents)
+        for(RovizItemDevBase *item : this->parents)
             item->stop();
 
-        for(AbstractRobotItem *item : this->parents)
+        for(RovizItemDevBase *item : this->parents)
             item->start();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -116,7 +138,7 @@ void SharedWindow::start()
     }
     else
     {
-        for(AbstractRobotItem *item : this->parents)
+        for(RovizItemDevBase *item : this->parents)
             item->start();
 
         this->btn_start->setIcon(this->ico_restart);
@@ -129,7 +151,7 @@ void SharedWindow::pause()
 {
     if(this->paused)
     {
-        for(AbstractRobotItem *item : this->parents)
+        for(RovizItemDevBase *item : this->parents)
             item->unpause();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -137,7 +159,7 @@ void SharedWindow::pause()
     }
     else
     {
-        for(AbstractRobotItem *item : this->parents)
+        for(RovizItemDevBase *item : this->parents)
             item->pause();
 
         this->btn_pause->setIcon(this->ico_unpause);
@@ -147,7 +169,7 @@ void SharedWindow::pause()
 
 void SharedWindow::stop()
 {
-    for(AbstractRobotItem *item : this->parents)
+    for(RovizItemDevBase *item : this->parents)
         item->stop();
 
     this->running = false;
@@ -244,6 +266,7 @@ void SharedWindow::load()
     {
         for(SharedWindow *s : SharedWindow::inst)
         {
+            // TODO Fix this...
             QStringList var_list = s->project_settings->value("Robot/SharedWindow/States").toStringList();
             for(QString var : var_list)
                 s->states.append(QByteArray::fromBase64(var.toLatin1()));
@@ -270,13 +293,14 @@ SharedWindow::~SharedWindow()
 {
 }
 
-void SharedWindow::addItem(AbstractRobotItem* item)
+void SharedWindow::addItem(RovizItemDevBase* item)
 {
     if(!this->parents.contains(item))
     {
         DockWidgetSignaling *dock = new DockWidgetSignaling(item->name(), this->main_window);
         dock->setWidget(item->widget());
-        dock->setObjectName(item->name());
+        // TODO Why?
+        // dock->setObjectName(item->name());
         this->main_window->addDockWidget(Qt::TopDockWidgetArea, dock);
         this->dock_items.append(dock);
         this->parents.append(item);
@@ -289,7 +313,7 @@ void SharedWindow::addItem(AbstractRobotItem* item)
     }
 }
 
-void SharedWindow::removeItem(AbstractRobotItem *item)
+void SharedWindow::removeItem(RovizItemDevBase *item)
 {
     this->parents.removeOne(item);
     QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
@@ -339,9 +363,10 @@ void SharedWindow::closeEvent(QCloseEvent *event)
     for(QByteArray a : this->states)
         var_list.append(a.toBase64());
 
-    this->project_settings->setValue("Robot/SharedWindow/Tabs", names);
-    this->project_settings->setValue("Robot/SharedWindow/ActiveTab", this->active_tab);
-    this->project_settings->setValue("Robot/SharedWindow/States", var_list);
+    // TODO fix this...
+    //this->project_settings->setValue("Robot/SharedWindow/Tabs", names);
+    //this->project_settings->setValue("Robot/SharedWindow/ActiveTab", this->active_tab);
+    //this->project_settings->setValue("Robot/SharedWindow/States", var_list);
 
     for(QWidget *w : this->dock_items)
             w->hide();

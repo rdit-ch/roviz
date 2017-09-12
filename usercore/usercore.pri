@@ -1,1 +1,1 @@
-include(../itemframework/pri/usercore.pri)
+include(../itemframework/itemframework/pri/usercore.pri)

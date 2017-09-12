@@ -1,26 +1,23 @@
 ﻿#ifndef SHARED_WINDOW_H
 #define SHARED_WINDOW_H
 
-#include <QObject>
-#include <QMdiArea>
-#include <QMdiSubWindow>
 #include <QMainWindow>
 #include <QList>
-#include <QMap>
-#include <QDockWidget>
-#include <QToolButton>
-#include <QTabBar>
-#include <QStringList>
 #include <QVector>
-#include <QVariant>
-#include <QLineEdit>
-#include "core/robot_core.h"
-#include "core/abstract_robot_item.h"
-#include "helper/settings_scope.h"
-#include "gui/gui_manager.h"
-#include "gui/dock_widget_signaling.h"
+#include <QMap>
+#include <QByteArray>
+#include <QIcon>
+#include "core/export_handling.h"
 
-class AbstractRobotItem;
+class RovizItemDevBase;
+class QCloseEvent;
+class SettingsScope;
+class QObject;
+class QDockWidget;
+class QToolButton;
+class QTabBar;
+class QLineEdit;
+class QWidget;
 
 /**
  * @brief Provides a shared window that displays data from all items
@@ -28,10 +25,8 @@ class AbstractRobotItem;
  * There is one SharedWindow per project, each one displaying the images of all
  * items on the scene in one aggregated window. It also handles the
  * start/pause/stop mechanism.
- *
- * \ingroup robot_framework
  */
-class ROBOTCORE_EXPORT SharedWindow : public QMainWindow
+class ROVIZ_EXPORT_CLASS SharedWindow : public QMainWindow
 {
 Q_OBJECT
 
@@ -49,13 +44,13 @@ public:
      * because the shared window also has to handle the start/pause/stop events
      * of the items that are not visible.
      */
-    void addItem(AbstractRobotItem *item);
+    void addItem(RovizItemDevBase *item);
 
     /**
      * @brief Remove an item from the shared window
      * @param item The item to remove
      */
-    void removeItem(AbstractRobotItem *item);
+    void removeItem(RovizItemDevBase *item);
 
     /**
      * @brief Loads the config (if not already done) and shows the window
@@ -80,7 +75,7 @@ private:
 
     QObject *destructor;
     QList<QDockWidget*> dock_items;
-    QList<AbstractRobotItem*> parents;
+    QList<RovizItemDevBase*> parents;
     bool running, paused, initialized;
     SettingsScope *project_settings;
     QToolButton *btn_start, *btn_pause, *btn_stop, *btn_new_tab;

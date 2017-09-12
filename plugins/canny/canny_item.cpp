@@ -2,14 +2,14 @@
 #include "canny_item.h"
 
 CannyItem::CannyItem()
-    : PortableItem("Canny")
+    : RovizItem("Canny")
 {
-    PORTABLE_INIT(Canny);
+    ROVIZ_INIT_ITEM(Canny);
 
-    this->input = this->addImageInput("Input");
-    this->output = this->addImageOutput("Output");
-    this->thres = this->addTrim("Threshold 1", 1, 100, 100);
-    this->ratio = this->addTrim("Ratio", 1, 10, 100);
+    this->input = this->addInput<Image>("Input");
+    this->output = this->addOutput<Image>("Output");
+    this->trim_thres = this->addTrim("Threshold 1", 1, 1000, true);
+    this->trim_ratio = this->addTrim("Ratio", 1, 10, 0.1);
 }
 
 CannyItem::~CannyItem()
@@ -19,18 +19,18 @@ CannyItem::~CannyItem()
 
 void CannyItem::thread()
 {
-    while(this->waitForImage(this->input))
+    while(this->waitForInput(this->input))
     {
         cv::Mat out;
         int t1, t2;
-        PortableImage in = this->nextImage(this->input);
+        Image in = this->next<Image>(this->input);
 
-        if(in.format() != PortableImage::Gray8)
+        if(in.format() != Image::Gray8)
             continue;
 
-        t1 = this->trimValue(thres);
-        t2 = t1 * this->trimValue(ratio);
+        t1 = this->trim_thres.value();
+        t2 = t1 * this->trim_ratio.value();
         cv::Canny(in.toCv(), out, t1, t2);
-        this->pushImageOut(PortableImage(out), this->output);
+        this->pushOut(Image(out), this->output);
     }
 }

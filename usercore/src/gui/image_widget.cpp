@@ -1,59 +1,68 @@
 
 #include "gui/image_widget.h"
 
+#include <QWidget>
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QPainter>
+
 ImageWidget::ImageWidget(QWidget *parent)
     : QLabel(parent)
 {
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
                         QSizePolicy::Expanding);
-    this->setScaledContents(false);
-    this->default_pix = QPixmap(":/usercore/res/default_image.png");
-    this->original = this->default_pix;
-    connect(this, &ImageWidget::setPixmapSignal,
-            this, &ImageWidget::setPixmapSlot);
-    this->resizeEvent(nullptr);
+}
+
+// TODO Implement
+void ImageWidget::reset()
+{
+}
+
+void ImageWidget::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+
+    painter.drawImage(this->image_rect, this->image_qt);
 }
 
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
-    if(!this->original.isNull())
-        this->setPixmap(this->original.scaled(this->size(),
-                                              Qt::KeepAspectRatio));
-    QLabel::resizeEvent(event);
+    if(this->image.format() == Image::NoFormat)
+        return;
+
+    this->recalcImageRect(event->size().width(), event->size().height());
 }
 
-void ImageWidget::setPixmapSlot(QImage img)
+void ImageWidget::newObject(StreamObject obj)
 {
-    this->original = QPixmap::fromImage(img);
-    this->resizeEvent(nullptr);
-}
+    Image img = this->image;
+    this->image = Image(obj);
 
-void ImageWidget::setImage(const PortableImage img)
-{
-    QImage::Format f = QImage::Format_Invalid;
-
-    switch(img.format())
+    // We have to resize, when the size changes
+    if(this->image.format() != Image::NoFormat &&
+       (img.format() != Image::NoFormat ||
+        this->image.width() != img.width() ||
+        this->image.height() != img.height()))
     {
-        case PortableImage::RGB555: f = QImage::Format_RGB555; break;
-        case PortableImage::RGB888: f = QImage::Format_RGB888; break;
-        case PortableImage::Gray8:  f = QImage::Format_Grayscale8; break;
-        default:                      f = QImage::Format_Invalid; break;
+        this->recalcImageRect(this->width(), this->height());
     }
 
-    QImage qimg(img.data(), img.width(), img.height(), f);
-
-    // The data of the PortableImage might get deleted too early,
-    // because the reference counting mechanisms of PortableImage
-    // and QImage are not synchronized.
-    this->image = img;
-
-    // QPixmaps can only be managed by the gui thread
-    emit this->setPixmapSignal(qimg);
+    this->image_qt = this->image.toQt();
 }
 
-void ImageWidget::reset()
+void ImageWidget::recalcImageRect(double w, double h)
 {
-    this->original = this->default_pix;
-    this->resizeEvent(nullptr);
+    if(this->image.width() == 0 || this->image.height() == 0)
+    {
+        this->image_rect.setRect(0, 0, 0, 0);
+        return;
+    }
+
+    double ar = (double)this->image.width() / this->image.height();
+
+    if(w > ar * h)
+        this->image_rect.setRect((w - (ar * h)) / 2, 0, ar * h, h);
+    else
+        this->image_rect.setRect(0, (h - (w / ar)) / 2, w, w / ar);
 }

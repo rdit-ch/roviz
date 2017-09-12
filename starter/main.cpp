@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
     QApplication::setOrganizationName("rdit.ch");
     QApplication::setOrganizationDomain("rdit.ch");
     QApplication::setApplicationName("roviz");
-    QApplication::setApplicationDisplayName("roviz 0.5");
-    QApplication::setApplicationVersion("0.5");
+    QApplication::setApplicationDisplayName("roviz 0.6");
+    QApplication::setApplicationVersion("0.6");
 
     StartupHelper::ensureCoreGetsLinked();
     LinkerHelper::ensureUserCoreGetsLinked();

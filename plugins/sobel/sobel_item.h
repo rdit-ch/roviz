@@ -1,26 +1,26 @@
 #ifndef SOBEL_ITEM_H
 #define SOBEL_ITEM_H
 
-#include "portable/portable_item.h"
-#include "portable/portable_image_mutable.h"
+#include "core/roviz_item.h"
+#include "streams/image_m.h"
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 
-class SobelItem : public PortableItem
+class SobelItem : public RovizItem
 {
     Q_OBJECT
 
 public:
-    PORTABLE_INVOKABLE SobelItem();
+    ROVIZ_INVOKABLE SobelItem();
     ~SobelItem();
 
 protected:
     void thread(void) override;
 
 private:
-    void *input;
-    void *output;
-    void *depth, *dx, *dy;
+    Input input;
+    Output output;
+    Trim depth, dx, dy;
 };
 
 #endif // SOBEL_ITEM_H

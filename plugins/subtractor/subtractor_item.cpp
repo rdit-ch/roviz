@@ -2,13 +2,13 @@
 #include "subtractor_item.h"
 
 SubtractorItem::SubtractorItem()
-    : PortableItem("Subtractor")
+    : RovizItem("Subtractor")
 {
-    PORTABLE_INIT(Subtractor);
+    ROVIZ_INIT_ITEM(Subtractor);
 
-    this->input1 = this->addImageInput("Input 1");
-    this->input2 = this->addImageInput("Input 2");
-    this->output = this->addImageOutput("Output");
+    this->input1 = this->addInput<Image>("Input 1");
+    this->input2 = this->addInput<Image>("Input 2");
+    this->output = this->addOutput<Image>("Output");
 }
 
 SubtractorItem::~SubtractorItem()
@@ -22,30 +22,30 @@ void SubtractorItem::starting()
 
 void SubtractorItem::thread()
 {
-    PortableImage in1, in2;
+    Image in1, in2;
     unsigned char *dst;
 
-    while(this->waitForImage(this->input1) &&
-          this->waitForImage(this->input2))
+    while(this->waitForInput(this->input1) &&
+          this->waitForInput(this->input2))
     {
         // We can't use nextImage, because if one input is slow, the queue on
         // the other input will never clear
-        in1 = this->newestImage(this->input1);
-        in2 = this->newestImage(this->input2);
+        in1 = this->newest<Image>(this->input1);
+        in2 = this->newest<Image>(this->input2);
 
         // TODO Handle more image formats
-        if(in1.format() != PortableImage::Gray8 ||
-           in2.format() != PortableImage::Gray8 ||
+        if(in1.format() != Image::Gray8 ||
+           in2.format() != Image::Gray8 ||
            in1.width() != in2.width() ||
            in1.height() != in2.height())
         {
             continue;
         }
 
-        PortableImageMutable out(in1.width(),
-                                 in1.height(),
-                                 PortableImage::Gray8,
-                                 {in1.id(), in2.id()});
+        ImageMutable out(in1.width(),
+                         in1.height(),
+                         Image::Gray8,
+                         {in1.id(), in2.id()});
 
         const unsigned char *src1 = in1.data();
         const unsigned char *src2 = in2.data();
@@ -55,6 +55,6 @@ void SubtractorItem::thread()
         while(src1 != end)
             *dst++ = abs((int)*src1++ - (int)*src2++);
 
-        this->pushImageOut(out, this->output);
+        this->pushOut(out, this->output);
     }
 }

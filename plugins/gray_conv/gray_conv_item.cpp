@@ -2,12 +2,12 @@
 #include "gray_conv_item.h"
 
 GrayConvItem::GrayConvItem()
-    : PortableItem("GrayConv")
+    : RovizItem("GrayConv")
 {
-    PORTABLE_INIT(GrayConv);
+    ROVIZ_INIT_ITEM(GrayConv);
 
-    this->input = this->addImageInput("RGB Input");
-    this->output = this->addImageOutput("Grayscale Output");
+    this->input = this->addInput<Image>("RGB Input");
+    this->output = this->addOutput<Image>("Grayscale Output");
 }
 
 GrayConvItem::~GrayConvItem()
@@ -21,48 +21,48 @@ void GrayConvItem::starting()
 
 void GrayConvItem::thread()
 {
-    PortableImage in;
+    Image in;
 #ifdef OPENCV_PRESENT
     cv::Mat out;
 #endif
 
-    while(this->waitForImage(this->input))
+    while(this->waitForInput(this->input))
     {
-        in = this->nextImage(this->input);
+        in = this->next<Image>(this->input);
 
         switch(in.format())
         {
-            case PortableImage::RGB888:
+            case Image::RGB888:
 
-                this->pushImageOut(GrayConvItem::fromRGB888(in), this->output);
+                this->pushOut(GrayConvItem::fromRGB888(in), this->output);
                 break;
 
-            case PortableImage::RGB555:
+            case Image::RGB555:
 
-                this->pushImageOut(GrayConvItem::fromRGB555(in), this->output);
+                this->pushOut(GrayConvItem::fromRGB555(in), this->output);
                 break;
 
-            case PortableImage::YUV422:
+            case Image::YUV422:
 
-                this->pushImageOut(GrayConvItem::fromYUV422(in), this->output);
+                this->pushOut(GrayConvItem::fromYUV422(in), this->output);
                 break;
 
-            case PortableImage::YUV422_Flipped:
+            case Image::YUV422_Flipped:
 
-                this->pushImageOut(GrayConvItem::fromYUV422_Flipped(in), this->output);
+                this->pushOut(GrayConvItem::fromYUV422_Flipped(in), this->output);
                 break;
 
-            case PortableImage::BGR_CV:
+            case Image::BGR_CV:
 
 #ifdef OPENCV_PRESENT
                 cv::cvtColor(in.toCv(), out, CV_BGR2GRAY);
-                this->pushImageOut(out, this->output);
+                this->pushOut(Image(out), this->output);
 #endif
                 break;
 
-            case PortableImage::Gray8:
+            case Image::Gray8:
 
-                this->pushImageOut(in, this->output);
+                this->pushOut(in, this->output);
                 break;
 
             default:
@@ -71,15 +71,15 @@ void GrayConvItem::thread()
     }
 }
 
-PortableImage GrayConvItem::fromRGB(PortableImage in, int depth)
+Image GrayConvItem::fromRGB(Image in, int depth)
 {
     int r, g, b;
     int y;
     unsigned char *dst;
 
-    PortableImageMutable out(in.width(),
+    ImageMutable out(in.width(),
                              in.height(),
-                             PortableImage::Gray8,
+                             Image::Gray8,
                              {in.id()});
 
     const unsigned char *src = in.data();
@@ -105,23 +105,23 @@ PortableImage GrayConvItem::fromRGB(PortableImage in, int depth)
     return out;
 }
 
-PortableImage GrayConvItem::fromRGB555(PortableImage in)
+Image GrayConvItem::fromRGB555(Image in)
 {
     return GrayConvItem::fromRGB(in, 5);
 }
 
-PortableImage GrayConvItem::fromRGB888(PortableImage in)
+Image GrayConvItem::fromRGB888(Image in)
 {
     return GrayConvItem::fromRGB(in, 8);
 }
 
-PortableImage GrayConvItem::fromYUV422(PortableImage in)
+Image GrayConvItem::fromYUV422(Image in)
 {
     unsigned char *dst;
 
-    PortableImageMutable out(in.width(),
+    ImageMutable out(in.width(),
                              in.height(),
-                             PortableImage::Gray8,
+                             Image::Gray8,
                              {in.id()});
 
     const unsigned char *src = in.data();
@@ -137,13 +137,13 @@ PortableImage GrayConvItem::fromYUV422(PortableImage in)
     return out;
 }
 
-PortableImage GrayConvItem::fromYUV422_Flipped(PortableImage in)
+Image GrayConvItem::fromYUV422_Flipped(Image in)
 {
     unsigned char *dst;
 
-    PortableImageMutable out(in.width(),
+    ImageMutable out(in.width(),
                              in.height(),
-                             PortableImage::Gray8,
+                             Image::Gray8,
                              {in.id()});
 
     const unsigned char *end = in.data();

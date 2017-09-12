@@ -2,12 +2,18 @@
 #include "tvg_item.h"
 
 TVGItem::TVGItem()
-    : PortableItem("Test Video Generator")
+    : RovizItem("Test Video Generator")
 {
-    PORTABLE_INIT(TVG);
+    ROVIZ_INIT_ITEM(TVG);
 
-    this->output = this->addImageOutput("Output");
-    this->addConfig("Video file", &this->vid_path, CONFIG_IS_PATH);
+    this->output = this->addOutput<Image>("Output");
+
+    this->conf_vid_path = this->addConfig<FilePath>(
+                "Path to the video",
+                {""},
+                FilePath::ExistingFile,
+                "All Files (*)",
+                true);
 }
 
 TVGItem::~TVGItem()
@@ -17,26 +23,27 @@ TVGItem::~TVGItem()
 
 void TVGItem::thread()
 {
-    std::chrono::high_resolution_clock::time_point last;
-    std::chrono::high_resolution_clock::duration del;
+    std::chrono::high_resolution_clock::time_point time_next_frame;
     cv::Mat out;
-    cv::VideoCapture cap(this->vid_path);
+    cv::VideoCapture cap(this->conf_vid_path.value().front());
     if(!cap.isOpened())
         return;
 
-    // The video seems to be too fast, don't know why though
-    std::chrono::milliseconds fdel((int)(1000 / cap.get(CV_CAP_PROP_FPS)));
+    std::chrono::microseconds frame_delay((int)(1000000. / cap.get(CV_CAP_PROP_FPS)));
 
-    last = std::chrono::high_resolution_clock::now();
+    time_next_frame = std::chrono::high_resolution_clock::now();
     while(this->wait())
     {
         if(!cap.read(out))
+        {
             cap.set(CV_CAP_PROP_POS_FRAMES, 0);
+            cap.read(out);
+        }
 
-        this->pushImageOut(PortableImage(out), this->output);
-        del = std::chrono::high_resolution_clock::now() - last;
-        last = std::chrono::high_resolution_clock::now();
-        if(del < fdel)
-            std::this_thread::sleep_for(del);
+        // Not just using += because that doesn't work well with pauses
+        time_next_frame = std::chrono::high_resolution_clock::now() + frame_delay;
+        std::this_thread::sleep_until(time_next_frame);
+        this->pushOut(Image(out), this->output);
     }
+    cap.release();
 }
