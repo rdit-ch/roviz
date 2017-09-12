@@ -3,6 +3,7 @@
 #include "streams/image_p.h"
 
 #include <memory>
+#include "core/template_decl.h"
 
 Image::Image(const StreamObject &base)
 {
@@ -28,19 +29,6 @@ Image::Image(bool, std::initializer_list<SourceID> sources)
     _this_base.reset(_this);
     this->initSources(sources);
 }
-
-#ifndef PORTABLE_EXPORT
-#include "gui/image_widget.h"
-QWidget *Image::initWidget(StreamBase *stream)
-{
-    ImageWidget *w = new ImageWidget();
-
-    QObject::connect(stream, &StreamBase::newObject,
-                     w, &ImageWidget::newObject);
-
-    return w;
-}
-#endif
 
 #ifdef QT_PRESENT
 Image::Image(QImage img, std::initializer_list<SourceID> sources)
@@ -82,12 +70,11 @@ Image::Image(cv::Mat img, std::initializer_list<SourceID> sources)
     this->initSources(sources);
 
     enum Image::Format f;
-    QImage::Format qf = QImage::Format_Invalid;
 
     // Be very careful when using OpenCV images in color mode! They use BGR, not RGB!
     switch(img.channels())
     {
-        case 1: f = Image::Gray8; qf = QImage::Format_Grayscale8; break;
+        case 1: f = Image::Gray8; break;
         case 3: f = Image::BGR_CV; break;
         default: f = Image::NoFormat; break;
     }
@@ -97,6 +84,12 @@ Image::Image(cv::Mat img, std::initializer_list<SourceID> sources)
     _this->data_ptr = _this->cv_img.data;
 
 #ifdef QT_PRESENT
+    QImage::Format qf = QImage::Format_Invalid;
+    switch(img.channels())
+    {
+        case 1: qf = QImage::Format_Grayscale8; break;
+        default: break;
+    }
     _this->qt_img = QImage(img.data, img.cols, img.rows, qf);
 #endif
 
@@ -139,12 +132,22 @@ const unsigned char *Image::data() const
     return _this->data_ptr;
 }
 
+#ifdef QT_PRESENT
 const QImage Image::toQt()
 {
     return _this->qt_img;
 }
+#endif
 
 const cv::_InputArray Image::toCv()
 {
     return cv::_InputArray(_this->cv_img);
 }
+
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+#include "gui/image_widget.h"
+StreamWidget *Image::initWidget(OutputPrivate *out)
+{
+    return new ImageWidget(out);
+}
+#endif

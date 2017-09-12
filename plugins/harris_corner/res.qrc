@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_HarrisCorner.png</file>
+    </qresource>
+</RCC>

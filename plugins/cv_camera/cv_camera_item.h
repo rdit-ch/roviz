@@ -1,6 +1,7 @@
 #ifndef CVCAMERA_ITEM_H
 #define CVCAMERA_ITEM_H
 
+#include "core/export_handling.h"
 #include "core/roviz_item.h"
 #include "config/config.h"
 #include "streams/image_m.h"
@@ -9,7 +10,9 @@
 
 class CvCameraItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE CvCameraItem();
@@ -20,7 +23,7 @@ protected:
     void stopped(void) override;
 
 private:
-    Output output;
+    Output<Image> output;
     Config<std::list<std::string> > conf_res;
     Config<int> conf_cam_id;
     cv::VideoCapture cap;

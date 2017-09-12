@@ -1,6 +1,8 @@
 #ifndef CONFIG_STORAGE_TYPE_H
 #define CONFIG_STORAGE_TYPE_H
 
+#include <list>
+#include <string>
 #include "config/file_path.h"
 
 /**
@@ -15,15 +17,15 @@
  * \sa FilePath
  */
 template<typename T>
-class ConfigStorageType
+class ROVIZ_EXPORT ConfigStorageType
 { public: typedef T type;};
 
 template<>
-class ConfigStorageType<std::list<std::string> >
+class ROVIZ_EXPORT ConfigStorageType<std::list<std::string> >
 { public: typedef int type; };
 
 template<>
-class ConfigStorageType<FilePath>
+class ROVIZ_EXPORT ConfigStorageType<FilePath>
 { public: typedef std::list<std::string> type; };
 
 #endif // CONFIG_STORAGE_TYPE_H

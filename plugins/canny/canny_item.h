@@ -8,7 +8,9 @@
 
 class CannyItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE CannyItem();
@@ -18,8 +20,8 @@ protected:
     void thread(void) override;
 
 private:
-    Input input;
-    Output output;
+    Input<Image> input;
+    Output<Image> output;
     Trim trim_thres, trim_ratio;
 };
 

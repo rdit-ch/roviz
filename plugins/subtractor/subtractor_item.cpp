@@ -25,13 +25,13 @@ void SubtractorItem::thread()
     Image in1, in2;
     unsigned char *dst;
 
-    while(this->waitForInput(this->input1) &&
-          this->waitForInput(this->input2))
+    while(this->input1.waitForInput() &&
+          this->input2.waitForInput())
     {
         // We can't use nextImage, because if one input is slow, the queue on
         // the other input will never clear
-        in1 = this->newest<Image>(this->input1);
-        in2 = this->newest<Image>(this->input2);
+        in1 = this->input1.newest();
+        in2 = this->input2.newest();
 
         // TODO Handle more image formats
         if(in1.format() != Image::Gray8 ||
@@ -55,6 +55,6 @@ void SubtractorItem::thread()
         while(src1 != end)
             *dst++ = abs((int)*src1++ - (int)*src2++);
 
-        this->pushOut(out, this->output);
+        this->output.pushOut(out);
     }
 }

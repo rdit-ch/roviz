@@ -1,13 +1,12 @@
-#ifndef PORTABLEITEMPRIVATE_H
-#define PORTABLEITEMPRIVATE_H
+#ifndef ROVIZ_ITEM_PRIVATE_H
+#define ROVIZ_ITEM_PRIVATE_H
 
 #include <map>
 #include <mutex>
 #include <condition_variable>
 #include <thread>
-#include "core/typedecl.h"
-#include "core/input_queue.h"
-#include "config/config_base.h"
+
+class RovizItem;
 
 /**
  * @brief Private part of RovizItem
@@ -18,7 +17,6 @@ class RovizItemPrivate
 {
 public:
     RovizItem *_this;
-    std::map<Input, InputQueue*> in_queue;
     std::condition_variable cond;
     std::thread *th;
     std::mutex mtx;
@@ -28,4 +26,4 @@ public:
     ~RovizItemPrivate() = default;
 };
 
-#endif // PORTABLEITEMPRIVATE_H
+#endif // ROVIZ_ITEM_PRIVATE_H

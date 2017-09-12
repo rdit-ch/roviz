@@ -2,12 +2,12 @@
 #include "TEMPLATE_FILE_item.h"
 
 TEMPLATE_CLASSItem::TEMPLATE_CLASSItem()
-    : PortableItem("TEMPLATE_CLASS")
+    : RovizItem("TEMPLATE_CLASS")
 {
-    PORTABLE_INIT(TEMPLATE_CLASS);
+    ROVIZ_INIT_ITEM(TEMPLATE_CLASS);
 
-    this->input = this->addImageInput("Input");
-    this->output = this->addImageOutput("Output");
+    this->input = this->addInput<Image>("Input");
+    this->output = this->addOutput<Image>("Output");
 }
 
 TEMPLATE_CLASSItem::~TEMPLATE_CLASSItem()
@@ -17,7 +17,7 @@ TEMPLATE_CLASSItem::~TEMPLATE_CLASSItem()
 
 void TEMPLATE_CLASSItem::thread()
 {
-    while(this->waitForImage(this->input))
+    while(this->input.waitForInput())
     {
     }
 }

@@ -17,10 +17,10 @@ SobelItem::~SobelItem()
 
 void SobelItem::thread()
 {
-    while(this->waitForInput(this->input))
+    while(this->input.waitForInput())
     {
         cv::Mat out, grad_x, grad_y, abs_grad_x, abs_grad_y;
-        Image in = this->next<Image>(this->input);
+        Image in = this->input.next();
 
         if(in.format() != Image::Gray8)
             continue;
@@ -36,6 +36,6 @@ void SobelItem::thread()
         // Total Gradient (approximate)
         cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, out);
 
-        this->pushOut(Image(out), this->output);
+        this->output.pushOut(Image(out));
     }
 }

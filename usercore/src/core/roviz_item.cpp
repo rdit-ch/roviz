@@ -4,6 +4,7 @@
 
 #include <thread>
 #include <chrono>
+#include <condition_variable>
 #include "streams/all_streams.h"
 
 RovizItem::RovizItem(std::string type_name)
@@ -18,9 +19,6 @@ RovizItem::RovizItem(std::string type_name)
 RovizItem::~RovizItem()
 {
     this->stop();
-    for(auto &ent : _this->in_queue)
-        delete ent.second;
-    _this->in_queue.clear();
 }
 
 void RovizItem::starting()
@@ -72,68 +70,36 @@ std::mutex &RovizItem::mutex() const
     return _this->mtx;
 }
 
-Trim RovizItem::addTrim(std::string name, double min, double max, std::function<void (double)> notifier_func)
+Trim RovizItem::addTrim(std::string name, double default_value, double min, double max, std::function<void (double)> notifier_func)
 {
-    return this->addTrim(name, min, max, 0, false, notifier_func);
+    return Trim(this->getTrimImpl(name, default_value, min, max, 0, false, notifier_func));
 }
 
-Trim RovizItem::addTrim(std::string name, double min, double max, bool logarithmic)
+Trim RovizItem::addTrim(std::string name, double default_value, double min, double max, bool logarithmic)
 {
-    return this->addTrim(name, min, max, 0, logarithmic, [](double){});
+    return Trim(this->getTrimImpl(name, default_value, min, max, 0, logarithmic, [](double){}));
 }
 
-Trim RovizItem::addTrim(std::string name, double min, double max, int steps, std::function<void (double)> notifier_func)
+Trim RovizItem::addTrim(std::string name, double default_value, double min, double max, int steps, std::function<void (double)> notifier_func)
 {
-    return this->addTrim(name, min, max, steps, false, notifier_func);
+    return Trim(this->getTrimImpl(name, default_value, min, max, steps, false, notifier_func));
 }
 
-Trim RovizItem::addTrim(std::string name, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
+Trim RovizItem::addTrim(std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
 {
-    // We need to create that here to avoid force-casting RovizItemBase to
-    // RovizItem when giving the Trim the 'this' pointer.
-    Trim trim(this, name, min, max, steps, logarithmic, notifier_func);
-
-    return RovizItemBase::addTrimBase(std::move(trim));
+    return Trim(this->getTrimImpl(name, default_value, min, max, steps, logarithmic, notifier_func));
 }
 
-Trim RovizItem::addTrim(std::string name, double min, double max, double step_size, std::function<void (double)> notifier_func)
+Trim RovizItem::addTrim(std::string name, double default_value, double min, double max, double step_size, std::function<void (double)> notifier_func)
 {
     // The cast is still needed because lround returns a long and not an int
-    return this->addTrim(name, min, max,
-                         static_cast<int>(std::lround((max - min) / step_size)),
-                         false, notifier_func);
-}
-
-void RovizItem::pushIn(StreamObject obj, Input in)
-{
-    if(_this->in_queue.size() < MAX_QUEUE_SIZE)
-    {
-        _this->in_queue[in]->push(obj);
-        _this->cond.notify_all();
-    }
+    return Trim(this->getTrimImpl(name, default_value, min, max,
+                                  static_cast<int>(std::lround((max - min) / step_size)),
+                                  false, notifier_func));
 }
 
 void RovizItem::stopped()
 {
-}
-
-void RovizItem::pushOut(StreamObject obj, Output out)
-{
-    RovizItemBase::pushOut(obj, out);
-}
-
-bool RovizItem::waitForInput(Input in)
-{
-    // Give other threads a chance too
-    std::this_thread::yield();
-
-    if(_this->in_queue.find(in) == _this->in_queue.end())
-        return false;
-
-    std::unique_lock<std::mutex> lock(_this->mtx);
-    _this->cond.wait(lock, [&]{return _this->in_queue[in]->available() || _this->is_stopped;});
-
-    return !_this->is_stopped;
 }
 
 void RovizItem::pause()
@@ -143,17 +109,17 @@ void RovizItem::pause()
     _this->is_paused = true;
 }
 
+void RovizItem::join()
+{
+    _this->th->join();
+}
+
 void RovizItem::unpause()
 {
     std::lock_guard<std::mutex> g(_this->mtx);
 
     _this->is_paused = false;
     this->wake();
-}
-
-Trim RovizItem::addTrimBase(Trim trim)
-{
-    return RovizItemBase::addTrimBase(std::move(trim));
 }
 
 void RovizItem::start()
@@ -182,80 +148,51 @@ void RovizItem::stop()
 }
 
 template<class T>
-Input RovizItem::addInput(std::string name)
+Input<T> RovizItem::addInput(std::string name)
 {
-    Input in;
-
-    in = this->addInputBase<T>(name);
-    _this->in_queue[in] = new InputQueue();
-
-    return in;
+    return this->addInputBase<T>(name, this);
 }
 
 template<class T>
-Output RovizItem::addOutput(std::string name)
+Output<T> RovizItem::addOutput(std::string name)
 {
     return this->addOutputBase<T>(name);
-}
-
-template<class T>
-T RovizItem::newest(Input in)
-{
-    return T(_this->in_queue[in]->newest());
-}
-
-template<class T>
-T RovizItem::next(Input in)
-{
-    return T(_this->in_queue[in]->next());
 }
 
 template<>
 Config<int> RovizItem::addConfig<int>(const std::string &name, const ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
 {
-    Config<int> conf(this, name, default_value, min, max, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
-}
-
-template<>
-Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
-{
-    Config<FilePath> conf(this, name, default_value, file_mode, filter, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
-}
-
-template<>
-Config<bool> RovizItem::addConfig<bool>(const std::string &name, const ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
-{
-    Config<bool> conf(this, name, default_value, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
-}
-
-template<>
-Config<std::list<std::string> > RovizItem::addConfig<std::list<std::string> >(const std::string &name, const ConfigStorageType<std::list<std::string> >::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed)
-{
-    Config<std::list<std::string> > conf(this, name, default_index, possibilities, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
-}
-
-template<>
-Config<std::string> RovizItem::addConfig<std::string>(const std::string &name, const ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
-{
-    Config<std::string> conf(this, name, default_value, checker, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
+    return Config<int>(this->getConfigImpl(name, default_value, min, max, restart_when_changed));
 }
 
 template<>
 Config<double> RovizItem::addConfig<double>(const std::string &name, const ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
 {
-    Config<double> conf(this, name, default_value, min, max, restart_when_changed);
-    RovizItemBase::addConfig(conf);
-    return conf;
+    return Config<double>(this->getConfigImpl(name, default_value, min, max, restart_when_changed));
+}
+
+template<>
+Config<std::string> RovizItem::addConfig<std::string>(const std::string &name, const ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
+{
+    return Config<std::string>(this->getConfigImpl(name, default_value, checker, restart_when_changed));
+}
+
+template<>
+Config<std::list<std::string> > RovizItem::addConfig<std::list<std::string> >(const std::string &name, const ConfigStorageType<std::list<std::string> >::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed)
+{
+    return Config<std::list<std::string> >(this->getConfigImpl(name, default_index, possibilities, restart_when_changed));
+}
+
+template<>
+Config<bool> RovizItem::addConfig<bool>(const std::string &name, const ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
+{
+    return Config<bool>(this->getConfigImpl(name, default_value, restart_when_changed));
+}
+
+template<>
+Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
+{
+    return Config<FilePath>(this->getConfigImpl(name, default_value, file_mode, filter, restart_when_changed));
 }
 
 INSTANTIATE_ROVIZ_ITEM

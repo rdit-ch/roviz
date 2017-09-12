@@ -2,15 +2,9 @@
 #define CONFIG_H
 
 #include <memory>
-#include <functional>
 #include "core/export_handling.h"
-#include ROVIZ_CONFIG_IMPL_INCLUDE
-#include "config/config_p.h"
-#include "config/config_base.h"
 #include "config/config_storage_type.h"
-#include "config/file_path.h"
-
-class RovizItem;
+#include "config/config_impl.h"
 
 /**
  * @brief Storage for the configuration of an item
@@ -23,13 +17,17 @@ class RovizItem;
  * \sa ConfigPrivate
  */
 template<typename T>
-class ROVIZ_EXPORT_CLASS Config : public ConfigBase
+class ROVIZ_EXPORT Config
 {
+COPY_DELETE(Config<T>)
+MOVE_DEFAULT(Config<T>)
+
 public:
     /**
-     * @brief Constructs an empty config, do not use manually
+     * @brief Constructs an empty config, don't try to access it
      */
-    Config();
+    Config() = default;
+    ~Config() = default;
 
     /**
      * @name Config interface
@@ -37,23 +35,7 @@ public:
      * Look at RovizItem::addConfig for an explanation of the parameters.
      * Never use those directly, always use RovizItem::addConfig!
      */
-    ///@{
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, int min, int max, bool restart_when_changed = false);
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, double min, double max, bool restart_when_changed = false);
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker = [](std::string s){return s;}, bool restart_when_changed = false);
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed = false);
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed = false);
-    Config(RovizItem *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed = false);
-    ///@}
-    ~Config() = default;
-
-    // Don't allow copies
-    Config(const Config &config) = delete;
-    Config &operator=(const Config &config) = delete;
-
-    // Allow moving
-    Config(Config &&config);
-    Config &operator=(Config &&config);
+    Config(ConfigImpl *impl);
 
     /**
      * @brief Get the current value stored in the config
@@ -68,15 +50,8 @@ public:
      */
     bool changed(void);
 
-    // TODO Make private and friend?
-    /**
-     * @brief Get the implementation base
-     * @return Pointer to the implementation
-     */
-    ConfigImplBase *getImplBase(void) const override;
-
 private:
-    std::unique_ptr<ConfigPrivate<T> > _this;
+    std::unique_ptr<ConfigImpl> impl;
 };
 
 #endif // CONFIG_H

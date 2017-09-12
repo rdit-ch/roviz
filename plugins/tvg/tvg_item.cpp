@@ -26,6 +26,7 @@ void TVGItem::thread()
     std::chrono::high_resolution_clock::time_point time_next_frame;
     cv::Mat out;
     cv::VideoCapture cap(this->conf_vid_path.value().front());
+
     if(!cap.isOpened())
         return;
 
@@ -43,7 +44,7 @@ void TVGItem::thread()
         // Not just using += because that doesn't work well with pauses
         time_next_frame = std::chrono::high_resolution_clock::now() + frame_delay;
         std::this_thread::sleep_until(time_next_frame);
-        this->pushOut(Image(out), this->output);
+        this->output.pushOut(Image(out));
     }
     cap.release();
 }

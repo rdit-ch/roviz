@@ -1,10 +1,9 @@
 include(../plugin.pri)
 
-HEADERS += \
-           factory_TEMPLATE_FILE.h \
+HEADERS += factory_TEMPLATE_FILE.h \
            TEMPLATE_FILE_item.h
-SOURCES += \
-           factory_TEMPLATE_FILE.cpp \
+
+SOURCES += factory_TEMPLATE_FILE.cpp \
            TEMPLATE_FILE_item.cpp
 
 RESOURCES += res.qrc

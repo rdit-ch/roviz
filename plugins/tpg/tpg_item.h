@@ -1,8 +1,10 @@
 ﻿#ifndef TPG_H
 #define TPG_H
 
+#include "core/export_handling.h"
+
 // This is a simulation only item
-#ifndef PORTABLE_EXPORT
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 
 #include <QImage>
 #include <QTimer>
@@ -30,8 +32,8 @@ private:
     QImage test_pattern;
     QTimer timer;
     int timeout;
-    Output output;
-    Trim trim;
+    Output<Image> output;
+    Trim trim_fps;
     bool timer_expired;
 
 private slots:

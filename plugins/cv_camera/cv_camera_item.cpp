@@ -54,7 +54,7 @@ void CvCameraItem::thread()
     while(this->wait())
     {
         this->cap >> frame;
-        emit this->pushOut(Image(frame), this->output);
+        this->output.pushOut(Image(frame));
     }
 }
 

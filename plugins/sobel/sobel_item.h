@@ -8,7 +8,9 @@
 
 class SobelItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE SobelItem();
@@ -18,9 +20,8 @@ protected:
     void thread(void) override;
 
 private:
-    Input input;
-    Output output;
-    Trim depth, dx, dy;
+    Input<Image> input;
+    Output<Image> output;
 };
 
 #endif // SOBEL_ITEM_H

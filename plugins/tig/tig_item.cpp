@@ -32,6 +32,6 @@ void TIGItem::thread()
     while(this->wait())
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        this->pushOut(this->img, this->output);
+        this->output.pushOut(this->img);
     }
 }

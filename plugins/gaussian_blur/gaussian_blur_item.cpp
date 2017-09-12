@@ -8,7 +8,8 @@ GaussianBlurItem::GaussianBlurItem()
 
     this->input = this->addInput<Image>("Input");
     this->output = this->addOutput<Image>("Output");
-    this->trim = this->addTrim("Blur Factor", 0, 10, 100);
+    this->trim_sigma = this->addTrim("Sigma", 0, 10, 100);
+    this->trim_ksize = this->addTrim("Kernel Size", 3, 1, 11, 2.);
 }
 
 GaussianBlurItem::~GaussianBlurItem()
@@ -18,14 +19,16 @@ GaussianBlurItem::~GaussianBlurItem()
 
 void GaussianBlurItem::thread()
 {
-    while(this->waitForInput(this->input))
+    while(this->input.waitForInput())
     {
         cv::Mat out;
-        Image img = this->next<Image>(this->input);
+        Image img = this->input.next();
+        int ksize = this->trim_ksize.value();
+        double sigma = this->trim_sigma.value();
         cv::GaussianBlur(img.toCv(),
                          out,
-                         cv::Size(0, 0),
-                         this->trim.value());
-        this->pushOut(Image(out, {img.id()}), this->output);
+                         cv::Size(ksize, ksize),
+                         sigma, sigma);
+        this->output.pushOut(Image(out, {img.id()}));
     }
 }

@@ -6,8 +6,8 @@
 #include <QResizeEvent>
 #include <QPainter>
 
-ImageWidget::ImageWidget(QWidget *parent)
-    : QLabel(parent)
+ImageWidget::ImageWidget(OutputPrivate *out)
+    : QLabel(nullptr), StreamWidget(out)
 {
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
@@ -17,6 +17,11 @@ ImageWidget::ImageWidget(QWidget *parent)
 // TODO Implement
 void ImageWidget::reset()
 {
+}
+
+QWidget *ImageWidget::qwidget()
+{
+    return this;
 }
 
 void ImageWidget::paintEvent(QPaintEvent *)
@@ -32,6 +37,7 @@ void ImageWidget::resizeEvent(QResizeEvent *event)
         return;
 
     this->recalcImageRect(event->size().width(), event->size().height());
+    this->update();
 }
 
 void ImageWidget::newObject(StreamObject obj)
@@ -49,6 +55,7 @@ void ImageWidget::newObject(StreamObject obj)
     }
 
     this->image_qt = this->image.toQt();
+    this->update();
 }
 
 void ImageWidget::recalcImageRect(double w, double h)

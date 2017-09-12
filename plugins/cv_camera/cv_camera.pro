@@ -1,10 +1,9 @@
 include(../plugin.pri)
 
-HEADERS += \
-           factory_cv_camera.h \
+HEADERS += factory_cv_camera.h \
            cv_camera_item.h
-SOURCES += \
-           factory_cv_camera.cpp \
+
+SOURCES += factory_cv_camera.cpp \
            cv_camera_item.cpp
 
 RESOURCES += res.qrc

@@ -11,7 +11,9 @@
 
 class TVGItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE TVGItem();
@@ -21,7 +23,7 @@ protected:
     void thread(void) override;
 
 private:
-    Output output;
+    Output<Image> output;
     Config<FilePath> conf_vid_path;
 };
 

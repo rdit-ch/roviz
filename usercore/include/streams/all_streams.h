@@ -5,5 +5,6 @@
 
 #include "streams/image.h"
 #include "streams/message.h"
+#include "streams/sparse.h"
 
 #endif // ALL_STREAMS_H

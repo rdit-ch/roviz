@@ -13,7 +13,9 @@
  */
 class FrameDelayerItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE FrameDelayerItem();
@@ -24,8 +26,8 @@ protected:
     void trimChanged(void *trim, int value);
 
 private:
-    Input input;
-    Output output;
+    Input<Image> input;
+    Output<Image> output;
     Trim trim_delay;
     std::queue<Image> queue;
     std::mutex mtx;

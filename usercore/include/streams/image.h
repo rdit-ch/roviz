@@ -1,10 +1,9 @@
-#ifndef PORTABLEIMAGE_H
-#define PORTABLEIMAGE_H
+#ifndef IMAGE_H
+#define IMAGE_H
 
 #include <initializer_list>
 #include "core/export_handling.h"
 #include "streams/stream_object.h"
-#include ROVIZ_STREAM_BASE_INCLUDE
 
 #ifdef QT_PRESENT
     #include <QImage>
@@ -15,6 +14,8 @@
 #endif
 
 class ImagePrivate;
+class OutputPrivate;
+class StreamWidget;
 
 /**
  * @brief A portable image class with smart memory management
@@ -31,7 +32,7 @@ class ImagePrivate;
  * \sa ImageMutable
  * \sa ImagePrivate
  */
-class ROVIZ_EXPORT_CLASS Image : public StreamObject
+class ROVIZ_EXPORT Image : public StreamObject
 {
 public:
 
@@ -163,7 +164,7 @@ protected:
     Image(bool do_init, std::initializer_list<SourceID> sources);
 
 // Handle the displaying of the image
-#ifndef ROVIZ_EXPORT
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 public:
     /**
      * @brief initWidget Returns a ImageWidget to display the image
@@ -172,8 +173,10 @@ public:
      *
      * See 'How to create your own streams'
      */
-    static QWidget *initWidget(StreamBase *stream);
+    static StreamWidget *initWidget(OutputPrivate *out);
 #endif
 };
 
-#endif // PORTABLEIMAGE_H
+DECLARE_STREAM_OBJECT(Image)
+
+#endif // IMAGE_H

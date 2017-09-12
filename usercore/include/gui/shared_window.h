@@ -9,7 +9,7 @@
 #include <QIcon>
 #include "core/export_handling.h"
 
-class RovizItemDevBase;
+class RovizItemBaseDev;
 class QCloseEvent;
 class SettingsScope;
 class QObject;
@@ -26,7 +26,7 @@ class QWidget;
  * items on the scene in one aggregated window. It also handles the
  * start/pause/stop mechanism.
  */
-class ROVIZ_EXPORT_CLASS SharedWindow : public QMainWindow
+class ROVIZ_EXPORT SharedWindow : public QMainWindow
 {
 Q_OBJECT
 
@@ -44,13 +44,13 @@ public:
      * because the shared window also has to handle the start/pause/stop events
      * of the items that are not visible.
      */
-    void addItem(RovizItemDevBase *item);
+    void addItem(RovizItemBaseDev *item);
 
     /**
      * @brief Remove an item from the shared window
      * @param item The item to remove
      */
-    void removeItem(RovizItemDevBase *item);
+    void removeItem(RovizItemBaseDev *item);
 
     /**
      * @brief Loads the config (if not already done) and shows the window
@@ -66,6 +66,12 @@ public:
      */
     static SharedWindow *instance(SettingsScope *proj);
 
+    /**
+     * @brief Called when the window is closed
+     * @param event The close event
+     *
+     * See QWidget::closeEvent
+     */
     void closeEvent(QCloseEvent *event) override;
 
 private:
@@ -75,7 +81,7 @@ private:
 
     QObject *destructor;
     QList<QDockWidget*> dock_items;
-    QList<RovizItemDevBase*> parents;
+    QList<RovizItemBaseDev*> parents;
     bool running, paused, initialized;
     SettingsScope *project_settings;
     QToolButton *btn_start, *btn_pause, *btn_stop, *btn_new_tab;

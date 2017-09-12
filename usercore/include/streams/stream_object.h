@@ -35,15 +35,15 @@ struct SrcTreeNode
 
 /**
  * @brief Base class of all objects that can be transported with a stream
- *
- * \sa Stream
  */
-class ROVIZ_EXPORT_CLASS StreamObject
+class ROVIZ_EXPORT StreamObject
 {
+    // Needed because we have to access the protected members of a StreamObject
+    // which is not 'this' in the conversion constructors of the derived classes.
     MAKE_ALL_STREAMS_A_FRIEND
 
 public:
-    StreamObject() = default;
+    StreamObject();
     virtual ~StreamObject() = default;
 
     /**
@@ -61,13 +61,9 @@ protected:
 
     // C++ doesn't allow this, just make sure the object implements such a
     // function.
-//  virtual QWidget *initWidget(StreamBase *stream);
+//  virtual static QWidget *initWidget(StreamBase *stream);
 };
 
-// This is the only place within the portable code that we need that. I'm not
-// going to make a portable macro just for that.
-#ifndef ROVIZ_EXPORT
-    Q_DECLARE_METATYPE(StreamObject)
-#endif
+DECLARE_STREAM_OBJECT(StreamObject)
 
 #endif // STREAM_OBJECT_H

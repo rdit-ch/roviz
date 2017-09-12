@@ -1,0 +1,72 @@
+
+#include "item_loader.h"
+#include <iostream>
+#include "core/roviz_item.h"
+
+#ifdef _WIN32
+    #error Windows not supported yet
+#else
+    #include <dlfcn.h>
+    #include <sys/types.h>
+    #include <dirent.h>
+#endif
+
+ItemLoader::~ItemLoader()
+{
+    for(const auto &lib_handle : this->lib_handles)
+        dlclose(lib_handle);
+}
+
+bool ItemLoader::load(std::string path, bool silent)
+{
+#ifdef _WIN32
+    #error Windows is not supported yet
+#else
+    struct dirent *file;
+    DIR *dir = opendir(path.c_str());
+    if(dir == nullptr)
+    {
+        if(!silent)
+            std::cout << "Error: Could not open plugin directory (" + path + ")" << std::endl;
+        return false;
+    }
+
+    while((file = readdir(dir)))
+    {
+        std::string libpath = path + "/" + file->d_name;
+        void *lib_handle = dlopen(libpath.c_str(), RTLD_LAZY);
+        if(lib_handle == nullptr)
+            continue;
+
+        const char **name_ptr = (const char**)dlsym(lib_handle, "rovizItemName");
+        if(name_ptr == nullptr)
+            goto fail;
+
+        RovizItemBaseCmdline *(*fn)();
+        *(void**)(&fn) = dlsym(lib_handle, "rovizItemFactory");
+        if(fn == nullptr)
+            goto fail;
+
+        // Not exactly safe, but we're going to run an arbitrary function that the plugin
+        // provides, so we have to trust the plugin anyway
+        this->factories[*name_ptr] = fn;
+        this->lib_handles.push_back(lib_handle);
+
+        continue;
+
+fail:   dlclose(lib_handle);
+        std::cout << "Warning: Invalid plugin (" + libpath + ")" << std::endl;
+    }
+#endif
+
+    return true;
+}
+
+RovizItemBaseCmdline *ItemLoader::newItem(const std::string type) const
+{
+    auto factory = this->factories.find(type);
+    if(factory == this->factories.end())
+        return nullptr;
+
+    return factory->second();
+}

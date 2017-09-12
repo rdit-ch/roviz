@@ -1,5 +1,5 @@
-#ifndef PORTABLEITEM_H
-#define PORTABLEITEM_H
+#ifndef ROVIZ_ITEM_H
+#define ROVIZ_ITEM_H
 
 /**
  * \defgroup roviz_plugins roviz plugins
@@ -11,49 +11,41 @@
 // to already start processing the next images as soon as they arrive.
 
 #include <string>
-#include <vector>
 #include <memory>
 #include <functional>
 #include <mutex>
 #include "core/export_handling.h"
-#include "config/config_base.h"
+#include "core/input.h"
+#include "core/output.h"
+#include "core/trim.h"
+#include "core/roviz_item_p.h"
 #include "config/config.h"
 #include "core/template_decl.h"
-#include "core/typedecl.h"
 #include "streams/stream_object.h"
 
 // Include the appropriate base class
 #include ROVIZ_BASE_INCLUDE
-
-class RovizItemPrivate;
-
-// Maximal number of frames that an input queue can hold.
-// Depending on the application, this might have to be adjusted.
-// TODO This should be easier to configure
-#define MAX_QUEUE_SIZE 32
 
 /**
  * @brief Base class for all items that use the roviz framework.
  *
  * All items using the roviz framework have to inherit from this class. They
  * have to at least implement thread(). This function will run in a seperate
- * thread and can process the image data.
+ * thread and can process the data.
  *
  * The templated functions need to know on what kind of stream they operate.
  * Examples might be Image or Message. You can also implement your own
- * stream-type. Look at Stream<T> for more information. Trying to call e.g.
- * next() with the wrong stream type for the given input will result in
- * undefined behavior!
+ * stream-type. Look at StreamObject for more information.
  *
  * \sa RovizItemBase
- * \sa RovizItemDevBase
  * \sa RovizItemNoExport
- * \sa RovizItemPrivate
  */
-class ROVIZ_EXPORT_CLASS RovizItem : public RovizItemBase
+class ROVIZ_EXPORT RovizItem : public RovizItemBase
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     // The moc won't allow a portable name
     Q_OBJECT
+#endif
 
 public:
     /**
@@ -62,7 +54,6 @@ public:
     explicit RovizItem(std::string type_name);
     virtual ~RovizItem();
 
-protected:
     /**
      * @brief Called, when the thread is about to start
      *
@@ -112,42 +103,6 @@ protected:
     virtual void stopped(void);
 
     /**
-     * @brief Returns the next object in the input queue
-     * @param input The input handle returned from addInput()
-     * @return The next object in the input queue
-     *
-     * \sa addInput
-     * \sa newest
-     */
-    template<class T>
-    T next(Input in);
-
-    /**
-     * @brief Returns the newest object in the input queue
-     * @param input The input handle returned from addInput()
-     * @return Returns the newest object in the input queue
-     *
-     * All older objects in the input queue are discarded.
-     *
-     * \sa addInput
-     * \sa next
-     */
-    template<class T>
-    T newest(Input in);
-
-    /**
-     * @brief Send an object out through an output
-     * @param obj The object
-     * @param out The output handle returned from addOutput()
-     *
-     * This function is completely thread safe, you can call it from thread()
-     * or any other function, like e.g. an event handler.
-     *
-     * \sa addOutput
-     */
-    void pushOut(StreamObject obj, Output out);
-
-    /**
      * @brief Add an input
      * @param name Name of the input
      * @return Handle to that input
@@ -155,7 +110,7 @@ protected:
      * \sa addOutput
      */
     template<class T>
-    Input addInput(std::string name);
+    Input<T> addInput(std::string name);
 
     /**
      * @brief Add an output
@@ -166,26 +121,7 @@ protected:
      * \sa pushOut
      */
     template<class T>
-    Output addOutput(std::string name);
-
-    /**
-     * @brief Wait until an object is available at the input
-     * @param input The input handle returned from addInput()
-     * @return true - New object is available
-     *         false - The item was stopped, the thread _HAS TO_ exit
-     *
-     * This function should be used by most (image processing) items to ensure
-     * the start/pause/stop mechanism works.
-     *
-     * This function implements the pause/stop mechanism. It doesn't return
-     * as long as the item is paused and returns false if it is stopped. It
-     * is important that the thread exits when this happens!
-     *
-     * \sa waitFor
-     * \sa wait
-     * \sa running
-     */
-    bool waitForInput(Input in);
+    Output<T> addOutput(std::string name);
 
     /**
      * @brief Sleep until a condition comes true
@@ -312,7 +248,7 @@ protected:
      * A trim value is a value, that can be adjusted (trimmed) at runtime. The
      * user can changed it e.g. through a slider on a GUI.
      */
-    Trim addTrim(std::string name, double min, double max, std::function<void (double)> notifier_func);
+    Trim addTrim(std::string name, double default_value, double min, double max, std::function<void (double)> notifier_func);
 
     /**
      * @brief Add a trim value
@@ -326,7 +262,7 @@ protected:
      * A trim value is a value, that can be adjusted (trimmed) at runtime. The
      * user can changed it e.g. through a slider on a GUI.
      */
-    Trim addTrim(std::string name, double min, double max, bool logarithmic);
+    Trim addTrim(std::string name, double default_value, double min, double max, bool logarithmic);
 
     /**
      * @brief Add a trim value
@@ -341,7 +277,7 @@ protected:
      * A trim value is a value, that can be adjusted (trimmed) at runtime. The
      * user can changed it e.g. through a slider on a GUI.
      */
-    Trim addTrim(std::string name, double min, double max, int steps, std::function<void (double)> notifier_func);
+    Trim addTrim(std::string name, double default_value, double min, double max, int steps, std::function<void (double)> notifier_func);
 
     /**
      * @brief Add a trim value
@@ -358,7 +294,7 @@ protected:
      * A trim value is a value, that can be adjusted (trimmed) at runtime. The
      * user can changed it e.g. through a slider on a GUI.
      */
-    Trim addTrim(std::string name, double min, double max, int steps = 0, bool logarithmic = false, std::function<void (double)> notifier_func = [](double){});
+    Trim addTrim(std::string name, double default_value, double min, double max, int steps = 0, bool logarithmic = false, std::function<void (double)> notifier_func = [](double){});
 
     /**
      * @brief Add a trim value
@@ -374,7 +310,7 @@ protected:
      * A trim value is a value, that can be adjusted (trimmed) at runtime. The
      * user can changed it e.g. through a slider on a GUI.
      */
-    Trim addTrim(std::string name, double min, double max, double step_size, std::function<void (double)> notifier_func = [](double){});
+    Trim addTrim(std::string name, double default_value, double min, double max, double step_size, std::function<void (double)> notifier_func = [](double){});
 
     /**
      * @brief Add a config for an integer value
@@ -413,7 +349,7 @@ protected:
      * @return The newly created config
      */
     template<class T>
-    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker = [](std::string s){return s;}, bool restart_when_changed = false);
+    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker = [](std::string &){return true;}, bool restart_when_changed = false);
 
     /**
      * @brief Add a config for a list of strings
@@ -466,15 +402,6 @@ private:
     ///@{
 
     /**
-     * @brief Add an object to the input queue
-     * @param obj The object
-     * @param input The input handle returned from addInput()
-     *
-     * Called by the base class to add a new object to the queue of an input.
-     */
-    void pushIn(StreamObject obj, Input input) override;
-
-    /**
      * @brief Start execution
      *
      * Starts the thread and the processing of data
@@ -494,6 +421,11 @@ private:
     void pause(void) override;
 
     /**
+     * @brief Wait for the thread to finish
+     */
+    void join(void) override;
+
+    /**
      * @brief Resume execution
      *
      * Resumes execution after a call to pause()
@@ -501,9 +433,7 @@ private:
      * \sa pause
      */
     void unpause(void) override;
-
-    Trim addTrimBase(Trim trim) override;
     ///@}
 };
 
-#endif // PORTABLEITEM_H
+#endif // ROVIZ_ITEM_H

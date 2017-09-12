@@ -1,10 +1,9 @@
 include(../plugin.pri)
 
-HEADERS += \
-           factory_canny.h \
+HEADERS += factory_canny.h \
            canny_item.h
-SOURCES += \
-           factory_canny.cpp \
+
+SOURCES += factory_canny.cpp \
            canny_item.cpp
 
 RESOURCES += res.qrc

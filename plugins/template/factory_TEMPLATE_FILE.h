@@ -1,8 +1,11 @@
 #ifndef FACTORY_TEMPLATE_UPPER_H
 #define FACTORY_TEMPLATE_UPPER_H
 
+#include "core/export_handling.h"
+#include "core/roviz_item.h"
+
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 #include "plugin/interface_factory.h"
-#include "core/abstract_robot_item.h"
 
 class FactoryTEMPLATE_CLASS : public InterfaceFactory
 {
@@ -16,5 +19,10 @@ public:
 public:
     bool init();
 };
+#else
+extern "C" {
+RovizItemBase ROVIZ_EXPORT *rovizItemFactory(void);
+}
+#endif
 
 #endif // FACTORY_TEMPLATE_UPPER_H

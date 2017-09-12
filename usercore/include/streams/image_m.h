@@ -1,5 +1,5 @@
-#ifndef PORTABLEIMAGEMUTABLE_H
-#define PORTABLEIMAGEMUTABLE_H
+#ifndef IMAGE_MUTABLE_H
+#define IMAGE_MUTABLE_H
 
 #include "streams/image.h"
 
@@ -11,7 +11,7 @@
  *
  * \sa Image
  */
-class ROVIZ_EXPORT_CLASS ImageMutable : public Image
+class ROVIZ_EXPORT ImageMutable : public Image
 {
 public:
     ImageMutable();
@@ -52,4 +52,4 @@ public:
     unsigned char *data(void);
 };
 
-#endif // PORTABLEIMAGEMUTABLE_H
+#endif // IMAGE_MUTABLE_H

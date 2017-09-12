@@ -22,11 +22,31 @@ class DockWidgetSignaling : public QDockWidget
 public:
     DockWidgetSignaling(QString title, QWidget *parent);
 
+    /**
+     * @brief Close event
+     * @param event The close event
+     *
+     * See QDockWidget::closeEvent
+     */
     void closeEvent(QCloseEvent *event) override;
+
+    /**
+     * @brief Show event
+     * @param event Show event
+     *
+     * See QDockWidget::showEvent
+     */
     void showEvent(QShowEvent *event) override;
 
 signals:
+    /**
+     * @brief The widget was closed
+     */
     void closed(void);
+
+    /**
+     * @brief The widget is shown
+     */
     void shown(void);
 };
 

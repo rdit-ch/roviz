@@ -1,37 +1,61 @@
 #ifndef CONFIG_IMPL_DEV_H
 #define CONFIG_IMPL_DEV_H
 
+#include <mutex>
 #include <functional>
-#include <QObject>
-#include "backend_dev/config_impl_dev_base.h"
+#include <string>
+#include <list>
+#include "core/export_handling.h"
+#include "config/config_impl.h"
 #include "config/config_storage_type.h"
 #include "config/file_path.h"
-#include "core/export_handling.h"
+#include "backend_dev/config_impl_base_dev.h"
 
 class QWidget;
-class QHBoxLayout;
-class QLabel;
-
-template<typename T>
-class ConfigPrivate;
+class RovizItemBaseDev;
 
 /**
  * @brief Dev implementation of the config interface
  *
- * Implements the saving of configs using itemframeworks settingsScope().
+ * Implements the saving of configs using the itemframeworks settings scope.
  *
  * \sa Config
- * \sa ConfigPrivate
+ * \sa ConfigImpl
  * \sa ConfigImplDevBase
  */
 template<typename T>
-class ROVIZ_EXPORT_CLASS ConfigImplDev : public ConfigImplDevBase
+class ROVIZ_EXPORT ConfigImplDev : public ConfigImplBaseDev
 {
+COPY_DELETE(ConfigImplDev<T>)
+MOVE_DELETE(ConfigImplDev<T>)
+
 public:
     /**
-     * @param config Private data of the config
+     * @name Config interface implementation
+     *
+     * These are the same parameters that are used in RovizItem.
+     *
+     * \sa RovizItem
      */
-    ConfigImplDev(ConfigPrivate<T> *config);
+    ///@{
+    // Int
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, int min, int max, bool restart_when_changed);
+
+    // Double
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, double min, double max, bool restart_when_changed);
+
+    // String
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed);
+
+    // List
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, const std::list<std::string> &possibilities, bool restart_when_changed);
+
+    // Bool
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed);
+
+    // Path
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed);
+    ///}
 
     /**
      * @return The QWidget associated with this config
@@ -39,71 +63,64 @@ public:
      * Every config has a widget that is used to adjust the value. This function
      * returns the widget for this config.
      */
-    QWidget *widget() const override;
+    QWidget *widget(void) const override;
 
     /**
-     * @brief Load the config from the settingsScope().
+     * @brief Load the value of this config from the settings scope
+     *
+     * Note: It can't be loaded in the constructor becuaes the settings
+     * scope is not valid yet at that time.
+     *
+     * \sa ConfigImplBaseDev::load
      */
     void load(void);
 
     /**
-     * @return true, if the item should be restarted when a config changes,
-     * false otherwise.
-     */
-    bool restartAfterChange(void) const override;
-
-    /**
-     * @brief Initialize the config (int)
-     *
-     * \sa Config
-     */
-    void init(int min, int max);
-
-    /**
-     * @brief Initialize the config (double)
-     *
-     * \sa Config
-     */
-    void init(double min, double max);
-
-    /**
-     * @brief Initialize the config (string)
-     *
-     * \sa Config
-     */
-    void init(std::function<bool (std::string&)> checker);
-
-    /**
-     * @brief Initialize the config (list)
-     *
-     * \sa Config
-     */
-    void init(const std::list<std::string> &possibilities); // TODO check 'API' version (possibilities)
-
-    /**
-     * @brief Initialize the config (bool)
-     *
-     * \sa Config
-     */
-    void init(void);
-
-    /**
-     * @brief Initialize the config (file path)
-     *
-     * \sa Config
-     */
-    void init(const std::string &filter, enum FilePath::Mode file_mode);
-
-    /**
      * @brief Called, when the config changes are applied
      */
-    void changed(void) override;
+    bool changed(void) override;
+
+    /**
+     * @brief Notify the item that the config value changed
+     *
+     * This notifies the config that the user changed the config and that
+     * those changes should be propagated to the plugin.
+     *
+     * \sa ConfigImplBaseDev::refresh
+     */
+    void refresh(void) override;
+
+    /**
+     * @brief Lock the mutex of the config
+     *
+     * \sa ConfigImpl::lock
+     * \sa unlock
+     */
+    void lock(void) override;
+
+    /**
+     * @brief Unlock the mutex of the config
+     *
+     * \sa ConfigImpl::unlock
+     * \sa lock
+     */
+    void unlock(void) override;
+
+    /**
+     * @brief Get the value of the config
+     * @return A pointer to the value
+     *
+     * \sa ConfigImpl::value
+     */
+    void *value(void) override;
 
 private:
-    ConfigPrivate<T> *_this;
+    RovizItemBaseDev *parent;
+    std::string name;
+    typename ConfigStorageType<T>::type val, tmp_val;
     QWidget *main_widget, *data_widget;
-    typename ConfigStorageType<T>::type tmp_val;
-    bool tmp_changed;
+    std::mutex mtx;
+    bool restart_after_change, has_changed, tmp_changed;
 
     void initMainWidget(QWidget *sub_widget);
     void save(void);

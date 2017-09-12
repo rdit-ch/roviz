@@ -1,10 +1,9 @@
 #ifndef TRIM_H
 #define TRIM_H
 
-#include <string>
-#include <functional>
+#include <memory>
 #include "core/export_handling.h"
-#include ROVIZ_TRIM_BASE_INCLUDE
+#include "core/trim_impl.h"
 
 class RovizItem;
 
@@ -19,29 +18,28 @@ class RovizItem;
  * \sa RovizItem
  * \sa Config
  */
-class ROVIZ_EXPORT_CLASS Trim : public TrimBase
+class ROVIZ_EXPORT Trim
 {
+COPY_DELETE(Trim)
+MOVE_DEFAULT(Trim)
+
 public:
+    // We need this to allow the construction at runtime with addTrim()
     Trim() = default;
+    ~Trim() = default;
 
     /**
      * @brief See RovizItem::addTrim
      */
-    Trim(RovizItem *item, std::string name, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func);
-    ~Trim() = default;
-
-    // Don't allow copies
-    Trim(const Trim &trim) = delete;
-    Trim &operator=(const Trim &config) = delete;
-
-    // Allow moving
-    Trim(Trim &&trim);
-    Trim &operator=(Trim &&trim);
+    Trim(TrimImpl *impl);
 
     /**
      * @return The current value of the Trim
      */
-    double value(void) const override;
+    double value(void) const;
+
+private:
+    std::unique_ptr<TrimImpl> impl;
 };
 
 #endif // TRIM_H

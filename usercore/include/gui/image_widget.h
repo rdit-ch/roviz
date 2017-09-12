@@ -7,13 +7,15 @@
 #include "core/export_handling.h"
 #include "streams/image.h"
 #include "streams/stream_object.h"
+#include "gui/stream_widget.h"
 
 class QWidget;
 class QPaintEvent;
 class QResizeEvent;
 
-// TODO Use native OpenGL, implement BGR display for OpenCV, just switching to
-// QOpenGLWidget doesn't seem to work, don't know why.
+// TODO Use native OpenGL (maybe that? https://github.com/Myzhar/QtOpenCVViewerGl),
+// implement BGR display for OpenCV, just switching to QOpenGLWidget doesn't seem to work,
+// don't know why.
 /**
  * @brief A widget to show images
  *
@@ -21,29 +23,51 @@ class QResizeEvent;
  * correct size.
  *
  * \sa Image
+ * \sa StreamWidget
  * \sa StreamObject
- * \sa Stream
  */
-class ROVIZ_EXPORT_CLASS ImageWidget : public QLabel
+class ROVIZ_EXPORT ImageWidget : public QLabel, public StreamWidget
 {
 Q_OBJECT
 
 public:
-    ImageWidget(QWidget *parent = nullptr);
+    ImageWidget(OutputPrivate *out);
+
+    /**
+     * @brief Called when a new image arrived
+     * @param obj StreamObject representing the new image to display
+     */
+    void newObject(StreamObject obj) override;
 
     /**
      * @brief Reset the widget to make it show the default image again
      */
-    void reset(void);
+    void reset(void) override;
+
+    /**
+     * @brief Convert this widget to a QWidget
+     * @return The QWidget
+     */
+    QWidget *qwidget(void) override;
 
 protected:
-    void paintEvent(QPaintEvent *event) override;
+    /**
+     * @brief Paint the widget
+     * @param event The paint event
+     *
+     * See QWidget::paintEvent
+     */
+    virtual void paintEvent(QPaintEvent *event) override;
+
+    /**
+     * @brief Called on a resize event
+     * @param event The resize event
+     *
+     * See QWidget::resizeEvent
+     */
     void resizeEvent(QResizeEvent *event) override;
 
-public slots:
-    void newObject(StreamObject obj);
-
-private:
+protected:
     QImage image_qt;
     Image image; // To keep a reference, prevents deletion
     QRectF image_rect;

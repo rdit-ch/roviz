@@ -1,7 +1,6 @@
 #ifndef FILE_PATH_H
 #define FILE_PATH_H
 
-#include <string>
 #include "core/export_handling.h"
 
 /**
@@ -15,7 +14,7 @@
  * \sa Config
  * \sa ConfigStorageType
  */
-class ROVIZ_EXPORT_CLASS FilePath
+class ROVIZ_EXPORT FilePath
 {
 public:
     enum Mode

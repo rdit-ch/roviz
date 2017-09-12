@@ -1,10 +1,9 @@
 include(../plugin.pri)
 
-HEADERS += \
-           factory_sobel.h \
+HEADERS += factory_sobel.h \
            sobel_item.h
-SOURCES += \
-           factory_sobel.cpp \
+
+SOURCES += factory_sobel.cpp \
            sobel_item.cpp
 
 RESOURCES += res.qrc

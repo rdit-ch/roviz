@@ -7,27 +7,41 @@
 // Including the header here leads to a circular inclusion
 class Image;
 class Message;
-
-#ifndef PORTABLE_EXPORT
-#include <QObject>
-
-// The MOC is not smart enough to handle it if its encapsulated
-// within the macro. If you want to add a stream, copy one of the
-// classes below and name it StreamInit*YOUR_CLASS*.
-
-// PortableImage stream
-class Q_DECL_EXPORT StreamInitImage : public QObject \
-{ Q_OBJECT public: static void init(void); };
-
-// Message stream
-class Q_DECL_EXPORT StreamInitMessage : public QObject \
-{ Q_OBJECT public: static void init(void); };
-
-#endif
+template<class T> class Sparse;
+class Point2D;
+class Point2F;
+class Point3D;
+class Point3F;
+class Rect;
+class RectF;
+class Circle;
+class CircleF;
 
 // Make sure all templates for the streams get instantiated
 #define DO_FOR_ALL_STREAMS(EXPR) \
     EXPR(Image) \
-    EXPR(Message)
+    EXPR(Message) \
+    DO_FOR_ALL_SPARSE_TEMPLATES(EXPR)
+
+#define DO_FOR_ALL_SPARSE(EXPR) \
+    EXPR(Point2D) \
+    EXPR(Point2F) \
+    EXPR(Point3D) \
+    EXPR(Point3F) \
+    EXPR(Rect) \
+    EXPR(RectF) \
+    EXPR(Circle) \
+    EXPR(CircleF)
+
+// Didn't find a way yet without duplicating it
+#define DO_FOR_ALL_SPARSE_TEMPLATES(EXPR) \
+    EXPR(Sparse<Point2D>) \
+    EXPR(Sparse<Point2F>) \
+    EXPR(Sparse<Point3D>) \
+    EXPR(Sparse<Point3F>) \
+    EXPR(Sparse<Rect>) \
+    EXPR(Sparse<RectF>) \
+    EXPR(Sparse<Circle>) \
+    EXPR(Sparse<CircleF>)
 
 #endif // TEMPLATEDECL_H

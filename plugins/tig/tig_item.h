@@ -11,7 +11,9 @@
 
 class TIGItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE TIGItem();
@@ -21,7 +23,7 @@ protected:
     void thread(void) override;
 
 private:
-    Output output;
+    Output<Image> output;
     Image img;
     Config<bool> conf_load_grey;
     Config<FilePath> conf_path;

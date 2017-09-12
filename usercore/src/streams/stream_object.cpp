@@ -2,6 +2,10 @@
 #include "streams/stream_object.h"
 #include "streams/stream_object_p.h"
 
+StreamObject::StreamObject()
+{
+}
+
 SourceID StreamObject::id() const
 {
     return _this_base->id;

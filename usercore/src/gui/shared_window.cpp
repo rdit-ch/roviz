@@ -16,7 +16,7 @@
 #include <QToolButton>
 #include <QCloseEvent>
 #include "helper/settings_scope.h"
-#include "backend_dev/roviz_item_dev_base.h"
+#include "backend_dev/roviz_item_base_dev.h"
 #include "gui/dock_widget_signaling.h"
 
 QMap<SettingsScope*, SharedWindow*> SharedWindow::inst;
@@ -127,10 +127,10 @@ void SharedWindow::start()
 {
     if(this->running)
     {
-        for(RovizItemDevBase *item : this->parents)
+        for(RovizItemBaseDev *item : this->parents)
             item->stop();
 
-        for(RovizItemDevBase *item : this->parents)
+        for(RovizItemBaseDev *item : this->parents)
             item->start();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -138,7 +138,7 @@ void SharedWindow::start()
     }
     else
     {
-        for(RovizItemDevBase *item : this->parents)
+        for(RovizItemBaseDev *item : this->parents)
             item->start();
 
         this->btn_start->setIcon(this->ico_restart);
@@ -151,7 +151,7 @@ void SharedWindow::pause()
 {
     if(this->paused)
     {
-        for(RovizItemDevBase *item : this->parents)
+        for(RovizItemBaseDev *item : this->parents)
             item->unpause();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -159,7 +159,7 @@ void SharedWindow::pause()
     }
     else
     {
-        for(RovizItemDevBase *item : this->parents)
+        for(RovizItemBaseDev *item : this->parents)
             item->pause();
 
         this->btn_pause->setIcon(this->ico_unpause);
@@ -169,7 +169,7 @@ void SharedWindow::pause()
 
 void SharedWindow::stop()
 {
-    for(RovizItemDevBase *item : this->parents)
+    for(RovizItemBaseDev *item : this->parents)
         item->stop();
 
     this->running = false;
@@ -264,26 +264,26 @@ void SharedWindow::load()
 {
     if(!this->initialized)
     {
-        for(SharedWindow *s : SharedWindow::inst)
+        QStringList state_list = this->project_settings->value("roviz/SharedWindow/States").toStringList();
+        for(QString var : state_list)
         {
-            // TODO Fix this...
-            QStringList var_list = s->project_settings->value("Robot/SharedWindow/States").toStringList();
-            for(QString var : var_list)
-                s->states.append(QByteArray::fromBase64(var.toLatin1()));
-            QStringList names = s->project_settings->value("Robot/SharedWindow/Tabs").toStringList();
-            s->active_tab = s->project_settings->value("Robot/SharedWindow/ActiveTab").toInt();
-            for(QString t : names)
-                s->tab->addTab(t);
-            s->tab->setCurrentIndex(s->active_tab);
-            if(s->tab->count() == 0)
-            {
-                s->states.append(s->main_window->saveState());
-                s->tab->addTab("Tab #1");
-            }
-            // Size is not valid until the first tab is present
-            s->btn_new_tab->setFixedSize(s->tab->tabRect(0).height(), s->tab->tabRect(0).height());
-            s->main_window->restoreState(s->states[s->active_tab]);
+            QByteArray ba;
+            ba.append(var);
+            this->states.append(QByteArray::fromBase64(ba));
         }
+        QStringList tab_names = this->project_settings->value("roviz/SharedWindow/Tabs").toStringList();
+        this->active_tab = this->project_settings->value("roviz/SharedWindow/ActiveTab").toInt();
+        for(QString t : tab_names)
+            this->tab->addTab(t);
+        this->tab->setCurrentIndex(this->active_tab);
+        if(this->tab->count() == 0)
+        {
+            this->states.append(this->main_window->saveState());
+            this->tab->addTab("Tab #1");
+        }
+        // Size is not valid until the first tab is present
+        this->btn_new_tab->setFixedSize(this->tab->tabRect(0).height(), this->tab->tabRect(0).height());
+        this->main_window->restoreState(this->states[this->active_tab]);
         this->initialized = true;
     }
     this->show();
@@ -293,14 +293,14 @@ SharedWindow::~SharedWindow()
 {
 }
 
-void SharedWindow::addItem(RovizItemDevBase* item)
+void SharedWindow::addItem(RovizItemBaseDev* item)
 {
     if(!this->parents.contains(item))
     {
         DockWidgetSignaling *dock = new DockWidgetSignaling(item->name(), this->main_window);
         dock->setWidget(item->widget());
-        // TODO Why?
-        // dock->setObjectName(item->name());
+        // Needed for saving/restoring the layout
+        dock->setObjectName(item->name());
         this->main_window->addDockWidget(Qt::TopDockWidgetArea, dock);
         this->dock_items.append(dock);
         this->parents.append(item);
@@ -313,7 +313,7 @@ void SharedWindow::addItem(RovizItemDevBase* item)
     }
 }
 
-void SharedWindow::removeItem(RovizItemDevBase *item)
+void SharedWindow::removeItem(RovizItemBaseDev *item)
 {
     this->parents.removeOne(item);
     QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
@@ -352,24 +352,22 @@ SharedWindow *SharedWindow::instance(SettingsScope *proj)
     return sw;
 }
 
-void SharedWindow::closeEvent(QCloseEvent *event)
+void SharedWindow::closeEvent(QCloseEvent *)
 {
-    QStringList names;
+    QStringList tab_names;
 
     for(int i = 0; i < this->tab->count(); i++)
-        names.append(this->tab->tabText(i));
+        tab_names.append(this->tab->tabText(i));
 
-    QStringList var_list;
-    for(QByteArray a : this->states)
-        var_list.append(a.toBase64());
+    QStringList state_list;
+    for(QByteArray state : this->states)
+        state_list.append(state.toBase64());
 
-    // TODO fix this...
-    //this->project_settings->setValue("Robot/SharedWindow/Tabs", names);
-    //this->project_settings->setValue("Robot/SharedWindow/ActiveTab", this->active_tab);
-    //this->project_settings->setValue("Robot/SharedWindow/States", var_list);
+//    this->project_settings->setValue("roviz/SharedWindow/Tabs", tab_names);
+//    this->project_settings->setValue("roviz/SharedWindow/ActiveTab", this->active_tab);
+//    this->project_settings->setValue("roviz/SharedWindow/States", state_list);
 
-    for(QWidget *w : this->dock_items)
-            w->hide();
-
-    QMainWindow::closeEvent(event);
+    // We don't want to close the window to preserve it's state for when it's
+    // opened the next time.
+    this->hide();
 }

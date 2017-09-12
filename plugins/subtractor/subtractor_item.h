@@ -11,7 +11,9 @@
  */
 class SubtractorItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE SubtractorItem();
@@ -22,8 +24,8 @@ protected:
     void thread(void) override;
 
 private:
-    Input input1, input2;
-    Output output;
+    Input<Image> input1, input2;
+    Output<Image> output;
 };
 
 #endif // SUBTRACTOR_ITEM_H

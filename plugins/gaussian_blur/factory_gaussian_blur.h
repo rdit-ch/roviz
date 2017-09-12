@@ -1,6 +1,10 @@
 #ifndef FACTORY_GAUSSIANBLUR_H
 #define FACTORY_GAUSSIANBLUR_H
 
+#include "core/export_handling.h"
+#include "core/roviz_item.h"
+
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 #include "plugin/interface_factory.h"
 
 class FactoryGaussianBlur : public InterfaceFactory
@@ -15,5 +19,10 @@ public:
 public:
     bool init() override;
 };
+#else
+extern "C" {
+ROVIZ_EXPORT RovizItemBase ROVIZ_EXPORT *rovizItemFactory(void);
+}
+#endif
 
 #endif // FACTORY_GAUSSIANBLUR_H

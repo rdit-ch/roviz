@@ -1,6 +1,6 @@
 
 // This is a simulation only item
-#ifndef PORTABLE_EXPORT
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 
 #include "tpg_item.h"
 
@@ -13,7 +13,7 @@ TPGItem::TPGItem()
     this->test_pattern = this->test_pattern.convertToFormat(QImage::Format_RGB888);
 
     this->output = this->addOutput<Image>("Test Pattern Output");
-    this->trim = this->addTrim("FPS", 1, 120, 0,
+    this->trim_fps = this->addTrim("FPS", 30, 1, 120, 0,
         [this](double value)
         {
             std::lock_guard<std::mutex> g(this->mutex());
@@ -36,7 +36,7 @@ TPGItem::~TPGItem()
 
 void TPGItem::starting()
 {
-    this->timeout = 1000 / this->trim.value();
+    this->timeout = 1000 / this->trim_fps.value();
     this->timer_expired = false;
     this->timer.start(this->timeout);
 }
@@ -72,7 +72,7 @@ void TPGItem::thread()
         if(f > 1.0)
             f = 0.0;
 
-        this->pushOut(out_img, this->output);
+        this->output.pushOut(out_img);
     }
 }
 

@@ -26,43 +26,43 @@ void GrayConvItem::thread()
     cv::Mat out;
 #endif
 
-    while(this->waitForInput(this->input))
+    while(this->input.waitForInput())
     {
-        in = this->next<Image>(this->input);
+        in = this->input.next();
 
         switch(in.format())
         {
             case Image::RGB888:
 
-                this->pushOut(GrayConvItem::fromRGB888(in), this->output);
+                this->output.pushOut(GrayConvItem::fromRGB888(in));
                 break;
 
             case Image::RGB555:
 
-                this->pushOut(GrayConvItem::fromRGB555(in), this->output);
+                this->output.pushOut(GrayConvItem::fromRGB555(in));
                 break;
 
             case Image::YUV422:
 
-                this->pushOut(GrayConvItem::fromYUV422(in), this->output);
+                this->output.pushOut(GrayConvItem::fromYUV422(in));
                 break;
 
             case Image::YUV422_Flipped:
 
-                this->pushOut(GrayConvItem::fromYUV422_Flipped(in), this->output);
+                this->output.pushOut(GrayConvItem::fromYUV422_Flipped(in));
                 break;
 
             case Image::BGR_CV:
 
 #ifdef OPENCV_PRESENT
                 cv::cvtColor(in.toCv(), out, CV_BGR2GRAY);
-                this->pushOut(Image(out), this->output);
+                this->output.pushOut(Image(out));
 #endif
                 break;
 
             case Image::Gray8:
 
-                this->pushOut(in, this->output);
+                this->output.pushOut(in);
                 break;
 
             default:

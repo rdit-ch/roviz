@@ -1,8 +1,13 @@
-#ifndef PORTABLEIMAGEPRIVATE_H
-#define PORTABLEIMAGEPRIVATE_H
+#ifndef IMAGE_PRIVATE_H
+#define IMAGE_PRIVATE_H
+
+#include "core/export_handling.h"
+
+#ifdef QT_PRESENT
+#include <QImage>
+#endif
 
 #include <memory>
-#include <QImage>
 #include "streams/image.h"
 #include "streams/stream_object_p.h"
 
@@ -36,4 +41,4 @@ public:
     void init(int w, int h, enum Image::Format f);
 };
 
-#endif // PORTABLEIMAGEPRIVATE_H
+#endif // IMAGE_PRIVATE_H

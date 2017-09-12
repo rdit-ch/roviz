@@ -11,7 +11,9 @@
  */
 class GrayConvItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE GrayConvItem();
@@ -22,8 +24,8 @@ protected:
     void thread(void) override;
 
 private:
-    Output output;
-    Input input;
+    Output<Image> output;
+    Input<Image> input;
 
     static Image fromRGB(Image in, int depth);
     static Image fromRGB555(Image in);

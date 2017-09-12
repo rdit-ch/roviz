@@ -13,7 +13,9 @@
  */
 class GaussianBlurItem : public RovizItem
 {
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
+#endif
 
 public:
     ROVIZ_INVOKABLE GaussianBlurItem();
@@ -23,9 +25,9 @@ protected:
     void thread(void) override;
 
 private:
-    Input input;
-    Output output;
-    Trim trim;
+    Input<Image> input;
+    Output<Image> output;
+    Trim trim_sigma, trim_ksize;
 };
 
 #endif // GAUSSIANBLUR_ITEM_H

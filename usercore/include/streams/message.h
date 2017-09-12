@@ -5,10 +5,10 @@
 #include <initializer_list>
 #include "core/export_handling.h"
 #include "streams/stream_object.h"
-#include ROVIZ_STREAM_BASE_INCLUDE
 
-class QWidget;
 class MessagePrivate;
+class OutputPrivate;
+class StreamWidget;
 
 /**
  * @brief Used to send messages across streams
@@ -93,10 +93,12 @@ protected:
     MessagePrivate *_this;
 
 // Handle the displaying of the message
-#ifndef ROVIZ_EXPORT
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 public:
-    static QWidget *initWidget(StreamBase *stream);
+    static StreamWidget *initWidget(OutputPrivate *out);
 #endif
 };
+
+DECLARE_STREAM_OBJECT(Message)
 
 #endif // MESSAGE_H

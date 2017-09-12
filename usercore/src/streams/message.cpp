@@ -2,7 +2,11 @@
 #include "streams/message.h"
 #include "streams/message_p.h"
 
+#include "core/template_decl.h"
+
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 #include <QWidget>
+#endif
 
 Message::Message(const StreamObject &base)
 {
@@ -45,10 +49,10 @@ int Message::size() const
     return _this->entries.size();
 }
 
-#ifndef ROVIZ_EXPORT
-QWidget *Message::initWidget(StreamBase *)
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+StreamWidget *Message::initWidget(OutputPrivate *out)
 {
     // TODO Implement
-    return new QWidget();
+    return nullptr;
 }
 #endif

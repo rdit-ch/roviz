@@ -8,7 +8,7 @@ FrameDelayerItem::FrameDelayerItem()
 
     this->input = this->addInput<Image>("Input");
     this->output = this->addOutput<Image>("Output");
-    this->trim_delay = this->addTrim("Delay (Frames)", 1, 10);
+    this->trim_delay = this->addTrim("Delay (Frames)", 3, 1, 10);
 }
 
 FrameDelayerItem::~FrameDelayerItem()
@@ -18,16 +18,16 @@ FrameDelayerItem::~FrameDelayerItem()
 
 void FrameDelayerItem::thread()
 {
-    while(this->waitForInput(this->input))
+    while(this->input.waitForInput())
     {
         std::this_thread::yield();
         std::lock_guard<std::mutex> g(this->mtx);
 
-        this->queue.push(this->newest<Image>(this->input));
+        this->queue.push(this->input.newest());
         if(this->trim_delay.value() >= this->queue.size())
             continue;
 
-        this->pushOut(this->queue.front(), this->output);
+        this->output.pushOut(this->queue.front());
         this->queue.pop();
     }
 }

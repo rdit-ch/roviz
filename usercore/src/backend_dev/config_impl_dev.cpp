@@ -3,109 +3,27 @@
 
 #include <mutex>
 #include <QtGlobal>
-#include <QRegularExpression>
-#include <QWidget>
-#include <QHBoxLayout>
-#include <QLabel>
+#include <QObject>
+#include <QString>
+#include <QVariant>
+#include <QStringList>
 #include <QLineEdit>
+#include <QLabel>
 #include <QIntValidator>
 #include <QDoubleValidator>
 #include <QComboBox>
 #include <QCheckBox>
-#include <QVariant>
 #include <QFileDialog>
 #include <QPushButton>
+#include <QHBoxLayout>
 #include "helper/settings_scope.h"
 #include "gui/gui_manager.h"
-#include "config/config_p.h"
 #include "core/template_decl.h"
 #include "core/roviz_item.h"
 
-template<typename T>
-ConfigImplDev<T>::ConfigImplDev(ConfigPrivate<T> *config)
-{
-    _this = config;
-}
-
-template<typename T>
-QWidget *ConfigImplDev<T>::widget() const
-{
-    return this->main_widget;
-}
-
 template<>
-void ConfigImplDev<int>::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/int/" + QString::fromStdString(_this->name));
-    if(var.isValid())
-        _this->val =  var.toInt();
-    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::number(_this->val));
-}
-
-template<>
-void ConfigImplDev<double>::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/double/" + QString::fromStdString(_this->name));
-    if(var.isValid())
-        _this->val = var.toDouble();
-    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::number(_this->val));
-}
-
-template<>
-void ConfigImplDev<std::string>::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/string/" + QString::fromStdString(_this->name));
-    if(var.isValid())
-        _this->val = var.toString().toStdString();
-    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::fromStdString(_this->val));
-}
-
-template<>
-void ConfigImplDev<std::list<std::string> >::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/list/" + QString::fromStdString(_this->name));
-    if(var.isValid())
-        _this->val = var.toInt();
-    qobject_cast<QComboBox*>(this->data_widget)->setCurrentIndex(_this->val);
-}
-
-template<>
-void ConfigImplDev<bool>::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/bool/" + QString::fromStdString(_this->name));
-    if(var.isValid())
-        _this->val = var.toBool();
-    qobject_cast<QCheckBox*>(this->data_widget)->setChecked(_this->val);
-}
-
-template<>
-void ConfigImplDev<FilePath>::load(void)
-{
-    QVariant var = _this->parent->settingsScope()->value("Config/file_path/" + QString::fromStdString(_this->name));
-    if(!var.isValid())
-        return;
-
-    QStringList list = var.toStringList();
-    _this->val.clear();
-    for(const auto &path : list)
-        _this->val.push_back(path.toStdString());
-
-    // We don't want a ';' in the beginning
-    QString str = list.front();
-    list.pop_front();
-    for(const auto &path : list)
-        str += "; " + path;
-    qobject_cast<QLineEdit*>(this->data_widget)->setText(str);
-}
-
-template<typename T>
-bool ConfigImplDev<T>::restartAfterChange() const
-{
-    return _this->restart_after_change;
-}
-
-template<>
-void ConfigImplDev<int>::init(int min, int max)
+ConfigImplDev<int>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
     QIntValidator *valid = new QIntValidator(min, max);
@@ -114,7 +32,7 @@ void ConfigImplDev<int>::init(int min, int max)
     QObject::connect(edit, &QLineEdit::textEdited,
                      [this](QString text)
     {
-        std::lock_guard<std::mutex> lock(_this->mtx);
+        std::lock_guard<std::mutex> lock(this->mtx);
 
         this->tmp_changed = true;
         this->tmp_val = text.toInt();
@@ -124,7 +42,8 @@ void ConfigImplDev<int>::init(int min, int max)
 }
 
 template<>
-void ConfigImplDev<double>::init(double min, double max)
+ConfigImplDev<double>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
     QDoubleValidator *valid = new QDoubleValidator(min, max, 1000); // 1000 is the default
@@ -133,7 +52,7 @@ void ConfigImplDev<double>::init(double min, double max)
     QObject::connect(edit, &QLineEdit::textEdited,
                      [this](QString text)
     {
-        std::lock_guard<std::mutex> lock(_this->mtx);
+        std::lock_guard<std::mutex> lock(this->mtx);
 
         this->tmp_changed = true;
         this->tmp_val = text.toDouble();
@@ -143,14 +62,15 @@ void ConfigImplDev<double>::init(double min, double max)
 }
 
 template<>
-void ConfigImplDev<std::string>::init(std::function<bool (std::string&)> checker)
+ConfigImplDev<std::string>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
 
     QObject::connect(edit, &QLineEdit::textEdited,
                      [this, checker](QString text)
     {
-        std::lock_guard<std::mutex> lock(_this->mtx);
+        std::lock_guard<std::mutex> lock(this->mtx);
 
         this->tmp_val = text.toStdString();
         this->tmp_changed = checker(this->tmp_val);
@@ -160,7 +80,8 @@ void ConfigImplDev<std::string>::init(std::function<bool (std::string&)> checker
 }
 
 template<>
-void ConfigImplDev<std::list<std::string> >::init(const std::list<std::string> &possibilities)
+ConfigImplDev<std::list<std::string> >::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::list<std::string > >::type &default_value, const std::list<std::string> &possibilities, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QComboBox *combo = new QComboBox();
 
@@ -170,7 +91,7 @@ void ConfigImplDev<std::list<std::string> >::init(const std::list<std::string> &
     QObject::connect(combo, QOverload<int>::of(&QComboBox::currentIndexChanged),
                      [combo, this](int)
     {
-        std::lock_guard<std::mutex> lock(_this->mtx);
+        std::lock_guard<std::mutex> lock(this->mtx);
 
         this->tmp_changed = true;
         this->tmp_val = combo->currentIndex();
@@ -180,14 +101,15 @@ void ConfigImplDev<std::list<std::string> >::init(const std::list<std::string> &
 }
 
 template<>
-void ConfigImplDev<bool>::init()
+ConfigImplDev<bool>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QCheckBox *box = new QCheckBox();
 
     QObject::connect(box, &QCheckBox::toggled,
                      [this](bool checked)
     {
-        std::lock_guard<std::mutex> lock(_this->mtx);
+        std::lock_guard<std::mutex> lock(this->mtx);
 
         this->tmp_changed = true;
         this->tmp_val = checked;
@@ -197,7 +119,8 @@ void ConfigImplDev<bool>::init()
 }
 
 template<>
-void ConfigImplDev<FilePath>::init(const std::string &filter, enum FilePath::Mode file_mode)
+ConfigImplDev<FilePath>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
+    : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QFileDialog::FileMode mode;
 
@@ -207,6 +130,7 @@ void ConfigImplDev<FilePath>::init(const std::string &filter, enum FilePath::Mod
         case FilePath::ExistingFile:  mode = QFileDialog::ExistingFile; break;
         case FilePath::MultipleFiles: mode = QFileDialog::ExistingFiles; break;
         case FilePath::Directory:     mode = QFileDialog::Directory; break;
+        default:                      mode = QFileDialog::ExistingFile; break;
     }
 
     QWidget *widget = new QWidget();
@@ -252,22 +176,120 @@ void ConfigImplDev<FilePath>::init(const std::string &filter, enum FilePath::Mod
 }
 
 template<typename T>
-void ConfigImplDev<T>::changed()
+QWidget *ConfigImplDev<T>::widget() const
 {
-    std::lock_guard<std::mutex> lock(_this->mtx);
+    return this->main_widget;
+}
+
+template<>
+void ConfigImplDev<int>::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/int/" + QString::fromStdString(this->name));
+    if(var.isValid())
+        this->val =  var.toInt();
+    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::number(this->val));
+}
+
+template<>
+void ConfigImplDev<double>::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/double/" + QString::fromStdString(this->name));
+    if(var.isValid())
+        this->val = var.toDouble();
+    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::number(this->val));
+}
+
+template<>
+void ConfigImplDev<std::string>::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/string/" + QString::fromStdString(this->name));
+    if(var.isValid())
+        this->val = var.toString().toStdString();
+    qobject_cast<QLineEdit*>(this->data_widget)->setText(QString::fromStdString(this->val));
+}
+
+template<>
+void ConfigImplDev<std::list<std::string> >::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/list/" + QString::fromStdString(this->name));
+    if(var.isValid())
+        this->val = var.toInt();
+    qobject_cast<QComboBox*>(this->data_widget)->setCurrentIndex(this->val);
+}
+
+template<>
+void ConfigImplDev<bool>::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/bool/" + QString::fromStdString(this->name));
+    if(var.isValid())
+        this->val = var.toBool();
+    qobject_cast<QCheckBox*>(this->data_widget)->setChecked(this->val);
+}
+
+template<>
+void ConfigImplDev<FilePath>::load(void)
+{
+    QVariant var = this->parent->settingsScope()->value("Config/file_path/" + QString::fromStdString(this->name));
+    if(!var.isValid())
+        return;
+
+    QStringList list = var.toStringList();
+    this->val.clear();
+    for(const auto &path : list)
+        this->val.push_back(path.toStdString());
+
+    // We don't want a ';' in the beginning
+    QString str = list.front();
+    list.pop_front();
+    for(const auto &path : list)
+        str += "; " + path;
+    qobject_cast<QLineEdit*>(this->data_widget)->setText(str);
+}
+
+template<typename T>
+bool ConfigImplDev<T>::changed()
+{
+    return this->has_changed;
+}
+
+template<typename T>
+void ConfigImplDev<T>::refresh()
+{
+    std::lock_guard<std::mutex> lock(this->mtx);
 
     // Only proceed if this item really changed
     if(!this->tmp_changed)
         return;
 
-    _this->changed = true;
+    this->has_changed = true;
     this->tmp_changed = false;
 
-    _this->val = this->tmp_val;
+    this->val = this->tmp_val;
     this->save();
 
-    if(_this->restart_after_change)
-        _this->parent->restart();
+    if(this->restart_after_change)
+        this->parent->restart();
+}
+
+template<typename T>
+void ConfigImplDev<T>::lock()
+{
+    this->mtx.lock();
+}
+
+template<typename T>
+void ConfigImplDev<T>::unlock()
+{
+    this->mtx.unlock();
+}
+
+template<typename T>
+void *ConfigImplDev<T>::value()
+{
+    // This isn't exactly safe (and very, very ugly), but we have to count on
+    // Config<T> being the only class to ever call this method and that it will
+    // use the propper locking and typecasts.
+    return &this->val;
 }
 
 template<typename T>
@@ -280,7 +302,7 @@ void ConfigImplDev<T>::initMainWidget(QWidget *sub_widget)
     // We assume that is the default layout. Specialize init() if that is not
     // the case.
     hlayout = new QHBoxLayout();
-    name_label = new QLabel(QString::fromStdString(_this->name));
+    name_label = new QLabel(QString::fromStdString(this->name));
     hlayout->addWidget(name_label);
     hlayout->addWidget(sub_widget);
     this->main_widget->setLayout(hlayout);
@@ -288,31 +310,31 @@ void ConfigImplDev<T>::initMainWidget(QWidget *sub_widget)
 
 template<>
 void ConfigImplDev<int>::save()
-{ _this->parent->settingsScope()->setValue("Config/int/" + QString::fromStdString(_this->name), _this->val); }
+{ this->parent->settingsScope()->setValue("Config/int/" + QString::fromStdString(this->name), this->val); }
 
 template<>
 void ConfigImplDev<double>::save()
-{ _this->parent->settingsScope()->setValue("Config/double/" + QString::fromStdString(_this->name), _this->val); }
+{ this->parent->settingsScope()->setValue("Config/double/" + QString::fromStdString(this->name), this->val); }
 
 template<>
 void ConfigImplDev<std::string>::save()
-{ _this->parent->settingsScope()->setValue("Config/string/" + QString::fromStdString(_this->name), QString::fromStdString(_this->val)); }
+{ this->parent->settingsScope()->setValue("Config/string/" + QString::fromStdString(this->name), QString::fromStdString(this->val)); }
 
 template<>
 void ConfigImplDev<std::list<std::string> >::save()
-{ _this->parent->settingsScope()->setValue("Config/list/" + QString::fromStdString(_this->name), _this->val); }
+{ this->parent->settingsScope()->setValue("Config/list/" + QString::fromStdString(this->name), this->val); }
 
 template<>
 void ConfigImplDev<bool>::save()
-{ _this->parent->settingsScope()->setValue("Config/bool/" + QString::fromStdString(_this->name), _this->val); }
+{ this->parent->settingsScope()->setValue("Config/bool/" + QString::fromStdString(this->name), this->val); }
 
 template<>
 void ConfigImplDev<FilePath>::save()
 {
     QStringList list;
-    for(const auto &path : _this->val)
+    for(const auto &path : this->val)
         list.append(QString::fromStdString(path));
-    _this->parent->settingsScope()->setValue("Config/file_path/" + QString::fromStdString(_this->name), list);
+    this->parent->settingsScope()->setValue("Config/file_path/" + QString::fromStdString(this->name), list);
 }
 
 INSTANTIATE_CONFIG_IMPL
