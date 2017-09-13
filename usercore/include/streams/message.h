@@ -24,32 +24,9 @@ class StreamWidget;
 class Message : public StreamObject
 {
 public:
-    /**
-     * @brief An entry of a message
-     *
-     * Depending on the type, either i, d or s is valid.
-     */
-    struct Entry
-    {
-        std::string name;
-
-        enum Type
-        {
-            Invalid,
-            String,
-            Int,
-            Double
-        } type;
-
-        std::string s;
-
-        // Can't use it for the string because of its non-trivial constructor/
-        // destructor, but let's at least use it here.
-        union {
-            int i;
-            double d;
-        };
-    };
+    // We don't define that here, because the 'm' member would otherwise have
+    // an incomplete type.
+    struct Entry;
 
     Message(const StreamObject &base);
     Message(std::initializer_list<SourceID> sources = {});
@@ -97,6 +74,37 @@ protected:
 public:
     static StreamWidget *initWidget(OutputPrivate *out);
 #endif
+};
+
+/**
+ * @brief An entry of a message
+ *
+ * Depending on the type, either i, d, s or m is valid.
+ */
+struct Message::Entry
+{
+    std::string name;
+
+    enum Type
+    {
+        Invalid,
+        String,
+        Int,
+        Double,
+        Message
+    } type;
+
+    std::string s;
+
+    // 'class' is needed because an enum entry has the same name
+    class Message m;
+
+    // Can't use it for the string because of its non-trivial constructor/
+    // destructor, but let's at least use it here.
+    union {
+        int i;
+        double d;
+    };
 };
 
 DECLARE_STREAM_OBJECT(Message)
