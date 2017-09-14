@@ -68,13 +68,22 @@ ConfigImplDev<std::string>::ConfigImplDev(RovizItemBaseDev *parent, const std::s
     QLineEdit *edit = new QLineEdit();
 
     QObject::connect(edit, &QLineEdit::textEdited,
-                     [this, checker](QString text)
+                     [this, checker, edit](QString text)
     {
-        std::lock_guard<std::mutex> lock(this->mtx);
+        std::string text_str = text.toStdString();
+        if(checker(text_str))
+        {
+            std::lock_guard<std::mutex> lock(this->mtx);
 
-        this->tmp_val = text.toStdString();
-        this->tmp_changed = checker(this->tmp_val);
+            this->tmp_val = text_str;
+            this->tmp_changed = true;
+        }
+        else
+        {
+            edit->setText(QString::fromStdString(this->tmp_val));
+        }
     });
+
     this->initMainWidget(edit);
     this->data_widget = edit;
 }
