@@ -11,7 +11,7 @@
  *
  * \sa Message
  */
-class MessageMutable : public Message
+class ROVIZ_EXPORT MessageMutable : public Message
 {
 public:
     MessageMutable(int expected_size = 1, std::initializer_list<SourceID> sources = {});

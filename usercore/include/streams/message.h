@@ -21,7 +21,7 @@ class StreamWidget;
  * \sa MessageMutable
  * \sa MessagePrivate
  */
-class Message : public StreamObject
+class ROVIZ_EXPORT Message : public StreamObject
 {
 public:
     // We don't define that here, because the 'm' member would otherwise have
