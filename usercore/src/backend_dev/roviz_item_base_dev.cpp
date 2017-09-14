@@ -194,9 +194,9 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::list<std::string> >::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed)
+ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::vector<std::string> >::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed)
 {
-    ConfigImplDev<std::list<std::string> > *impl = new ConfigImplDev<std::list<std::string> >(this, name, default_index, possibilities, restart_when_changed);
+    ConfigImplDev<std::vector<std::string> > *impl = new ConfigImplDev<std::vector<std::string> >(this, name, default_index, possibilities, restart_when_changed);
 
     _this->initConfigImpl(impl);
 

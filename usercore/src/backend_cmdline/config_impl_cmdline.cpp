@@ -1,5 +1,7 @@
 
 #include "backend_cmdline/config_impl_cmdline.h"
+
+#include <vector>
 #include "core/template_decl.h"
 
 template<class T>
@@ -27,7 +29,7 @@ void ConfigImplCmdline<std::string>::load(std::string value)
 }
 
 template<>
-void ConfigImplCmdline<std::list<std::string> >::load(std::string value)
+void ConfigImplCmdline<std::vector<std::string> >::load(std::string value)
 {
     // TODO Implement
 }
@@ -42,7 +44,7 @@ template<>
 void ConfigImplCmdline<FilePath>::load(std::string value)
 {
     std::string::size_type delim;
-    std::list<std::string> list;
+    std::vector<std::string> list;
 
     while((delim = value.find(';')) != value.npos)
     {

@@ -22,7 +22,7 @@ CvCameraItem::CvCameraItem()
 
     this->output = this->addOutput<Image>("Camera Output");
 
-    this->conf_res = this->addConfig<std::list<std::string> >
+    this->conf_res = this->addConfig<std::vector<std::string> >
                 ("Resolution",
                  2,
                  {

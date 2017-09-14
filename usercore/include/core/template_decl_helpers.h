@@ -23,7 +23,7 @@
     EXPR(double) \
     EXPR(bool) \
     EXPR(std::string) \
-    EXPR(std::list<std::string>) \
+    EXPR(std::vector<std::string>) \
     EXPR(FilePath)
 
 #define INSTANTIATE_CONFIG_P(T) \

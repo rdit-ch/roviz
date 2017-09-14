@@ -65,9 +65,9 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::list<std::string> >::type &, const std::list<std::string> &, bool )
+ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::vector<std::string> >::type &, const std::vector<std::string> &, bool )
 {
-    ConfigImplBaseCmdline *impl = new ConfigImplCmdline<std::list<std::string> >();
+    ConfigImplBaseCmdline *impl = new ConfigImplCmdline<std::vector<std::string> >();
 
     _this_base->configs[name] = impl;
 

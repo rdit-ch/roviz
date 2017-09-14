@@ -178,9 +178,9 @@ Config<std::string> RovizItem::addConfig<std::string>(const std::string &name, c
 }
 
 template<>
-Config<std::list<std::string> > RovizItem::addConfig<std::list<std::string> >(const std::string &name, const ConfigStorageType<std::list<std::string> >::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed)
+Config<std::vector<std::string> > RovizItem::addConfig<std::vector<std::string> >(const std::string &name, const ConfigStorageType<std::vector<std::string> >::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed)
 {
-    return Config<std::list<std::string> >(this->getConfigImpl(name, default_index, possibilities, restart_when_changed));
+    return Config<std::vector<std::string> >(this->getConfigImpl(name, default_index, possibilities, restart_when_changed));
 }
 
 template<>

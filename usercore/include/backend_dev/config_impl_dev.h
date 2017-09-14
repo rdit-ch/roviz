@@ -4,7 +4,7 @@
 #include <mutex>
 #include <functional>
 #include <string>
-#include <list>
+#include <vector>
 #include "core/export_handling.h"
 #include "config/config_impl.h"
 #include "config/config_storage_type.h"
@@ -48,7 +48,7 @@ public:
     ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed);
 
     // List
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, const std::list<std::string> &possibilities, bool restart_when_changed);
+    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed);
 
     // Bool
     ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed);

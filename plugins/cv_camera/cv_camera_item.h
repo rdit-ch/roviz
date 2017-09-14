@@ -24,7 +24,7 @@ protected:
 
 private:
     Output<Image> output;
-    Config<std::list<std::string> > conf_res;
+    Config<std::vector<std::string> > conf_res;
     Config<int> conf_cam_id;
     cv::VideoCapture cap;
     std::vector<int> width_list, height_list;

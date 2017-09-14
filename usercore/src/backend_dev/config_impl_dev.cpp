@@ -89,7 +89,7 @@ ConfigImplDev<std::string>::ConfigImplDev(RovizItemBaseDev *parent, const std::s
 }
 
 template<>
-ConfigImplDev<std::list<std::string> >::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::list<std::string > >::type &default_value, const std::list<std::string> &possibilities, bool restart_when_changed)
+ConfigImplDev<std::vector<std::string> >::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::vector<std::string > >::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QComboBox *combo = new QComboBox();
@@ -218,7 +218,7 @@ void ConfigImplDev<std::string>::load(void)
 }
 
 template<>
-void ConfigImplDev<std::list<std::string> >::load(void)
+void ConfigImplDev<std::vector<std::string> >::load(void)
 {
     QVariant var = this->parent->settingsScope()->value("Config/list/" + QString::fromStdString(this->name));
     if(var.isValid())
@@ -330,7 +330,7 @@ void ConfigImplDev<std::string>::save()
 { this->parent->settingsScope()->setValue("Config/string/" + QString::fromStdString(this->name), QString::fromStdString(this->val)); }
 
 template<>
-void ConfigImplDev<std::list<std::string> >::save()
+void ConfigImplDev<std::vector<std::string> >::save()
 { this->parent->settingsScope()->setValue("Config/list/" + QString::fromStdString(this->name), this->val); }
 
 template<>

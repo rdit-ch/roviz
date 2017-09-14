@@ -14,6 +14,7 @@
 #include <memory>
 #include <functional>
 #include <mutex>
+#include <vector>
 #include "core/export_handling.h"
 #include "core/input.h"
 #include "core/output.h"
@@ -361,7 +362,7 @@ public:
      * @return The newly created config
      */
     template<class T>
-    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_index, const std::list<std::string> &possibilities, bool restart_when_changed = false);
+    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed = false);
 
     /**
      * @brief Add a config for a boolean value
