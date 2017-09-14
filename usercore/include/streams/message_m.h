@@ -14,7 +14,7 @@
 class MessageMutable : public Message
 {
 public:
-    MessageMutable(std::initializer_list<SourceID> sources = {});
+    MessageMutable(int expected_size = 1, std::initializer_list<SourceID> sources = {});
     ~MessageMutable() = default;
 
     /**
@@ -44,6 +44,40 @@ public:
      * WARNING: This function doesn't check the bounds!
      */
     Message::Entry &operator[](int index);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(std::string name, int value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(std::string name, double value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(std::string name, std::string value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(std::string name, Message &&value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param entry The entry to append
+     */
+    void append(const Message::Entry &entry);
 
     /**
      * @brief Get a mutable iterator pointing to the first entry
