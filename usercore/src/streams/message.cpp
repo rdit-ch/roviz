@@ -49,6 +49,16 @@ int Message::size() const
     return _this->entries.size();
 }
 
+std::vector<Message::Entry>::const_iterator Message::begin() const
+{
+    return _this->entries.cbegin();
+}
+
+std::vector<Message::Entry>::const_iterator Message::end() const
+{
+    return _this->entries.cend();
+}
+
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 StreamWidget *Message::initWidget(OutputPrivate *out)
 {

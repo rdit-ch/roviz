@@ -66,6 +66,22 @@ public:
      */
     int size(void) const;
 
+    /**
+     * @brief Get const iterator pointing to the first entry
+     * @return Const iterator pointing to the first entry
+     *
+     * Makes this class usable in range-based for loops.
+     */
+    std::vector<Message::Entry>::const_iterator begin(void) const;
+
+    /**
+     * @brief Get const iterator pointing after the last entry
+     * @return Const iterator pointing after the last entry
+     *
+     * Makes this class usable in range-based for loops.
+     */
+    std::vector<Message::Entry>::const_iterator end(void) const;
+
 protected:
     MessagePrivate *_this;
 

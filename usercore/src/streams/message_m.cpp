@@ -24,3 +24,23 @@ Message::Entry &MessageMutable::operator[](int index)
 {
     return _this->entries[index];
 }
+
+std::vector<Message::Entry>::const_iterator MessageMutable::begin()
+{
+    return _this->entries.begin();
+}
+
+std::vector<Message::Entry>::const_iterator MessageMutable::end()
+{
+    return _this->entries.end();
+}
+
+std::vector<Message::Entry>::const_iterator MessageMutable::cbegin() const
+{
+    return _this->entries.cbegin();
+}
+
+std::vector<Message::Entry>::const_iterator MessageMutable::cend() const
+{
+    return _this->entries.cend();
+}

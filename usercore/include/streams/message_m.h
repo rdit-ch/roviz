@@ -44,6 +44,34 @@ public:
      * WARNING: This function doesn't check the bounds!
      */
     Message::Entry &operator[](int index);
+
+    /**
+     * @brief Get a mutable iterator pointing to the first entry
+     * @return Mutable iterator pointing to the first entry
+     *
+     * Makes this class usable in range-based for loops.
+     */
+    std::vector<Message::Entry>::const_iterator begin(void);
+
+    /**
+     * @brief Get a mutable iterator pointing after the last entry
+     * @return Mutable iterator pointing after the last entry
+     *
+     * Makes this class usable in range-based for loops.
+     */
+    std::vector<Message::Entry>::const_iterator end(void);
+
+    /**
+     * @brief Get const iterator pointing to the first entry
+     * @return Const iterator pointing to the first entry
+     */
+    std::vector<Message::Entry>::const_iterator cbegin(void) const;
+
+    /**
+     * @brief Get const iterator pointing after the last entry
+     * @return Const iterator pointing after the last entry
+     */
+    std::vector<Message::Entry>::const_iterator cend(void) const;
 };
 
 #endif // MESSAGE_M_H
