@@ -375,7 +375,7 @@ public:
     Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed = false);
 
     /**
-     * @brief Add a config for an integer value
+     * @brief Add a config for a file path
      * @param name Name of the config
      * @param default_value Default value if nothing is saved in the config file
      * @param file_mode Determines, what can be selected (see FilePath::Mode)
