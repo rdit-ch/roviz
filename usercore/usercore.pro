@@ -55,7 +55,8 @@ SOURCES +=  src/usercore.cpp \
             src/streams/sparse.cpp \
             src/streams/sparse_p.cpp \
             src/streams/sparse_m.cpp \
-            src/streams/sparse_types.cpp
+            src/streams/sparse_types.cpp \
+    include/gui/message_widget.cpp
 
 HEADERS +=  include/usercore.h \
             include/config/config.h \
@@ -85,7 +86,8 @@ HEADERS +=  include/usercore.h \
             include/streams/sparse.h \
             include/streams/sparse_p.h \
             include/streams/sparse_m.h \
-            include/streams/sparse_types.h
+            include/streams/sparse_types.h \
+    include/gui/message_widget.h
 
 UI_DIR       = $$BUILDDIR/usercore/ui_header/
 OBJECTS_DIR  = $$BUILDDIR/usercore/obj/

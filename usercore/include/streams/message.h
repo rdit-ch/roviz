@@ -66,6 +66,9 @@ public:
      */
     int size(void) const;
 
+    const Message::Entry &begin(void);
+    const Message::Entry &end(void);
+
 protected:
     MessagePrivate *_this;
 
