@@ -11,6 +11,7 @@
 Message::Message(const StreamObject &base)
 {
     _this_base = base._this_base;
+    _this = dynamic_cast<MessagePrivate*>(this->_this_base.get());
 }
 
 Message::Message(std::string msg_type, std::initializer_list<SourceID> sources)
