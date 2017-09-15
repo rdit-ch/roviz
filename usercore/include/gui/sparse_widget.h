@@ -24,7 +24,7 @@ public:
     /**
      * @brief Reset the widget to make it show the default image again
      */
-    void reset(void) override;
+    void resetWidget(void) override;
 
     /**
      * @brief Called when a new sparse object arrived

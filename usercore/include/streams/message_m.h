@@ -21,6 +21,8 @@ public:
      * @brief Append an entry to the message
      * @param name Name of the entry
      * @param value Value of the entry
+     *
+     * Note: T has to be copy-constructable.
      */
     void append(const std::string &name, int value);
 

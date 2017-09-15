@@ -3,6 +3,7 @@
 #include "streams/message_p.h"
 
 #include "core/template_decl.h"
+#include "streams/all_streams.h"
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 #include <QWidget>
@@ -67,10 +68,10 @@ std::vector<Message::Entry>::const_iterator Message::end() const
 }
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+#include "gui/message_widget.h"
 StreamWidget *Message::initWidget(OutputPrivate *out)
 {
-    // TODO Implement
-    return nullptr;
+    return new MessageWidget(out);
 }
 #endif
 
@@ -115,3 +116,8 @@ bool Message::Entry::to<bool>() const
            this->value_var == "TRUE" ||
            this->value_var == "1";
 }
+
+template int Message::Entry::to<int>(void) const;
+template double Message::Entry::to<double>(void) const;
+template std::string Message::Entry::to<std::string>(void) const;
+template bool Message::Entry::to<bool>(void) const;

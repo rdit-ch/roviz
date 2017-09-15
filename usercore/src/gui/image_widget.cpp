@@ -15,7 +15,7 @@ ImageWidget::ImageWidget(OutputPrivate *out)
 }
 
 // TODO Implement
-void ImageWidget::reset()
+void ImageWidget::resetWidget()
 {
 }
 

@@ -14,10 +14,10 @@ SparseWidget::SparseWidget(std::function<void (SparseWidget *)> draw_func, Strea
 {
 }
 
-void SparseWidget::reset()
+void SparseWidget::resetWidget()
 {
     this->sparse_obj = def_item;
-    this->ImageWidget::reset();
+    this->ImageWidget::resetWidget();
 }
 
 void SparseWidget::paintEvent(QPaintEvent *event)

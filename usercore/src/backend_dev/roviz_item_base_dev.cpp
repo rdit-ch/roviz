@@ -97,7 +97,7 @@ void RovizItemBaseDev::contextMenuPrepare(QMenu &menu) const
 void RovizItemBaseDev::stop()
 {
     for(StreamWidget* widget : _this->output_widgets)
-        widget->reset();
+        widget->resetWidget();
 }
 
 void RovizItemBaseDev::restart()

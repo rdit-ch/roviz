@@ -16,7 +16,6 @@ class RovizItem;
 class RovizItemPrivate
 {
 public:
-    RovizItem *_this;
     std::condition_variable cond;
     std::thread *th;
     std::mutex mtx;

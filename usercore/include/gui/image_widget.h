@@ -42,7 +42,7 @@ public:
     /**
      * @brief Reset the widget to make it show the default image again
      */
-    void reset(void) override;
+    void resetWidget(void) override;
 
     /**
      * @brief Convert this widget to a QWidget

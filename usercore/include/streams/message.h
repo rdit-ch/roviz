@@ -1,14 +1,17 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include <typeinfo>
+#include <functional>
 #include <string>
 #include <initializer_list>
 #include "core/export_handling.h"
 #include "streams/stream_object.h"
 
-class MessagePrivate;
 class OutputPrivate;
 class StreamWidget;
+class MessageWidget;
+class MessagePrivate;
 
 /**
  * @brief Used to send messages across streams
@@ -23,10 +26,10 @@ class StreamWidget;
  */
 class ROVIZ_EXPORT Message : public StreamObject
 {
+friend class MessageWidget;
+
 public:
-    // We don't define that here, because the 'm' member would otherwise have
-    // an incomplete type.
-    struct Entry;
+    class Entry;
 
     Message(const StreamObject &base);
     Message(std::string msg_type = "Generic", std::initializer_list<SourceID> sources = {});
@@ -104,7 +107,7 @@ public:
 /**
  * @brief An entry of a message
  *
- * Depending on the type, either i, d, s or m is valid.
+ * Be sure you call the correct access function by always checking 'type' first!
  */
 class Message::Entry
 {

@@ -29,7 +29,6 @@ public:
     QHBoxLayout *main_layout, *main_image_layout, *main_control_layout;
     QList<ConfigImplBaseDev*> config_impls;
     QWidget *control_base;
-    QImage default_image;
     QList<StreamWidget*> output_widgets;
     bool config_present, conf_loaded;
 

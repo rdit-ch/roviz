@@ -26,7 +26,7 @@ public:
     /**
      * @brief Reset the widget to make it show the default image again
      */
-    virtual void reset(void) = 0;
+    virtual void resetWidget(void) = 0;
 
     /**
      * @brief Convert this widget to a QWidget

@@ -3,6 +3,7 @@
 
 #include "core/export_handling.h"
 
+//RovizItem
 #define INSTANTIATE_ROVIZ_ITEM_P(T) \
     template Input<T> RovizItem::addInput<T>(std::string name); \
     template Output<T> RovizItem::addOutput<T>(std::string name); \
@@ -17,6 +18,7 @@
 #define INSTANTIATE_ROVIZ_ITEM \
     DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM##_P)
 
+// RovizItemBase
 #define INSTANTIATE_ROVIZ_BASE_P(T) \
     template Input<T> RovizItemBase::addInputBase<T>(std::string name, RovizItem *item); \
     template Output<T> RovizItemBase::addOutputBase<T>(std::string name);
@@ -24,6 +26,7 @@
 #define INSTANTIATE_ROVIZ_BASE \
     DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_BASE##_P)
 
+// Config
 #define DO_FOR_ALL_CONFIG_TYPES(EXPR) \
     EXPR(int) \
     EXPR(double) \
@@ -44,12 +47,28 @@
 #define INSTANTIATE_CONFIG_IMPL \
     DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG_IMPL##_P)
 
+// Streams
 #define MAKE_ALL_STREAMS_A_FRIEND_P(T) \
     friend class T;
 
 #define MAKE_ALL_STREAMS_A_FRIEND \
     DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND##_P)
 
+// Input
+#define INSTANTIATE_INPUT_P(T) \
+    template class Input<T >;
+
+#define INSTANTIATE_INPUT \
+    DO_FOR_ALL_STREAMS(INSTANTIATE_INPUT##_P)
+
+// Output
+#define INSTANTIATE_OUTPUT_P(T) \
+    template class Output<T >;
+
+#define INSTANTIATE_OUTPUT \
+    DO_FOR_ALL_STREAMS(INSTANTIATE_OUTPUT##_P)
+
+// Sparse
 #define INSTANTIATE_SPARSE_P(T) \
     template class Sparse<T>;
 
@@ -67,18 +86,6 @@
 
 #define INSTANTIATE_SPARSE_MUTABLE \
     DO_FOR_ALL_SPARSE(INSTANTIATE_SPARSE_MUTABLE##_P)
-
-#define INSTANTIATE_INPUT_P(T) \
-    template class Input<T >;
-
-#define INSTANTIATE_INPUT \
-    DO_FOR_ALL_STREAMS(INSTANTIATE_INPUT##_P)
-
-#define INSTANTIATE_OUTPUT_P(T) \
-    template class Output<T >;
-
-#define INSTANTIATE_OUTPUT \
-    DO_FOR_ALL_STREAMS(INSTANTIATE_OUTPUT##_P)
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 #define INSTANTIATE_SPARSE_WIDGET_P(T) \
