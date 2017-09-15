@@ -22,9 +22,9 @@ Message::Message(std::initializer_list<SourceID> sources)
 
 const Message::Entry &Message::entry(const std::string &name) const
 {
-    for(const auto &e : _this->entries)
-        if(e.name == name)
-            return e;
+    for(const auto &entry : _this->entries)
+        if(entry.name() == name)
+            return entry;
 
     // Return something invalid if nothing's found
     return _this->default_entry;
@@ -66,3 +66,45 @@ StreamWidget *Message::initWidget(OutputPrivate *out)
     return nullptr;
 }
 #endif
+
+Message::Entry::Entry(const std::string &name, const std::string &value)
+    : name_var(name), value_var(value)
+{
+}
+
+std::string Message::Entry::name() const
+{
+    return this->name_var;
+}
+
+std::string Message::Entry::value() const
+{
+    return this->value_var;
+}
+
+template<>
+int Message::Entry::to<int>() const
+{
+    return std::stoi(this->value_var);
+}
+
+template<>
+double Message::Entry::to<double>() const
+{
+    return std::stod(this->value_var);
+}
+
+template<>
+std::string Message::Entry::to<std::string>() const
+{
+    return this->value_var;
+}
+
+template<>
+bool Message::Entry::to<bool>() const
+{
+    return this->value_var == "true" ||
+           this->value_var == "True" ||
+           this->value_var == "TRUE" ||
+           this->value_var == "1";
+}

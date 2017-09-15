@@ -50,34 +50,16 @@ public:
      * @param name Name of the entry
      * @param value Value of the entry
      */
-    void append(std::string name, int value);
-
-    /**
-     * @brief Append an entry to the message
-     * @param name Name of the entry
-     * @param value Value of the entry
-     */
-    void append(std::string name, double value);
-
-    /**
-     * @brief Append an entry to the message
-     * @param name Name of the entry
-     * @param value Value of the entry
-     */
-    void append(std::string name, std::string value);
-
-    /**
-     * @brief Append an entry to the message
-     * @param name Name of the entry
-     * @param value Value of the entry
-     */
-    void append(std::string name, Message &&value);
+    void append(const std::string &name, const std::string &value);
 
     /**
      * @brief Append an entry to the message
      * @param entry The entry to append
+     *
+     * This function takes ownership of the entry, which means that it
+     * needs to be moved with std::move.
      */
-    void append(const Message::Entry &entry);
+    void append(Entry &&entry);
 
     /**
      * @brief Get a mutable iterator pointing to the first entry

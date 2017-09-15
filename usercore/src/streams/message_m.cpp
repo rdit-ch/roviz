@@ -26,49 +26,14 @@ Message::Entry &MessageMutable::operator[](int index)
     return _this->entries[index];
 }
 
-void MessageMutable::append(std::string name, int value)
+void MessageMutable::append(const std::string &name, const std::string &value)
 {
-    Message::Entry entry;
-
-    entry.name = name;
-    entry.i = value;
-
-    _this->entries.push_back(entry);
+    _this->entries.push_back(Message::Entry(name, value));
 }
 
-void MessageMutable::append(std::string name, double value)
+void MessageMutable::append(Message::Entry &&entry)
 {
-    Message::Entry entry;
-
-    entry.name = name;
-    entry.d = value;
-
-    _this->entries.push_back(entry);
-}
-
-void MessageMutable::append(std::string name, std::string value)
-{
-    Message::Entry entry;
-
-    entry.name = name;
-    entry.s = value;
-
-    _this->entries.push_back(entry);
-}
-
-void MessageMutable::append(std::string name, Message &&value)
-{
-    Message::Entry entry;
-
-    entry.name = name;
-    entry.m = std::move(value);
-
-    _this->entries.push_back(entry);
-}
-
-void MessageMutable::append(const Message::Entry &entry)
-{
-    _this->entries.push_back(entry);
+    _this->entries.push_back(std::move(entry));
 }
 
 std::vector<Message::Entry>::const_iterator MessageMutable::begin()

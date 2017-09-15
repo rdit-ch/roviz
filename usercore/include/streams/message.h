@@ -97,30 +97,24 @@ public:
  *
  * Depending on the type, either i, d, s or m is valid.
  */
-struct Message::Entry
+class Message::Entry
 {
-    std::string name;
+COPY_DELETE(Entry)
+MOVE_DEFAULT(Entry)
 
-    enum Type
-    {
-        Invalid,
-        String,
-        Int,
-        Double,
-        Message
-    } type;
+public:
+    Entry() = default;
+    Entry(const std::string &name, const std::string &value);
 
-    std::string s;
+    std::string name(void) const;
+    std::string value(void) const;
 
-    // 'class' is needed because an enum entry has the same name
-    class Message m;
+    template<typename T>
+    T to(void) const;
 
-    // Can't use it for the string because of its non-trivial constructor/
-    // destructor, but let's at least use it here.
-    union {
-        int i;
-        double d;
-    };
+private:
+    std::string name_var;
+    std::string value_var;
 };
 
 DECLARE_STREAM_OBJECT(Message)
