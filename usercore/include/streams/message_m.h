@@ -22,7 +22,28 @@ public:
      * @param name Name of the entry
      * @param value Value of the entry
      */
+    void append(const std::string &name, int value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(const std::string &name, double value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
     void append(const std::string &name, const std::string &value);
+
+    /**
+     * @brief Append an entry to the message
+     * @param name Name of the entry
+     * @param value Value of the entry
+     */
+    void append(const std::string &name, bool value);
 
     /**
      * @brief Append an entry to the message
