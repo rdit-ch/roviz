@@ -8,6 +8,7 @@ SOURCES +=  src/backend_dev/config_impl_dev.cpp \
             src/backend_dev/trim_impl_dev.cpp \
             src/gui/dock_widget_signaling.cpp \
             src/gui/image_widget.cpp \
+            src/gui/message_widget.cpp \
             src/gui/shared_window.cpp \
             src/gui/sparse_widget.cpp \
             src/gui/stream_widget.cpp
@@ -20,6 +21,7 @@ HEADERS +=  include/backend_dev/config_impl_dev.h \
             include/backend_dev/trim_impl_dev.h \
             include/gui/dock_widget_signaling.h \
             include/gui/image_widget.h \
+            include/gui/message_widget.h \
             include/gui/shared_window.h \
             include/gui/sparse_widget.h \
             include/gui/stream_widget.h
@@ -56,8 +58,7 @@ SOURCES +=  src/usercore.cpp \
             src/streams/sparse.cpp \
             src/streams/sparse_p.cpp \
             src/streams/sparse_m.cpp \
-            src/streams/sparse_types.cpp \
-    include/gui/message_widget.cpp
+            src/streams/sparse_types.cpp
 
 HEADERS +=  include/usercore.h \
             include/config/config.h \
@@ -87,8 +88,7 @@ HEADERS +=  include/usercore.h \
             include/streams/sparse.h \
             include/streams/sparse_p.h \
             include/streams/sparse_m.h \
-            include/streams/sparse_types.h \
-    include/gui/message_widget.h
+            include/streams/sparse_types.h
 
 UI_DIR       = $$BUILDDIR/usercore/ui_header/
 OBJECTS_DIR  = $$BUILDDIR/usercore/obj/
