@@ -225,6 +225,8 @@ void RovizItemBaseDev::start()
 {
 }
 
-INSTANTIATE_SPARSE
+#define INSTANTIATE_ROVIZ_ITEM_BASE_DEV(T) \
+    template Input<T> RovizItemBaseDev::addInputBase<T>(std::string name, RovizItem *item); \
+    template Output<T> RovizItemBaseDev::addOutputBase<T>(std::string name);
 
-INSTANTIATE_ROVIZ_BASE
+DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_DEV)

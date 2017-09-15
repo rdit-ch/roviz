@@ -33,4 +33,13 @@ bool Config<T>::changed()
     return this->impl->changed();
 }
 
-INSTANTIATE_CONFIG
+//template class Config<int>;
+//template class Config<double>;
+//template class Config<std::string>;
+//template class Config<std::vector<std::string> >;
+//template class Config<FilePath>;
+//template class Config<bool>;
+
+#define INSTANTIATE_CONFIG(T) template class Config<T>;
+
+DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG)

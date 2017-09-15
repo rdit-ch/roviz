@@ -3,6 +3,27 @@
 
 #include "core/export_handling.h"
 
+#define DO_FOR_ALL_SPARSE_TYPES(EXPR) \
+    EXPR(Point2D) \
+    EXPR(Point2F) \
+    EXPR(Point3D) \
+    EXPR(Point3F) \
+    EXPR(Rect) \
+    EXPR(RectF) \
+    EXPR(Circle) \
+    EXPR(CircleF)
+
+// Didn't find a way yet without duplicating it
+#define DO_FOR_ALL_SPARSE(EXPR) \
+    EXPR(Sparse<Point2D>) \
+    EXPR(Sparse<Point2F>) \
+    EXPR(Sparse<Point3D>) \
+    EXPR(Sparse<Point3F>) \
+    EXPR(Sparse<Rect>) \
+    EXPR(Sparse<RectF>) \
+    EXPR(Sparse<Circle>) \
+    EXPR(Sparse<CircleF>)
+
 class ROVIZ_EXPORT Point2D
 {
     public:

@@ -154,4 +154,6 @@ void SparseWidget::draw<CircleF>()
     }
 }
 
-INSTANTIATE_SPARSE_WIDGET
+#define INSTANTIATE_SPARSE_WIDGET(T) template void SparseWidget::draw<T>(void);
+
+DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_WIDGET)

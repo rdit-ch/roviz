@@ -72,4 +72,6 @@ bool ConfigImplCmdline<T>::changed()
     return false;
 }
 
-INSTANTIATE_CONFIG_IMPL
+#define INSTANTIATE_CONFIG_IMPL(T) template class ConfigImplCmdline<T>;
+
+DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG_IMPL)

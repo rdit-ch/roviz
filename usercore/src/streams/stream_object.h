@@ -6,6 +6,8 @@
 #include "core/template_decl.h"
 #include "core/export_handling.h"
 
+#define MAKE_ALL_STREAMS_A_FRIEND(T) friend class T;
+
 struct SrcTreeNode;
 class StreamObjectPrivate;
 
@@ -40,7 +42,7 @@ class ROVIZ_EXPORT StreamObject
 {
     // Needed because we have to access the protected members of a StreamObject
     // which is not 'this' in the conversion constructors of the derived classes.
-    MAKE_ALL_STREAMS_A_FRIEND
+    DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND)
 
 public:
     StreamObject();

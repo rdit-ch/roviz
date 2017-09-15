@@ -120,4 +120,8 @@ Output<T> RovizItemBaseCmdline::addOutputBase(std::string )
     return output;
 }
 
-INSTANTIATE_ROVIZ_BASE
+#define INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE(T) \
+    template Input<T> RovizItemBaseCmdline::addInputBase<T>(std::string name, RovizItem *item); \
+    template Output<T> RovizItemBaseCmdline::addOutputBase<T>(std::string name);
+
+DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE)

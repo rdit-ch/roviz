@@ -106,4 +106,8 @@ StreamWidget *Sparse<T>::initWidget(OutputPrivate *out)
 }
 #endif
 
-INSTANTIATE_SPARSE
+#define INSTANTIATE_SPARSE(T)          template class Sparse<T>;
+#define INSTANTIATE_SPARSE_PRIVATE(T)  template class SparsePrivate<T>;
+
+DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE)
+DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_PRIVATE)

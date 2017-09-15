@@ -195,4 +195,14 @@ Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const C
     return Config<FilePath>(this->getConfigImpl(name, default_value, file_mode, filter, restart_when_changed));
 }
 
-INSTANTIATE_ROVIZ_ITEM
+#define INSTANTIATE_ROVIZ_ITEM(T) \
+    template Input<T> RovizItem::addInput<T>(std::string name); \
+    template Output<T> RovizItem::addOutput<T>(std::string name); \
+    template Config<int> RovizItem::addConfig<int>(const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed); \
+    template Config<double> RovizItem::addConfig<double>(const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed); \
+    template Config<std::string> RovizItem::addConfig<std::string>(const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed); \
+    template Config<std::vector<std::string> > RovizItem::addConfig<std::vector<std::string> >(const std::string &name, const typename ConfigStorageType<std::vector<std::string> >::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed); \
+    template Config<bool> RovizItem::addConfig<bool>(const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed); \
+    template Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed);
+
+DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM)

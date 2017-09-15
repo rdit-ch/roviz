@@ -41,4 +41,6 @@ bool Input<T>::waitForInput()
     return _this->item->waitForCond([this]{return !this->_this->objects.empty();});
 }
 
-INSTANTIATE_INPUT
+#define INSTANTIATE_INPUT(T) template class Input<T >;
+
+DO_FOR_ALL_STREAMS(INSTANTIATE_INPUT)

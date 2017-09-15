@@ -5,6 +5,14 @@
 #include <string>
 #include "config/file_path.h"
 
+#define DO_FOR_ALL_CONFIG_TYPES(EXPR) \
+    EXPR(int) \
+    EXPR(double) \
+    EXPR(bool) \
+    EXPR(std::string) \
+    EXPR(std::vector<std::string>) \
+    EXPR(FilePath)
+
 /**
  * @brief Class that connects a type that can be stored in a config and it's
  * value type.

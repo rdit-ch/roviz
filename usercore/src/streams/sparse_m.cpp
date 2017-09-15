@@ -1,5 +1,6 @@
 
 #include "streams/sparse_m.h"
+#include "streams/all_streams.h"
 
 // If I just use '_this' instead of 'this->_this', the compiler complains.
 // No idea why.
@@ -37,4 +38,6 @@ typename std::vector<T>::iterator SparseMutable<T>::end()
     return this->_this->data.end();
 }
 
-INSTANTIATE_SPARSE_MUTABLE
+#define INSTANTIATE_SPARSE_MUTABLE(T) template class SparseMutable<T>;
+
+DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_MUTABLE)

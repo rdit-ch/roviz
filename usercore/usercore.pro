@@ -55,7 +55,6 @@ SOURCES +=  src/usercore.cpp \
             src/streams/message_m.cpp \
             src/streams/stream_object.cpp \
             src/streams/sparse.cpp \
-            src/streams/sparse_p.cpp \
             src/streams/sparse_m.cpp \
             src/streams/sparse_types.cpp
 
@@ -80,7 +79,6 @@ HEADERS +=  include/usercore.h \
             src/core/output_p.h \
             src/core/roviz_item_p.h \
             src/core/template_decl.h \
-            src/core/template_decl_helpers.h \
             src/core/trim_impl.h \
             src/streams/all_streams.h \
             src/streams/image_p.h \

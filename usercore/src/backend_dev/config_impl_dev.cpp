@@ -346,4 +346,6 @@ void ConfigImplDev<FilePath>::save()
     this->parent->settingsScope()->setValue("Config/file_path/" + QString::fromStdString(this->name), list);
 }
 
-INSTANTIATE_CONFIG_IMPL
+#define INSTANTIATE_CONFIG_IMPL(T) template class ConfigImplDev<T>;
+
+DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG_IMPL)

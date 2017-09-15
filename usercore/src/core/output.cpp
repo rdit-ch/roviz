@@ -17,8 +17,6 @@ void Output<T>::pushOut(T obj)
         pushIn(obj);
 }
 
-// Yes, that needs to be here. If you change anything (including the order),
-// bugs from hell will be summoned.
-INSTANTIATE_SPARSE
+#define INSTANTIATE_OUTPUT(T) template class Output<T >;
 
-INSTANTIATE_OUTPUT
+DO_FOR_ALL_STREAMS(INSTANTIATE_OUTPUT)
