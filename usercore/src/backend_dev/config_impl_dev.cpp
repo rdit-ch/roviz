@@ -164,8 +164,10 @@ ConfigImplDev<FilePath>::ConfigImplDev(RovizItemBaseDev *parent, const std::stri
             return;
 
         QStringList files = diag.selectedFiles();
-        this->tmp_val.clear();
         edit->setText("");
+
+        std::lock_guard<std::mutex> lock(this->mtx);
+        this->tmp_val.clear();
 
         // We don't want a ';' in the beginning
         this->tmp_val.push_back(files.front().toStdString());
@@ -264,18 +266,21 @@ bool ConfigImplDev<T>::changed()
 template<typename T>
 void ConfigImplDev<T>::refresh()
 {
-    std::lock_guard<std::mutex> lock(this->mtx);
+    {
+        std::lock_guard<std::mutex> lock(this->mtx);
 
-    // Only proceed if this item really changed
-    if(!this->tmp_changed)
-        return;
+        // Only proceed if this item really changed
+        if(!this->tmp_changed)
+            return;
 
-    this->has_changed = true;
-    this->tmp_changed = false;
+        this->has_changed = true;
+        this->tmp_changed = false;
 
-    this->val = this->tmp_val;
-    this->save();
+        this->val = this->tmp_val;
+        this->save();
+    }
 
+    // We have to release the lock before we restart the item
     if(this->restart_after_change)
         this->parent->restart();
 }
