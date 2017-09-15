@@ -16,3 +16,4 @@ equals(BACKEND, "Dev") {
 SUBDIRS += tpg
 SUBDIRS += tig
 }
+SUBDIRS += config_message_test
