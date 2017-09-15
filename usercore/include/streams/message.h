@@ -29,7 +29,7 @@ public:
     struct Entry;
 
     Message(const StreamObject &base);
-    Message(std::initializer_list<SourceID> sources = {});
+    Message(std::string msg_type = "Generic", std::initializer_list<SourceID> sources = {});
     virtual ~Message() = default;
 
     /**
@@ -65,6 +65,15 @@ public:
      * @return The amount of entries of this message
      */
     int size(void) const;
+
+    /**
+     * @brief Get the type of the message
+     * @return Type of the message
+     *
+     * With the type of a message, the receiver can check if it understands this
+     * message format.
+     */
+    std::string type(void) const;
 
     /**
      * @brief Get const iterator pointing to the first entry

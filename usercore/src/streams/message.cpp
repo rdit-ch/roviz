@@ -13,11 +13,12 @@ Message::Message(const StreamObject &base)
     _this_base = base._this_base;
 }
 
-Message::Message(std::initializer_list<SourceID> sources)
+Message::Message(std::string msg_type, std::initializer_list<SourceID> sources)
     : _this(new MessagePrivate())
 {
     _this_base.reset(_this);
     this->initSources(sources);
+    _this->type = msg_type;
 }
 
 const Message::Entry &Message::entry(const std::string &name) const
@@ -47,6 +48,11 @@ const Message::Entry &Message::operator[](int index) const
 int Message::size() const
 {
     return _this->entries.size();
+}
+
+std::string Message::type() const
+{
+    return _this->type;
 }
 
 std::vector<Message::Entry>::const_iterator Message::begin() const

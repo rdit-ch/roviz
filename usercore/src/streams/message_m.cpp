@@ -2,8 +2,8 @@
 #include "streams/message_m.h"
 #include "streams/message_p.h"
 
-MessageMutable::MessageMutable(int expected_size, std::initializer_list<SourceID> sources)
-    : Message(sources)
+MessageMutable::MessageMutable(std::string msg_type, std::initializer_list<SourceID> sources, int expected_size)
+    : Message(msg_type, sources)
 {
     _this->entries.reserve(expected_size);
 }

@@ -14,6 +14,7 @@ class MessagePrivate : public StreamObjectPrivate
 public:
     std::vector<Message::Entry> entries;
     Message::Entry default_entry;
+    std::string type;
 
     ~MessagePrivate() = default;
 };

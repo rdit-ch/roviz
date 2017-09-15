@@ -14,7 +14,7 @@
 class ROVIZ_EXPORT MessageMutable : public Message
 {
 public:
-    MessageMutable(int expected_size = 1, std::initializer_list<SourceID> sources = {});
+    MessageMutable(std::string msg_type = "Generic", std::initializer_list<SourceID> sources = {}, int expected_size = 1);
     ~MessageMutable() = default;
 
     /**
