@@ -40,12 +40,15 @@ struct SrcTreeNode
  */
 class ROVIZ_EXPORT StreamObject
 {
-    // Needed because we have to access the protected members of a StreamObject
-    // which is not 'this' in the conversion constructors of the derived classes.
-    DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND)
+// Needed because we have to access the protected members of a StreamObject
+// which is not 'this' in the conversion constructors of the derived classes.
+DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND)
+
+COPY_DEFAULT(StreamObject)
+MOVE_DEFAULT(StreamObject)
 
 public:
-    StreamObject();
+    StreamObject() = default;
     virtual ~StreamObject() = default;
 
     /**

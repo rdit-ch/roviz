@@ -15,7 +15,11 @@ class QWidget;
  */
 class ROVIZ_EXPORT ConfigImplBaseDev : public ConfigImpl
 {
+COPY_DELETE(ConfigImplBaseDev)
+MOVE_DELETE(ConfigImplBaseDev)
+
 public:
+    ConfigImplBaseDev() = default;
     virtual ~ConfigImplBaseDev() = default;
 
     /**

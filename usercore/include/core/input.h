@@ -22,14 +22,14 @@ class ROVIZ_EXPORT Input
 // there is no way around this at the moment
 friend class RovizItemBase;
 
-COPY_DELETE(Input<T>)
-MOVE_DEFAULT(Input<T>)
+COPY_DELETE(Input)
+MOVE_DEFAULT(Input)
 
 public:
     Input() = default;
     ~Input() = default;
 
-    Input(RovizItem *item);
+    explicit Input(RovizItem *item);
 
     /**
      * @brief Returns the next object in the input queue

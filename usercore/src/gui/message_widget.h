@@ -11,7 +11,7 @@ class MessageWidget : public QTreeWidget, public StreamWidget
 Q_OBJECT
 
 public:
-    MessageWidget(OutputPrivate *out);
+    explicit MessageWidget(OutputPrivate *out);
     ~MessageWidget() = default;
 
     /**

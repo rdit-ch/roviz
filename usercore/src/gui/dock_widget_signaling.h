@@ -21,6 +21,7 @@ class DockWidgetSignaling : public QDockWidget
 
 public:
     DockWidgetSignaling(QString title, QWidget *parent);
+    ~DockWidgetSignaling() = default;
 
     /**
      * @brief Close event

@@ -2,11 +2,6 @@
 #include "streams/image_m.h"
 #include "streams/image_p.h"
 
-ImageMutable::ImageMutable()
-    : Image()
-{
-}
-
 #ifdef QT_PRESENT
 ImageMutable::ImageMutable(QImage img, std::initializer_list<SourceID> sources)
     : Image(img, sources)

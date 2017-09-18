@@ -16,7 +16,13 @@
  */
 class ROVIZ_EXPORT FilePath
 {
+COPY_DEFAULT(FilePath)
+MOVE_DEFAULT(FilePath)
+
 public:
+    FilePath() = default;
+    ~FilePath() = default;
+
     enum Mode
     {
         AnyFile,

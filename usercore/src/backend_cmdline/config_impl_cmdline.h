@@ -19,7 +19,13 @@
 template<class T>
 class ROVIZ_EXPORT ConfigImplCmdline : public ConfigImplBaseCmdline
 {
+COPY_DELETE(ConfigImplCmdline)
+MOVE_DELETE(ConfigImplCmdline)
+
 public:
+    ConfigImplCmdline() = default;
+    ~ConfigImplCmdline() = default;
+
     /**
      * @brief Get the value of the config
      * @return A pointer to the value

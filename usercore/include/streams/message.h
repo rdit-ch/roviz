@@ -28,6 +28,9 @@ class ROVIZ_EXPORT Message : public StreamObject
 {
 friend class MessageWidget;
 
+COPY_DEFAULT(Message)
+MOVE_DEFAULT(Message)
+
 public:
     class Entry;
 

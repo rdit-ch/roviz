@@ -24,8 +24,11 @@ class TrimImpl;
  */
 class ROVIZ_EXPORT RovizItemBaseDev : public AbstractItem
 {
-    Q_OBJECT
-    friend class RovizItemBaseDevPrivate;
+Q_OBJECT
+friend class RovizItemBaseDevPrivate;
+
+COPY_DELETE(RovizItemBaseDev)
+MOVE_DELETE(RovizItemBaseDev)
 
 public:
     /**

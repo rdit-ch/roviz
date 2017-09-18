@@ -13,8 +13,11 @@
  */
 class ROVIZ_EXPORT ImageMutable : public Image
 {
+COPY_DELETE(ImageMutable)
+MOVE_DEFAULT(ImageMutable)
+
 public:
-    ImageMutable();
+    ImageMutable() = default;
 #ifdef QT_PRESENT
     /**
      * @brief Constructs an image with the given data of a QImage

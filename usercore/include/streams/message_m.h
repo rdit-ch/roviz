@@ -13,6 +13,9 @@
  */
 class ROVIZ_EXPORT MessageMutable : public Message
 {
+COPY_DELETE(MessageMutable)
+MOVE_DEFAULT(MessageMutable)
+
 public:
     MessageMutable(std::string msg_type = "Generic", std::initializer_list<SourceID> sources = {}, int expected_size = 1);
     ~MessageMutable() = default;

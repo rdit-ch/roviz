@@ -7,6 +7,7 @@
 class TrimImpl
 {
 public:
+    TrimImpl() = default;
     virtual ~TrimImpl() = default;
 
     /**

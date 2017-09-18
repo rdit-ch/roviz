@@ -19,6 +19,7 @@ class StreamWidget;
 #define POINT_RECT_SIZE   4
 #define SPARSE_LINE_WIDTH 1
 
+// TODO Make this dynamic
 // If we do this within Sparse<T>, it will get instantiated multiple times
 extern const QColor SparseColor[10];
 #endif
@@ -28,9 +29,14 @@ template<class T> class SparsePrivate;
 template<class T>
 class ROVIZ_EXPORT Sparse : public StreamObject
 {
+COPY_DEFAULT(Sparse)
+MOVE_DEFAULT(Sparse)
+
 public:
     Sparse(Image base_image = Image(), std::initializer_list<SourceID> sources = {});
     Sparse(const StreamObject &base);
+    virtual ~Sparse() = default;
+
     void add(const T &obj);
     void add(const std::list<T> &objs);
     void add(const std::vector<T> &objs);

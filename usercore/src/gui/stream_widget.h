@@ -14,7 +14,7 @@
 class StreamWidget
 {
 public:
-    StreamWidget(OutputPrivate *out);
+    explicit StreamWidget(OutputPrivate *out);
     virtual ~StreamWidget() = default;
 
     /**

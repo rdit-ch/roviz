@@ -34,6 +34,9 @@ class StreamWidget;
  */
 class ROVIZ_EXPORT Image : public StreamObject
 {
+COPY_DEFAULT(Image)
+MOVE_DEFAULT(Image)
+
 public:
 
     /**
@@ -93,7 +96,7 @@ public:
     Image(cv::Mat img, std::initializer_list<SourceID> sources = {});
 #endif
 
-    ~Image() = default;
+    virtual ~Image() = default;
 
     /**
      * @return The width of the image

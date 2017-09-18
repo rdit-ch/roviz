@@ -15,7 +15,11 @@
  */
 class ROVIZ_EXPORT ConfigImplBaseCmdline : public ConfigImpl
 {
+COPY_DELETE(ConfigImplBaseCmdline)
+MOVE_DELETE(ConfigImplBaseCmdline)
+
 public:
+    ConfigImplBaseCmdline() = default;
     virtual ~ConfigImplBaseCmdline() = default;
 
     /**

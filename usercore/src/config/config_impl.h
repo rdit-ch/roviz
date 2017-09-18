@@ -10,7 +10,11 @@
  */
 class ROVIZ_EXPORT ConfigImpl
 {
+COPY_DELETE(ConfigImpl)
+MOVE_DELETE(ConfigImpl)
+
 public:
+    ConfigImpl() = default;
     virtual ~ConfigImpl() = default;
 
     // Ugly trick to work around the fact that virtual templates are not allowed

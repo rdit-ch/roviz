@@ -21,6 +21,9 @@ class ConfigImpl;
  */
 class ROVIZ_EXPORT RovizItemBaseCmdline
 {
+COPY_DELETE(RovizItemBaseCmdline)
+MOVE_DELETE(RovizItemBaseCmdline)
+
 public:
     /**
      * @brief Constructor

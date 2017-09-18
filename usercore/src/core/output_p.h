@@ -4,6 +4,7 @@
 #include <functional>
 #include <mutex>
 #include <list>
+#include "core/export_handling.h"
 #include "streams/stream_object.h"
 
 class InputPrivate;

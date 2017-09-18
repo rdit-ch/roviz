@@ -7,8 +7,13 @@
 template<class T>
 class ROVIZ_EXPORT SparseMutable : public Sparse<T>
 {
+COPY_DELETE(SparseMutable)
+MOVE_DEFAULT(SparseMutable)
+
 public:
     SparseMutable(Image base_image = Image(), std::initializer_list<SourceID> sources = {});
+    ~SparseMutable() = default;
+
     T &at(unsigned int index);
     T &operator[](unsigned int index);
     typename std::vector<T>::iterator begin(void);

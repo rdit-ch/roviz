@@ -31,7 +31,8 @@ class ROVIZ_EXPORT ImageWidget : public QLabel, public StreamWidget
 Q_OBJECT
 
 public:
-    ImageWidget(OutputPrivate *out);
+    explicit ImageWidget(OutputPrivate *out);
+    virtual ~ImageWidget() = default;
 
     /**
      * @brief Called when a new image arrived

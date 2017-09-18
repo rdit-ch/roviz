@@ -30,6 +30,7 @@ public:
     int w, h, bits, bytes, len;
     enum Image::Format f;
 
+    ImagePrivate() = default;
     ~ImagePrivate();
 
     /**

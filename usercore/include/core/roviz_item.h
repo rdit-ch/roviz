@@ -48,6 +48,9 @@ class ROVIZ_EXPORT RovizItem : public RovizItemBase
     Q_OBJECT
 #endif
 
+COPY_DELETE(RovizItem)
+MOVE_DELETE(RovizItem)
+
 public:
     /**
      * @param type_name The name of the item

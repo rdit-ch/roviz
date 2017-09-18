@@ -34,7 +34,8 @@ Q_OBJECT
 Q_DISABLE_COPY(SharedWindow)
 
 public:
-    ~SharedWindow();
+    SharedWindow() = default;
+    ~SharedWindow() = default;
 
     /**
      * @brief Add an item to the shared window

@@ -31,7 +31,7 @@ public:
     /**
      * @brief See RovizItem::addTrim
      */
-    Trim(TrimImpl *impl);
+    explicit Trim(TrimImpl *impl);
 
     /**
      * @return The current value of the Trim

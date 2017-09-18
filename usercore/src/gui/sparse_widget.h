@@ -20,6 +20,7 @@ Q_OBJECT
 
 public:
     SparseWidget(std::function<void (SparseWidget *)> draw_func, StreamObject default_item, std::function<Image (StreamObject)> image_fn, OutputPrivate *out);
+    ~SparseWidget() = default;
 
     /**
      * @brief Reset the widget to make it show the default image again

@@ -289,10 +289,6 @@ void SharedWindow::load()
     this->show();
 }
 
-SharedWindow::~SharedWindow()
-{
-}
-
 void SharedWindow::addItem(RovizItemBaseDev* item)
 {
     if(!this->parents.contains(item))
