@@ -17,7 +17,7 @@
  * \sa ConfigImplBaseCmdline
  */
 template<class T>
-class ROVIZ_EXPORT ConfigImplCmdline : public ConfigImplBaseCmdline
+class ConfigImplCmdline : public ConfigImplBaseCmdline
 {
 COPY_DELETE(ConfigImplCmdline)
 MOVE_DELETE(ConfigImplCmdline)

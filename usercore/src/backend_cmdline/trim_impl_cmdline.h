@@ -12,7 +12,7 @@
  *
  * \sa TrimImpl
  */
-class ROVIZ_EXPORT TrimImplCmdline : public TrimImpl
+class TrimImplCmdline : public TrimImpl
 {
 COPY_DELETE(TrimImplCmdline)
 MOVE_DELETE(TrimImplCmdline)

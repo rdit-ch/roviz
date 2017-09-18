@@ -8,7 +8,7 @@
  *
  * \sa Config
  */
-class ROVIZ_EXPORT ConfigImpl
+class ConfigImpl
 {
 COPY_DELETE(ConfigImpl)
 MOVE_DELETE(ConfigImpl)

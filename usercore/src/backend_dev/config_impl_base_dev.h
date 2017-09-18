@@ -13,7 +13,7 @@ class QWidget;
  * \sa ConfigImpl
  * \sa ConfigImplDev
  */
-class ROVIZ_EXPORT ConfigImplBaseDev : public ConfigImpl
+class ConfigImplBaseDev : public ConfigImpl
 {
 COPY_DELETE(ConfigImplBaseDev)
 MOVE_DELETE(ConfigImplBaseDev)

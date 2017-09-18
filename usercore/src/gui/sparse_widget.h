@@ -14,7 +14,7 @@
  * \sa Sparse
  * \sa ImageWidget
  */
-class ROVIZ_EXPORT SparseWidget : public ImageWidget
+class SparseWidget : public ImageWidget
 {
 Q_OBJECT
 

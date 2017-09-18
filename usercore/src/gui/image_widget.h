@@ -26,7 +26,7 @@ class QResizeEvent;
  * \sa StreamWidget
  * \sa StreamObject
  */
-class ROVIZ_EXPORT ImageWidget : public QLabel, public StreamWidget
+class ImageWidget : public QLabel, public StreamWidget
 {
 Q_OBJECT
 

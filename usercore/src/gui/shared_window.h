@@ -26,7 +26,7 @@ class QWidget;
  * items on the scene in one aggregated window. It also handles the
  * start/pause/stop mechanism.
  */
-class ROVIZ_EXPORT SharedWindow : public QMainWindow
+class SharedWindow : public QMainWindow
 {
 Q_OBJECT
 

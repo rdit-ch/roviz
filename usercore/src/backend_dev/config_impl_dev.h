@@ -24,7 +24,7 @@ class RovizItemBaseDev;
  * \sa ConfigImplDevBase
  */
 template<typename T>
-class ROVIZ_EXPORT ConfigImplDev : public ConfigImplBaseDev
+class ConfigImplDev : public ConfigImplBaseDev
 {
 COPY_DELETE(ConfigImplDev)
 MOVE_DELETE(ConfigImplDev)

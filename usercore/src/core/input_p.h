@@ -18,7 +18,7 @@ class RovizItem;
  * \sa Output
  * \sa OutputPrivate
  */
-class ROVIZ_EXPORT InputPrivate
+class InputPrivate
 {
 public:
     RovizItem *item;

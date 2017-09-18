@@ -22,7 +22,7 @@ class RovizItemBaseDev;
  * \sa TrimImpl
  * \sa TrimImplBaseDev
  */
-class ROVIZ_EXPORT TrimImplDev : public QObject, public TrimImpl
+class TrimImplDev : public QObject, public TrimImpl
 {
 Q_OBJECT
 

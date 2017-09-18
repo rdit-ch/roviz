@@ -13,7 +13,7 @@
  * \sa ConfigImpl
  * \sa ConfigImplCmdline
  */
-class ROVIZ_EXPORT ConfigImplBaseCmdline : public ConfigImpl
+class ConfigImplBaseCmdline : public ConfigImpl
 {
 COPY_DELETE(ConfigImplBaseCmdline)
 MOVE_DELETE(ConfigImplBaseCmdline)
