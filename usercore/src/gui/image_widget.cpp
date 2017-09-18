@@ -7,11 +7,12 @@
 #include <QPainter>
 
 ImageWidget::ImageWidget(OutputPrivate *out)
-    : QLabel(nullptr), StreamWidget(out)
+    : QLabel(nullptr), StreamWidget(out), default_image(":/usercore/res/default_image.png")
 {
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
                         QSizePolicy::Expanding);
+    this->resetWidget();
 }
 
 void ImageWidget::newObject(StreamObject obj)
@@ -32,9 +33,12 @@ void ImageWidget::newObject(StreamObject obj)
     this->update();
 }
 
-// TODO Implement
 void ImageWidget::resetWidget()
 {
+    this->image = this->default_image;
+    this->image_qt = this->default_image;
+    this->recalcImageRect(this->width(), this->height());
+    this->update();
 }
 
 QWidget *ImageWidget::qwidget()

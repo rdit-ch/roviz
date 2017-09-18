@@ -163,6 +163,7 @@ void SharedWindow::load()
         this->main_window->restoreState(this->states[this->active_tab]);
         this->initialized = true;
     }
+
     this->show();
 }
 

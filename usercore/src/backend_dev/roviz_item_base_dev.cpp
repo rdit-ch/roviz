@@ -108,7 +108,8 @@ Output<T> RovizItemBaseDev::addOutputBase(std::string name)
     OutputPrivate *output_p = output._this.get();
 
     widget = T::initWidget(output_p);
-    // TODO Temporary hack
+
+    // TODO Throw some kind of error here
     if(widget == nullptr)
         return output;
 

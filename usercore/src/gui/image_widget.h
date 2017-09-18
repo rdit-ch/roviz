@@ -72,6 +72,7 @@ protected:
     QImage image_qt;
     Image image; // To keep a reference, prevents deletion
     QRectF image_rect;
+    QImage default_image;
 
     /**
      * @brief Recalculates the image dimensions after a resize
