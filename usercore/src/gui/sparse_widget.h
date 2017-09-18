@@ -23,15 +23,15 @@ public:
     ~SparseWidget() = default;
 
     /**
-     * @brief Reset the widget to make it show the default image again
-     */
-    void resetWidget(void) override;
-
-    /**
      * @brief Called when a new sparse object arrived
      * @param obj StreamObject representing the new sparse object to display
      */
     void newObject(StreamObject obj) override;
+
+    /**
+     * @brief Reset the widget to make it show the default image again
+     */
+    void resetWidget(void) override;
 
     /**
      * @brief Draws the widget

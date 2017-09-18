@@ -23,13 +23,6 @@ Image::Image(std::initializer_list<SourceID> sources)
     _this->init(0, 0, Image::NoFormat);
 }
 
-Image::Image(bool, std::initializer_list<SourceID> sources)
-    : _this(new ImagePrivate())
-{
-    _this_base.reset(_this);
-    this->initSources(sources);
-}
-
 #ifdef QT_PRESENT
 Image::Image(QImage img, std::initializer_list<SourceID> sources)
     : _this(new ImagePrivate())
@@ -142,6 +135,13 @@ const QImage Image::toQt()
 const cv::_InputArray Image::toCv()
 {
     return cv::_InputArray(_this->cv_img);
+}
+
+Image::Image(bool, std::initializer_list<SourceID> sources)
+    : _this(new ImagePrivate())
+{
+    _this_base.reset(_this);
+    this->initSources(sources);
 }
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev

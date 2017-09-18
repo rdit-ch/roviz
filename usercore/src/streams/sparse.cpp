@@ -2,6 +2,8 @@
 #include "streams/sparse.h"
 #include "core/template_decl.h"
 
+// TODO Make this dynamic
+// If we do this within Sparse<T>, it will get instantiated multiple times
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
 const QColor SparseColor[] =
 {

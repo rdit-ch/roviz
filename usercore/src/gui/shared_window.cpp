@@ -108,6 +108,114 @@ SharedWindow::SharedWindow(QWidget *parent)
             this, &SharedWindow::tabStartRename);
 }
 
+void SharedWindow::addItem(RovizItemBaseDev* item)
+{
+    if(!this->parents.contains(item))
+    {
+        DockWidgetSignaling *dock = new DockWidgetSignaling(item->name(), this->main_window);
+        dock->setWidget(item->widget());
+        // Needed for saving/restoring the layout
+        dock->setObjectName(item->name());
+        this->main_window->addDockWidget(Qt::TopDockWidgetArea, dock);
+        this->dock_items.append(dock);
+        this->parents.append(item);
+        item->widget()->hide();
+        dock->hide();
+        connect(dock, &DockWidgetSignaling::closed,
+                this, &SharedWindow::itemClosed);
+        if(this->running)
+            item->start();
+    }
+}
+
+void SharedWindow::removeItem(RovizItemBaseDev *item)
+{
+    this->parents.removeOne(item);
+    QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
+    this->dock_items.removeOne(d);
+    d->deleteLater();
+    item->widget()->deleteLater();
+}
+
+void SharedWindow::load()
+{
+    if(!this->initialized)
+    {
+        QStringList state_list = this->project_settings->value("roviz/SharedWindow/States").toStringList();
+        for(QString var : state_list)
+        {
+            QByteArray ba;
+            ba.append(var);
+            this->states.append(QByteArray::fromBase64(ba));
+        }
+        QStringList tab_names = this->project_settings->value("roviz/SharedWindow/Tabs").toStringList();
+        this->active_tab = this->project_settings->value("roviz/SharedWindow/ActiveTab").toInt();
+        for(QString t : tab_names)
+            this->tab->addTab(t);
+        this->tab->setCurrentIndex(this->active_tab);
+        if(this->tab->count() == 0)
+        {
+            this->states.append(this->main_window->saveState());
+            this->tab->addTab("Tab #1");
+        }
+        // Size is not valid until the first tab is present
+        this->btn_new_tab->setFixedSize(this->tab->tabRect(0).height(), this->tab->tabRect(0).height());
+        this->main_window->restoreState(this->states[this->active_tab]);
+        this->initialized = true;
+    }
+    this->show();
+}
+
+SharedWindow *SharedWindow::instance(SettingsScope *proj)
+{
+    if(proj == nullptr)
+        return nullptr;
+
+    // Get instance for the current project
+    SharedWindow *sw = SharedWindow::inst.value(proj, nullptr);
+
+    if(sw == nullptr)
+    {
+        // Create instance if it doesn't exist already
+        sw = new SharedWindow(nullptr);
+
+        // We have to ensure proper deletion of every SharedWindow. We can't
+        // make it static because it would be destructed after QApplication,
+        // and that leads to SEGFAULTs for QObjects. Instead, we want to delete
+        // it as soon as the project is closed. We can't make it it's parent
+        // directly, because a QObject is not allowed to be the parent of a
+        // QWidget. Instead, we wait for the destroyed() signal and destroy it
+        // then.
+        connect(proj, &QObject::destroyed,
+                sw, &SharedWindow::destroy);
+
+        SharedWindow::inst.insert(proj, sw);
+        sw->project_settings = proj;
+    }
+
+    return sw;
+}
+
+void SharedWindow::closeEvent(QCloseEvent *)
+{
+    QStringList tab_names;
+
+    for(int i = 0; i < this->tab->count(); i++)
+        tab_names.append(this->tab->tabText(i));
+
+    QStringList state_list;
+    for(QByteArray state : this->states)
+        state_list.append(state.toBase64());
+
+//    this->project_settings->setValue("roviz/SharedWindow/Tabs", tab_names);
+//    this->project_settings->setValue("roviz/SharedWindow/ActiveTab", this->active_tab);
+//    this->project_settings->setValue("roviz/SharedWindow/States", state_list);
+
+    // We don't want to close the window to preserve it's state for when it's
+    // opened the next time.
+    this->hide();
+}
+
 bool SharedWindow::allChildrenClosed()
 {
     for(auto child : this->dock_items)
@@ -257,112 +365,4 @@ void SharedWindow::itemClosed()
         else
             this->close();
     }
-}
-
-void SharedWindow::load()
-{
-    if(!this->initialized)
-    {
-        QStringList state_list = this->project_settings->value("roviz/SharedWindow/States").toStringList();
-        for(QString var : state_list)
-        {
-            QByteArray ba;
-            ba.append(var);
-            this->states.append(QByteArray::fromBase64(ba));
-        }
-        QStringList tab_names = this->project_settings->value("roviz/SharedWindow/Tabs").toStringList();
-        this->active_tab = this->project_settings->value("roviz/SharedWindow/ActiveTab").toInt();
-        for(QString t : tab_names)
-            this->tab->addTab(t);
-        this->tab->setCurrentIndex(this->active_tab);
-        if(this->tab->count() == 0)
-        {
-            this->states.append(this->main_window->saveState());
-            this->tab->addTab("Tab #1");
-        }
-        // Size is not valid until the first tab is present
-        this->btn_new_tab->setFixedSize(this->tab->tabRect(0).height(), this->tab->tabRect(0).height());
-        this->main_window->restoreState(this->states[this->active_tab]);
-        this->initialized = true;
-    }
-    this->show();
-}
-
-void SharedWindow::addItem(RovizItemBaseDev* item)
-{
-    if(!this->parents.contains(item))
-    {
-        DockWidgetSignaling *dock = new DockWidgetSignaling(item->name(), this->main_window);
-        dock->setWidget(item->widget());
-        // Needed for saving/restoring the layout
-        dock->setObjectName(item->name());
-        this->main_window->addDockWidget(Qt::TopDockWidgetArea, dock);
-        this->dock_items.append(dock);
-        this->parents.append(item);
-        item->widget()->hide();
-        dock->hide();
-        connect(dock, &DockWidgetSignaling::closed,
-                this, &SharedWindow::itemClosed);
-        if(this->running)
-            item->start();
-    }
-}
-
-void SharedWindow::removeItem(RovizItemBaseDev *item)
-{
-    this->parents.removeOne(item);
-    QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
-    this->dock_items.removeOne(d);
-    d->deleteLater();
-    item->widget()->deleteLater();
-}
-
-SharedWindow *SharedWindow::instance(SettingsScope *proj)
-{
-    if(proj == nullptr)
-        return nullptr;
-
-    // Get instance for the current project
-    SharedWindow *sw = SharedWindow::inst.value(proj, nullptr);
-
-    if(sw == nullptr)
-    {
-        // Create instance if it doesn't exist already
-        sw = new SharedWindow(nullptr);
-
-        // We have to ensure proper deletion of every SharedWindow. We can't
-        // make it static because it would be destructed after QApplication,
-        // and that leads to SEGFAULTs for QObjects. Instead, we want to delete
-        // it as soon as the project is closed. We can't make it it's parent
-        // directly, because a QObject is not allowed to be the parent of a
-        // QWidget. Instead, we wait for the destroyed() signal and destroy it
-        // then.
-        connect(proj, &QObject::destroyed,
-                sw, &SharedWindow::destroy);
-
-        SharedWindow::inst.insert(proj, sw);
-        sw->project_settings = proj;
-    }
-
-    return sw;
-}
-
-void SharedWindow::closeEvent(QCloseEvent *)
-{
-    QStringList tab_names;
-
-    for(int i = 0; i < this->tab->count(); i++)
-        tab_names.append(this->tab->tabText(i));
-
-    QStringList state_list;
-    for(QByteArray state : this->states)
-        state_list.append(state.toBase64());
-
-//    this->project_settings->setValue("roviz/SharedWindow/Tabs", tab_names);
-//    this->project_settings->setValue("roviz/SharedWindow/ActiveTab", this->active_tab);
-//    this->project_settings->setValue("roviz/SharedWindow/States", state_list);
-
-    // We don't want to close the window to preserve it's state for when it's
-    // opened the next time.
-    this->hide();
 }

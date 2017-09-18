@@ -29,6 +29,26 @@ void RovizItemBaseCmdline::setTrim(std::string name, double value)
         trim->second->setValue(value);
 }
 
+template<class T>
+Input<T> RovizItemBaseCmdline::addInputBase(std::string , RovizItem *item)
+{
+    Input<T> input(item);
+
+    _this_base->inputs.push_back(input._this.get());
+
+    return input;
+}
+
+template<class T>
+Output<T> RovizItemBaseCmdline::addOutputBase(std::string )
+{
+    Output<T> output;
+
+    _this_base->outputs.push_back(output._this.get());
+
+    return output;
+}
+
 TrimImpl *RovizItemBaseCmdline::getTrimImpl(std::string name, double, double, double, int, bool, std::function<void (double)>)
 {
     TrimImplCmdline *impl = new TrimImplCmdline();
@@ -98,26 +118,6 @@ void RovizItemBaseCmdline::start()
 
 void RovizItemBaseCmdline::stop()
 {
-}
-
-template<class T>
-Input<T> RovizItemBaseCmdline::addInputBase(std::string , RovizItem *item)
-{
-    Input<T> input(item);
-
-    _this_base->inputs.push_back(input._this.get());
-
-    return input;
-}
-
-template<class T>
-Output<T> RovizItemBaseCmdline::addOutputBase(std::string )
-{
-    Output<T> output;
-
-    _this_base->outputs.push_back(output._this.get());
-
-    return output;
 }
 
 #define INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE(T) \

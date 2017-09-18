@@ -14,51 +14,16 @@ SparseWidget::SparseWidget(std::function<void (SparseWidget *)> draw_func, Strea
 {
 }
 
-void SparseWidget::resetWidget()
-{
-    this->sparse_obj = def_item;
-    this->ImageWidget::resetWidget();
-}
-
-void SparseWidget::paintEvent(QPaintEvent *event)
-{
-    this->ImageWidget::paintEvent(event);
-    this->draw_fn(this);
-}
-
-// TODO Optimize those?
-double SparseWidget::xTF(double x)
-{
-    return this->image_rect.x() + (x * ((double)this->image_rect.width() / this->image.width()));
-}
-
-double SparseWidget::yTF(double y)
-{
-    return this->image_rect.y() + (y * ((double)this->image_rect.height() / this->image.height()));
-}
-
-double SparseWidget::wTF(double w)
-{
-    return w * ((double)this->image_rect.width() / this->image.width());
-}
-
-double SparseWidget::hTF(double h)
-{
-    return h * ((double)this->image_rect.height() / this->image.height());
-}
-
 void SparseWidget::newObject(StreamObject obj)
 {
     this->sparse_obj = obj;
     this->ImageWidget::newObject(this->image_fn(obj));
 }
 
-template<class T>
-void SparseWidget::updatePenColor(QPainter &painter, T obj)
+void SparseWidget::resetWidget()
 {
-    QPen pen(SparseColor[obj.group % sizeof(SparseColor)]);
-    pen.setWidth(SPARSE_LINE_WIDTH);
-    painter.setPen(pen);
+    this->sparse_obj = def_item;
+    this->ImageWidget::resetWidget();
 }
 
 template<class T>
@@ -152,6 +117,41 @@ void SparseWidget::draw<CircleF>()
         painter.drawEllipse(QPointF(xTF(circle.x), yTF(circle.y)),
                             wTF(circle.r), hTF(circle.r));
     }
+}
+
+void SparseWidget::paintEvent(QPaintEvent *event)
+{
+    this->ImageWidget::paintEvent(event);
+    this->draw_fn(this);
+}
+
+template<class T>
+void SparseWidget::updatePenColor(QPainter &painter, T obj)
+{
+    QPen pen(SparseColor[obj.group % sizeof(SparseColor)]);
+    pen.setWidth(SPARSE_LINE_WIDTH);
+    painter.setPen(pen);
+}
+
+// TODO Optimize those?
+double SparseWidget::xTF(double x)
+{
+    return this->image_rect.x() + (x * ((double)this->image_rect.width() / this->image.width()));
+}
+
+double SparseWidget::yTF(double y)
+{
+    return this->image_rect.y() + (y * ((double)this->image_rect.height() / this->image.height()));
+}
+
+double SparseWidget::wTF(double w)
+{
+    return w * ((double)this->image_rect.width() / this->image.width());
+}
+
+double SparseWidget::hTF(double h)
+{
+    return h * ((double)this->image_rect.height() / this->image.height());
 }
 
 #define INSTANTIATE_SPARSE_WIDGET(T) template void SparseWidget::draw<T>(void);

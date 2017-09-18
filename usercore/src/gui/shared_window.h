@@ -67,6 +67,7 @@ public:
      */
     static SharedWindow *instance(SettingsScope *proj);
 
+protected:
     /**
      * @brief Called when the window is closed
      * @param event The close event
@@ -98,7 +99,7 @@ private:
 
     bool allChildrenClosed(void);
 
-public slots:
+private slots:
     void destroy(void);
     void start(void);
     void pause(void);

@@ -25,20 +25,37 @@ void RovizItem::starting()
 {
 }
 
-bool RovizItem::wait()
+void RovizItem::stop()
 {
-    // Give other threads a chance too
-    std::this_thread::yield();
-
-    std::unique_lock<std::mutex> lock(_this->mtx);
-    _this->cond.wait(lock, [this]{return !_this->is_paused || _this->is_stopped;});
-
-    return !_this->is_stopped;
+    if(_this->th != nullptr)
+    {
+        _this->mtx.lock();
+        _this->is_stopped = true;
+        _this->is_paused = false;
+        _this->mtx.unlock();
+        _this->cond.notify_all();
+        _this->th->join();
+        delete _this->th;
+        _this->th = nullptr;
+    }
+    this->stopped();
+    RovizItemBase::stop();
 }
 
-bool RovizItem::running() const
+void RovizItem::stopped()
 {
-    return !_this->is_stopped && !_this->is_paused;
+}
+
+template<class T>
+Input<T> RovizItem::addInput(std::string name)
+{
+    return this->addInputBase<T>(name, this);
+}
+
+template<class T>
+Output<T> RovizItem::addOutput(std::string name)
+{
+    return this->addOutputBase<T>(name);
 }
 
 bool RovizItem::waitForCond(std::function<bool ()> cond)
@@ -58,6 +75,22 @@ bool RovizItem::waitFor(std::function<bool ()> cond)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     return !_this->is_stopped;
+}
+
+bool RovizItem::wait()
+{
+    // Give other threads a chance too
+    std::this_thread::yield();
+
+    std::unique_lock<std::mutex> lock(_this->mtx);
+    _this->cond.wait(lock, [this]{return !_this->is_paused || _this->is_stopped;});
+
+    return !_this->is_stopped;
+}
+
+bool RovizItem::running() const
+{
+    return !_this->is_stopped && !_this->is_paused;
 }
 
 void RovizItem::wake() const
@@ -98,67 +131,6 @@ Trim RovizItem::addTrim(std::string name, double default_value, double min, doub
                                   false, notifier_func));
 }
 
-void RovizItem::stopped()
-{
-}
-
-void RovizItem::pause()
-{
-    std::lock_guard<std::mutex> g(_this->mtx);
-
-    _this->is_paused = true;
-}
-
-void RovizItem::join()
-{
-    _this->th->join();
-}
-
-void RovizItem::unpause()
-{
-    std::lock_guard<std::mutex> g(_this->mtx);
-
-    _this->is_paused = false;
-    this->wake();
-}
-
-void RovizItem::start()
-{
-    this->starting();
-    RovizItemBase::start();
-    _this->is_stopped = false;
-    _this->th = new std::thread(&RovizItem::thread, this);
-}
-
-void RovizItem::stop()
-{
-    if(_this->th != nullptr)
-    {
-        _this->mtx.lock();
-        _this->is_stopped = true;
-        _this->is_paused = false;
-        _this->mtx.unlock();
-        _this->cond.notify_all();
-        _this->th->join();
-        delete _this->th;
-        _this->th = nullptr;
-    }
-    this->stopped();
-    RovizItemBase::stop();
-}
-
-template<class T>
-Input<T> RovizItem::addInput(std::string name)
-{
-    return this->addInputBase<T>(name, this);
-}
-
-template<class T>
-Output<T> RovizItem::addOutput(std::string name)
-{
-    return this->addOutputBase<T>(name);
-}
-
 template<>
 Config<int> RovizItem::addConfig<int>(const std::string &name, const ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
 {
@@ -195,9 +167,37 @@ Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const C
     return Config<FilePath>(this->getConfigImpl(name, default_value, file_mode, filter, restart_when_changed));
 }
 
+void RovizItem::start()
+{
+    this->starting();
+    RovizItemBase::start();
+    _this->is_stopped = false;
+    _this->th = new std::thread(&RovizItem::thread, this);
+}
+
+void RovizItem::pause()
+{
+    std::lock_guard<std::mutex> g(_this->mtx);
+
+    _this->is_paused = true;
+}
+
+void RovizItem::join()
+{
+    _this->th->join();
+}
+
+void RovizItem::unpause()
+{
+    std::lock_guard<std::mutex> g(_this->mtx);
+
+    _this->is_paused = false;
+    this->wake();
+}
+
 #define INSTANTIATE_ROVIZ_ITEM(T) \
-    template Input<T> RovizItem::addInput<T>(std::string name); \
-    template Output<T> RovizItem::addOutput<T>(std::string name); \
+    template Input<T > RovizItem::addInput<T >(std::string name); \
+    template Output<T > RovizItem::addOutput<T >(std::string name); \
     template Config<int> RovizItem::addConfig<int>(const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed); \
     template Config<double> RovizItem::addConfig<double>(const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed); \
     template Config<std::string> RovizItem::addConfig<std::string>(const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed); \

@@ -78,38 +78,6 @@ QWidget *RovizItemBaseDev::widget()
     return _this->main_widget;
 }
 
-void RovizItemBaseDev::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
-{
-    // In case AbstractItem also implements this
-    AbstractItem::mouseDoubleClickEvent(event);
-    auto x = this->settingsScope()->parentScope()->allSettings();
-    SharedWindow::instance(this->settingsScope()->parentScope())->load();
-    _this->main_widget->parentWidget()->show();
-    _this->main_widget->show();
-}
-
-void RovizItemBaseDev::contextMenuPrepare(QMenu &menu) const
-{
-    if(_this->config_present)
-        menu.addAction("Configure", [this]{_this->showConfigWindow();});
-}
-
-void RovizItemBaseDev::stop()
-{
-    for(StreamWidget* widget : _this->output_widgets)
-        widget->resetWidget();
-}
-
-void RovizItemBaseDev::restart()
-{
-    // Restarting doesn't mean starting it when it was stopped before
-    if(this->running())
-    {
-        this->stop();
-        this->start();
-    }
-}
-
 template<class T>
 Input<T> RovizItemBaseDev::addInputBase(std::string name, RovizItem *item)
 {
@@ -223,6 +191,38 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
 
 void RovizItemBaseDev::start()
 {
+}
+
+void RovizItemBaseDev::stop()
+{
+    for(StreamWidget* widget : _this->output_widgets)
+        widget->resetWidget();
+}
+
+void RovizItemBaseDev::restart()
+{
+    // Restarting doesn't mean starting it when it was stopped before
+    if(this->running())
+    {
+        this->stop();
+        this->start();
+    }
+}
+
+void RovizItemBaseDev::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    // In case AbstractItem also implements this
+    AbstractItem::mouseDoubleClickEvent(event);
+    auto x = this->settingsScope()->parentScope()->allSettings();
+    SharedWindow::instance(this->settingsScope()->parentScope())->load();
+    _this->main_widget->parentWidget()->show();
+    _this->main_widget->show();
+}
+
+void RovizItemBaseDev::contextMenuPrepare(QMenu &menu) const
+{
+    if(_this->config_present)
+        menu.addAction("Configure", [this]{_this->showConfigWindow();});
 }
 
 #define INSTANTIATE_ROVIZ_ITEM_BASE_DEV(T) \

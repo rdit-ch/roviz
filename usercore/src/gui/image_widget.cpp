@@ -14,6 +14,24 @@ ImageWidget::ImageWidget(OutputPrivate *out)
                         QSizePolicy::Expanding);
 }
 
+void ImageWidget::newObject(StreamObject obj)
+{
+    Image img = this->image;
+    this->image = Image(obj);
+
+    // We have to resize, when the size changes
+    if(this->image.format() != Image::NoFormat &&
+       (img.format() != Image::NoFormat ||
+        this->image.width() != img.width() ||
+        this->image.height() != img.height()))
+    {
+        this->recalcImageRect(this->width(), this->height());
+    }
+
+    this->image_qt = this->image.toQt();
+    this->update();
+}
+
 // TODO Implement
 void ImageWidget::resetWidget()
 {
@@ -37,24 +55,6 @@ void ImageWidget::resizeEvent(QResizeEvent *event)
         return;
 
     this->recalcImageRect(event->size().width(), event->size().height());
-    this->update();
-}
-
-void ImageWidget::newObject(StreamObject obj)
-{
-    Image img = this->image;
-    this->image = Image(obj);
-
-    // We have to resize, when the size changes
-    if(this->image.format() != Image::NoFormat &&
-       (img.format() != Image::NoFormat ||
-        this->image.width() != img.width() ||
-        this->image.height() != img.height()))
-    {
-        this->recalcImageRect(this->width(), this->height());
-    }
-
-    this->image_qt = this->image.toQt();
     this->update();
 }
 
