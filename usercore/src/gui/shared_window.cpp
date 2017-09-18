@@ -76,7 +76,10 @@ SharedWindow::SharedWindow(QWidget *parent)
     this->main_window->setDockOptions(QMainWindow::AnimatedDocks |
                                       QMainWindow::AllowTabbedDocks |
                                       QMainWindow::AllowNestedDocks);
+
+    // This makes the seperator visible
     this->main_window->setStyleSheet("QMainWindow::separator {background-color: gray; width: 5px; height: 5px}");
+
     tab_layout->addWidget(this->tab);
     tab_layout->addWidget(this->btn_new_tab);
     tab_layout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
@@ -103,10 +106,6 @@ SharedWindow::SharedWindow(QWidget *parent)
             this, &SharedWindow::tabMoved);
     connect(this->tab, &QTabBar::tabBarDoubleClicked,
             this, &SharedWindow::tabStartRename);
-
-    // That's probably the only place that gets called only once in the
-    // beginning  without adding a new class/function.
-    qRegisterMetaType<StreamObject>();
 }
 
 bool SharedWindow::allChildrenClosed()
