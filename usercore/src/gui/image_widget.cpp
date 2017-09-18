@@ -55,7 +55,7 @@ void ImageWidget::paintEvent(QPaintEvent *)
 
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
-    if(this->image.format() == Image::NoFormat)
+    if(this->image_qt.format() == QImage::Format_Invalid)
         return;
 
     this->recalcImageRect(event->size().width(), event->size().height());
