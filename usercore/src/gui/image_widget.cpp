@@ -22,8 +22,8 @@ void ImageWidget::newObject(StreamObject obj)
 
     // We have to resize, when the size changes
     if(this->image.format() != Image::NoFormat &&
-       (img.format() != Image::NoFormat ||
-        this->image.width() != img.width() ||
+       img.format() != Image::NoFormat &&
+       (this->image.width() != img.width() ||
         this->image.height() != img.height()))
     {
         this->recalcImageRect(this->width(), this->height());
