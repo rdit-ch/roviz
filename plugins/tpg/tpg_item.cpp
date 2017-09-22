@@ -34,7 +34,7 @@ TPGItem::~TPGItem()
     this->stop();
 }
 
-void TPGItem::starting()
+void TPGItem::pre_thread()
 {
     this->timeout = 1000 / this->trim_fps.value();
     this->timer_expired = false;

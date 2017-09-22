@@ -26,7 +26,7 @@ public:
     ~TPGItem();
 
 private:
-    void starting(void) override;
+    void pre_thread(void) override;
     void thread(void) override;
 
     QImage test_pattern;
