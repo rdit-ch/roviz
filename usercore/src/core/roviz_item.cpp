@@ -21,7 +21,7 @@ RovizItem::~RovizItem()
     this->stop();
 }
 
-void RovizItem::starting()
+void RovizItem::pre_thread()
 {
 }
 
@@ -38,11 +38,11 @@ void RovizItem::stop()
         delete _this->th;
         _this->th = nullptr;
     }
-    this->stopped();
+    this->post_thread();
     RovizItemBase::stop();
 }
 
-void RovizItem::stopped()
+void RovizItem::post_thread()
 {
 }
 
@@ -169,7 +169,7 @@ Config<FilePath> RovizItem::addConfig<FilePath>(const std::string &name, const C
 
 void RovizItem::start()
 {
-    this->starting();
+    this->pre_thread();
     RovizItemBase::start();
     _this->is_stopped = false;
     _this->th = new std::thread(&RovizItem::thread, this);

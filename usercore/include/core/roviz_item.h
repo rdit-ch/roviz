@@ -69,9 +69,9 @@ public:
      * trims/configs are preserved, you can set them in the constructor. The
      * thread doesn't run yet at this point.
      *
-     * \sa stopped
+     * \sa post_thread
      */
-    virtual void starting(void);
+    virtual void pre_thread(void);
 
     /**
      * @brief Main thread of the item
@@ -79,8 +79,8 @@ public:
      * This function will be executed in a different thread and you can
      * process the image data in here.
      *
-     * \sa starting
-     * \sa stopped
+     * \sa pre_thread
+     * \sa post_thread
      */
     virtual void thread(void) = 0;
 
@@ -102,9 +102,10 @@ public:
      * Called _after_ the thread stopped. You can do some cleanup here if you
      * like.
      *
-     * \sa starting
+     * \sa pre_thread
+     * \sa thread
      */
-    virtual void stopped(void);
+    virtual void post_thread(void);
 
     /**
      * @brief Add an input

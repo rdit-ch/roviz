@@ -20,7 +20,7 @@ public:
 
 protected:
     void thread(void) override;
-    void stopped(void) override;
+    void post_thread(void) override;
 
 private:
     Output<Image> output;

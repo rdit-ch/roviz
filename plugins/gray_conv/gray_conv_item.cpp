@@ -15,7 +15,7 @@ GrayConvItem::~GrayConvItem()
     this->stop();
 }
 
-void GrayConvItem::starting()
+void GrayConvItem::pre_thread()
 {
 }
 

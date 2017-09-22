@@ -20,7 +20,7 @@ public:
     ~SubtractorItem();
 
 protected:
-    void starting(void) override;
+    void pre_thread(void) override;
     void thread(void) override;
 
 private:

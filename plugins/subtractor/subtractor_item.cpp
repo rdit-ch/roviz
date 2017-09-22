@@ -16,7 +16,7 @@ SubtractorItem::~SubtractorItem()
     this->stop();
 }
 
-void SubtractorItem::starting()
+void SubtractorItem::pre_thread()
 {
 }
 

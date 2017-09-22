@@ -58,7 +58,7 @@ void CvCameraItem::thread()
     }
 }
 
-void CvCameraItem::stopped()
+void CvCameraItem::post_thread()
 {
     this->cap.release();
 }
