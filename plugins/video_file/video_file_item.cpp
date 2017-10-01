@@ -1,31 +1,31 @@
 
-#include "tvg_item.h"
+#include "video_file_item.h"
 
-TVGItem::TVGItem()
-    : RovizItem("Test Video Generator")
+VideoFileItem::VideoFileItem()
+    : RovizItem("VideoFile")
 {
-    ROVIZ_INIT_ITEM(TVG);
+    ROVIZ_INIT_ITEM(VideoFile);
 
     this->output = this->addOutput<Image>("Output");
 
-    this->conf_vid_path = this->addConfig<FilePath>(
+    this->conf_path = this->addConfig<FilePath>(
                 "Path to the video",
                 {""},
                 FilePath::ExistingFile,
-                "All Files (*)",
+                "Video Files (*.mp4 *.mkv *.flv *.m4a *.avi);;All Files (*)",
                 true);
 }
 
-TVGItem::~TVGItem()
+VideoFileItem::~VideoFileItem()
 {
     this->stop();
 }
 
-void TVGItem::thread()
+void VideoFileItem::thread()
 {
     std::chrono::high_resolution_clock::time_point time_next_frame;
     cv::Mat out;
-    cv::VideoCapture cap(this->conf_vid_path.value().front());
+    cv::VideoCapture cap(this->conf_path.value().front());
 
     if(!cap.isOpened())
         return;

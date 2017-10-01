@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>logo_TIG.png</file>
+        <file>logo_VideoFile.png</file>
     </qresource>
 </RCC>

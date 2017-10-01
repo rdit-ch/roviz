@@ -1,7 +1,7 @@
 {
-"name"        : "TIG",
+"name"        : "VideoFile",
 "version"     : "1.0" ,
 "api-version" : "0.1",
 "vendor"      : "rdit.ch",
-"description" : "TIG"
+"description" : "VideoFile"
 }

@@ -9,11 +9,11 @@ SUBDIRS += cv_camera
 SUBDIRS += canny
 SUBDIRS += sobel
 SUBDIRS += harris_corner
-SUBDIRS += tvg
+SUBDIRS += config_message_test
+SUBDIRS += image_file
+SUBDIRS += video_file
 
 # Simulation only items
 equals(BACKEND, "Dev") {
 SUBDIRS += tpg
-SUBDIRS += tig
 }
-SUBDIRS += config_message_test
