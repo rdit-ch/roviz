@@ -77,7 +77,6 @@ void RovizItemBaseDevPrivate::showConfigWindow()
     main_layout->addLayout(conf_layout);
     main_layout->addLayout(button_layout);
     dialog->setLayout(main_layout);
-    dialog->setLayout(conf_layout);
 
     connect(btn_ok, &QPushButton::clicked,
             dialog, &QDialog::accept);
