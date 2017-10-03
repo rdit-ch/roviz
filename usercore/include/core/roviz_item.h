@@ -354,7 +354,7 @@ public:
      * @return The newly created config
      */
     template<class T>
-    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker = [](std::string &){return true;}, bool restart_when_changed = false);
+    Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed = false);
 
     /**
      * @brief Add a config for a list of strings
