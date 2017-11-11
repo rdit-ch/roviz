@@ -63,6 +63,10 @@ private:
     double yTF(double y);
     double wTF(double w);
     double hTF(double h);
+    void paintThread(QPaintEvent *event);
+
+private slots:
+    void paintSlot(void);
 };
 
 #endif // SPARSE_WIDGET_H

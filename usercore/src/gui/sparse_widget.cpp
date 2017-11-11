@@ -2,6 +2,7 @@
 #include "gui/sparse_widget.h"
 
 #include <QPaintEvent>
+#include <thread>
 #include "core/template_decl.h"
 #include "streams/sparse.h"
 
@@ -121,6 +122,9 @@ void SparseWidget::draw<CircleF>()
 
 void SparseWidget::paintEvent(QPaintEvent *event)
 {
+    std::thread th(&SparseWidget::paintThread, this, event);
+
+
     this->ImageWidget::paintEvent(event);
     this->draw_fn(this);
 }
@@ -152,6 +156,18 @@ double SparseWidget::wTF(double w)
 double SparseWidget::hTF(double h)
 {
     return h * ((double)this->image_rect.height() / this->image.height());
+}
+
+void SparseWidget::paintThread(QPaintEvent *event)
+{
+
+}
+
+void SparseWidget::paintSlot(void)
+{
+    QPainter painter(this);
+
+    painter.drawImage(this->image_rect, this->image_qt);
 }
 
 #define INSTANTIATE_SPARSE_WIDGET(T) template void SparseWidget::draw<T>(void);
