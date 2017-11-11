@@ -5,9 +5,14 @@
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QPainter>
+#include <iostream>
 
 ImageWidget::ImageWidget(OutputPrivate *out)
-    : QLabel(nullptr), StreamWidget(out), default_image(":/usercore/res/default_image.png")
+    : QLabel(nullptr),
+      StreamWidget(out),
+      default_pixmap(":/usercore/res/default_image.png"),
+      scale_factor(1),
+      scale_pixmap(true)
 {
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
@@ -17,26 +22,20 @@ ImageWidget::ImageWidget(OutputPrivate *out)
 
 void ImageWidget::newObject(StreamObject obj)
 {
-    Image img = this->image;
     this->image = Image(obj);
+    this->pixmap = QPixmap::fromImage(this->image.toQt());
 
-    // We have to resize, when the size changes
-    if(this->image.format() != Image::NoFormat &&
-       img.format() != Image::NoFormat &&
-       (this->image.width() != img.width() ||
-        this->image.height() != img.height()))
-    {
-        this->recalcImageRect(this->width(), this->height());
-    }
+    // We only have to do this if the dimensions changed, but checking this
+    // would also result in overhead and the gain is minimal.
+    this->recalcImageRect(this->width(), this->height());
 
-    this->image_qt = this->image.toQt();
     this->update();
 }
 
 void ImageWidget::resetWidget()
 {
-    this->image = this->default_image;
-    this->image_qt = this->default_image;
+    this->image = Image();
+    this->pixmap = this->default_pixmap;
     this->recalcImageRect(this->width(), this->height());
     this->update();
 }
@@ -50,30 +49,36 @@ void ImageWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
 
-    painter.drawImage(this->image_rect, this->image_qt);
+    std::lock_guard<std::mutex> g(this->mtx_pixmap);
+    painter.drawPixmap(this->image_rect.topLeft(), this->pixmap_scaled);
 }
 
 void ImageWidget::resizeEvent(QResizeEvent *event)
 {
-    if(this->image_qt.format() == QImage::Format_Invalid)
-        return;
-
     this->recalcImageRect(event->size().width(), event->size().height());
     this->update();
 }
 
 void ImageWidget::recalcImageRect(double w, double h)
 {
-    if(this->image.width() == 0 || this->image.height() == 0)
+    if(this->pixmap.isNull() || this->pixmap.width() == 0 || this->pixmap.height() == 0)
     {
         this->image_rect.setRect(0, 0, 0, 0);
         return;
     }
 
-    double ar = (double)this->image.width() / this->image.height();
+    double ar = static_cast<double>(this->pixmap.width()) / this->pixmap.height();
 
     if(w > ar * h)
         this->image_rect.setRect((w - (ar * h)) / 2, 0, ar * h, h);
     else
         this->image_rect.setRect(0, (h - (w / ar)) / 2, w, w / ar);
+
+    this->scale_factor = w / this->pixmap.width();
+
+    if(this->scale_pixmap)
+    {
+        std::lock_guard<std::mutex> g(this->mtx_pixmap);
+        this->pixmap_scaled = this->pixmap.scaled(this->image_rect.size());
+    }
 }

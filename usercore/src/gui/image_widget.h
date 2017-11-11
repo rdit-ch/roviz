@@ -69,10 +69,13 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 protected:
-    QImage image_qt;
+    QPixmap pixmap, pixmap_scaled;
     Image image; // To keep a reference, prevents deletion
-    QRectF image_rect;
-    QImage default_image;
+    QRect image_rect;
+    QPixmap default_pixmap;
+    double scale_factor;
+    std::mutex mtx_pixmap;
+    bool scale_pixmap;
 
     /**
      * @brief Recalculates the image dimensions after a resize

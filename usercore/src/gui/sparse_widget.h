@@ -41,28 +41,14 @@ public:
     template<class T>
     void draw(void);
 
-protected:
-    /**
-     * @brief Paint the widget
-     * @param event The paint event
-     *
-     * See QWidget::paintEvent
-     *
-     * \sa draw
-     */
-    void paintEvent(QPaintEvent *event) override;
-
 private:
-    StreamObject sparse_obj, def_item;
+    StreamObject sparse_obj, default_item;
+    QPixmap tmp_pixmap;
     std::function<void (SparseWidget *)> draw_fn;
     std::function<Image (StreamObject)> image_fn;
 
     template<class T>
     void updatePenColor(QPainter &painter, T obj);
-    double xTF(double x);
-    double yTF(double y);
-    double wTF(double w);
-    double hTF(double h);
 };
 
 #endif // SPARSE_WIDGET_H
