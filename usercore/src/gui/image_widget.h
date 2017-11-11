@@ -4,6 +4,8 @@
 #include <QRectF>
 #include <QImage>
 #include <QLabel>
+#include <mutex>
+#include <condition_variable>
 #include "core/export_handling.h"
 #include "streams/image.h"
 #include "streams/stream_object.h"
@@ -52,6 +54,8 @@ public:
     QWidget *qwidget(void) override;
 
 protected:
+    virtual void paintToPixmap(Image img);
+
     /**
      * @brief Paint the widget
      * @param event The paint event
@@ -69,10 +73,11 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 protected:
-    QImage image_qt;
+    QPixmap pixmap1, pixmap2;
     Image image; // To keep a reference, prevents deletion
     QRectF image_rect;
     QImage default_image;
+    std::atomic_bool paint_pixmap1;
 
     /**
      * @brief Recalculates the image dimensions after a resize

@@ -46,6 +46,31 @@ QWidget *ImageWidget::qwidget()
     return this;
 }
 
+void ImageWidget::paintThread()
+{
+    while(this->running)
+    {
+        this->in_ready.wait(this->mtx_in);
+
+        std::lock_guard<std::mutex> g(this->mtx_in);
+
+        if(!this->running)
+            return;
+
+        if(this->is_ringbuf1_copying)
+            this->paintInThread(this->image_ringbuf1);
+        else
+            this->paintInThread(this->image_ringbuf2);
+
+        this->is_ringbuf1_copying = !this->is_ringbuf1_copying;
+    }
+}
+
+void ImageWidget::paintThread(Image img)
+{
+
+}
+
 void ImageWidget::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
