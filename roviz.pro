@@ -23,3 +23,11 @@ equals(BACKEND, "Dev") {
 equals(BACKEND, "Cmdline") {
     SUBDIRS += starter/cmdline
 }
+
+# This disables the 'bug' that the install.sh script gets copied
+# to a file called 'install'.
+disable_install_target.target   = %
+disable_install_target.depends  = %.sh
+disable_install_target.commands =
+
+QMAKE_EXTRA_TARGETS += disable_install_target
