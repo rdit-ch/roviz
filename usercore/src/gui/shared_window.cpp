@@ -28,7 +28,8 @@ SharedWindow::SharedWindow(QWidget *parent)
       ico_pause(QIcon(":/usercore/res/pause.png")),
       ico_unpause(QIcon(":/usercore/res/unpause.png")),
       ico_stop(QIcon(":/usercore/res/stop.png")),
-      ico_new_tab(QIcon(":/usercore/res/new_tab.png"))
+      ico_new_tab(QIcon(":/usercore/res/new_tab.png")),
+      ico_settings(QIcon(":/usercore/res/settings.png"))
 {
     this->running = false;
     this->paused = false;
@@ -37,6 +38,7 @@ SharedWindow::SharedWindow(QWidget *parent)
     this->btn_start = new QToolButton();
     this->btn_pause = new QToolButton();
     this->btn_stop = new QToolButton();
+    this->btn_settings = new QToolButton();
     this->tab = new QTabBar();
     this->btn_new_tab = new QToolButton();
     this->main_window = new QMainWindow();
@@ -48,21 +50,27 @@ SharedWindow::SharedWindow(QWidget *parent)
     this->btn_start->setIcon(this->ico_start);
     this->btn_pause->setIcon(this->ico_pause);
     this->btn_stop->setIcon(this->ico_stop);
+    this->btn_settings->setIcon(this->ico_settings);
     this->btn_start->setIconSize(QSize(50, 50));
     this->btn_pause->setIconSize(QSize(50, 50));
     this->btn_stop->setIconSize(QSize(50, 50));
+    this->btn_settings->setIconSize(QSize(50, 50));
     this->btn_start->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     this->btn_pause->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     this->btn_stop->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    this->btn_settings->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     this->btn_start->setFixedSize(50, 50);
     this->btn_pause->setFixedSize(50, 50);
     this->btn_stop->setFixedSize(50, 50);
+    this->btn_settings->setFixedSize(50, 50);
     this->btn_start->setAutoRaise(true);
     this->btn_pause->setAutoRaise(true);
     this->btn_stop->setAutoRaise(true);
+    this->btn_settings->setAutoRaise(true);
     btn_layout->addWidget(this->btn_start);
     btn_layout->addWidget(this->btn_pause);
     btn_layout->addWidget(this->btn_stop);
+    btn_layout->addWidget(this->btn_settings);
     btn_layout->setAlignment(Qt::AlignLeft);
 
     this->btn_new_tab->setIcon(this->ico_new_tab);
@@ -96,6 +104,8 @@ SharedWindow::SharedWindow(QWidget *parent)
             this, &SharedWindow::pause);
     connect(this->btn_stop, &QPushButton::clicked,
             this, &SharedWindow::stop);
+    connect(this->btn_settings, &QPushButton::clicked,
+            this, &SharedWindow::showSettings);
     connect(this->btn_new_tab, &QPushButton::clicked,
             this, &SharedWindow::addTab);
     connect(this->tab, &QTabBar::currentChanged,
@@ -285,6 +295,11 @@ void SharedWindow::stop()
     this->paused = false;
     this->btn_pause->setIcon(this->ico_pause);
     this->btn_pause->setEnabled(false);
+}
+
+void SharedWindow::showSettings()
+{
+
 }
 
 void SharedWindow::addTab()

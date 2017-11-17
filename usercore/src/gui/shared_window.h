@@ -79,14 +79,14 @@ protected:
 private:
     static QMap<SettingsScope*, SharedWindow*> inst;
 
-    const QIcon ico_start, ico_restart, ico_pause, ico_unpause, ico_stop, ico_new_tab;
+    const QIcon ico_start, ico_restart, ico_pause, ico_unpause, ico_stop, ico_new_tab, ico_settings;
 
     QObject *destructor;
     QList<QDockWidget*> dock_items;
     QList<RovizItemBaseDev*> parents;
     bool running, paused, initialized;
     SettingsScope *project_settings;
-    QToolButton *btn_start, *btn_pause, *btn_stop, *btn_new_tab;
+    QToolButton *btn_start, *btn_pause, *btn_stop, *btn_new_tab, *btn_settings;
     QTabBar *tab;
     QMainWindow *main_window;
     int active_tab;
@@ -104,6 +104,7 @@ private slots:
     void start(void);
     void pause(void);
     void stop(void);
+    void showSettings(void);
     void addTab(void);
     void changeToTab(int index);
     void tabClosed(int index);
