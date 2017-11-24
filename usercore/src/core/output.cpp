@@ -4,6 +4,9 @@
 #include "core/template_decl.h"
 #include "streams/all_streams.h"
 
+namespace roviz
+{
+
 template<class T>
 Output<T>::Output()
     : _this(new OutputPrivate())
@@ -19,4 +22,6 @@ void Output<T>::pushOut(T obj)
 
 #define INSTANTIATE_OUTPUT(T) template class Output<T >;
 
-DO_FOR_ALL_STREAMS(INSTANTIATE_OUTPUT)
+ROVIZ_DO_FOR_ALL_STREAMS(INSTANTIATE_OUTPUT)
+
+}

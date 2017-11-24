@@ -2,6 +2,13 @@
 #include "streams/sparse.h"
 #include "core/template_decl.h"
 
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+    #include "gui/sparse_widget.h"
+#endif
+
+namespace roviz
+{
+
 // TODO Make this dynamic
 // If we do this within Sparse<T>, it will get instantiated multiple times
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
@@ -98,7 +105,6 @@ typename std::vector<T>::const_iterator Sparse<T>::end() const
 }
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-#include "gui/sparse_widget.h"
 template<class T>
 StreamWidget *Sparse<T>::initWidget(OutputPrivate *out)
 {
@@ -111,5 +117,7 @@ StreamWidget *Sparse<T>::initWidget(OutputPrivate *out)
 #define INSTANTIATE_SPARSE(T)          template class Sparse<T>;
 #define INSTANTIATE_SPARSE_PRIVATE(T)  template class SparsePrivate<T>;
 
-DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE)
-DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_PRIVATE)
+ROVIZ_DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE)
+ROVIZ_DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_PRIVATE)
+
+}

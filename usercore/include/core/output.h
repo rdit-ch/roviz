@@ -5,7 +5,10 @@
 #include "core/export_handling.h"
 #include "core/output_p.h"
 
-class RovizItem;
+namespace roviz
+{
+
+class Item;
 
 /**
  * @brief Represents the output of an item
@@ -19,7 +22,7 @@ class ROVIZ_EXPORT Output
 {
 // We have to directly access '_this' from the RovizItem bases,
 // there is no way around this at the moment
-friend class RovizItemBase;
+friend class ItemBase;
 
 COPY_DELETE(Output)
 MOVE_DEFAULT(Output)
@@ -44,5 +47,7 @@ public:
 private:
     std::unique_ptr<OutputPrivate> _this;
 };
+
+}
 
 #endif // OUTPUT_H

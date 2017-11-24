@@ -7,6 +7,9 @@
 #include <QPainter>
 #include <iostream>
 
+namespace roviz
+{
+
 ImageWidget::ImageWidget(OutputPrivate *out)
     : QLabel(nullptr),
       StreamWidget(out),
@@ -81,4 +84,6 @@ void ImageWidget::recalcImageRect(double w, double h)
         std::lock_guard<std::mutex> g(this->mtx_pixmap);
         this->pixmap_scaled = this->pixmap.scaled(this->image_rect.size());
     }
+}
+
 }

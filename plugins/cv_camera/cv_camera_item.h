@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/videoio.hpp>
 
-class CvCameraItem : public RovizItem
+class CvCameraItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -23,9 +23,9 @@ protected:
     void post_thread(void) override;
 
 private:
-    Output<Image> output;
-    Config<std::vector<std::string> > conf_res;
-    Config<int> conf_cam_id;
+    roviz::Output<roviz::Image> output;
+    roviz::Config<std::vector<std::string> > conf_res;
+    roviz::Config<int> conf_cam_id;
     cv::VideoCapture cap;
     std::vector<int> width_list, height_list;
     int res_index;

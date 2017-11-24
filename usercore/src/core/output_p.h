@@ -7,6 +7,9 @@
 #include "core/export_handling.h"
 #include "streams/stream_object.h"
 
+namespace roviz
+{
+
 class InputPrivate;
 
 /**
@@ -47,5 +50,7 @@ public:
 private:
     std::mutex mtx;
 };
+
+}
 
 #endif // OUTPUT_P_H

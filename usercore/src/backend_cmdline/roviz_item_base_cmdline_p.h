@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 
+namespace roviz
+{
+
 class ConfigImplBaseCmdline;
 class TrimImplCmdline;
 class InputPrivate;
@@ -15,7 +18,7 @@ class OutputPrivate;
  *
  * \sa RovizItemBaseCmdline
  */
-class RovizItemBaseCmdlinePrivate
+class ItemBaseCmdlinePrivate
 {
 public:
     std::vector<InputPrivate*> inputs;
@@ -23,5 +26,7 @@ public:
     std::map<std::string, TrimImplCmdline*> trims;
     std::map<std::string, ConfigImplBaseCmdline*> configs;
 };
+
+}
 
 #endif // ROVIZ_ITEM_BASE_CMDLINE_P_H

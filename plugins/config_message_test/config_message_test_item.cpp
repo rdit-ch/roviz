@@ -4,11 +4,11 @@
 #include <iostream>
 
 ConfigMessageTestItem::ConfigMessageTestItem()
-    : RovizItem("ConfigMessageTest")
+    : roviz::Item("ConfigMessageTest")
 {
     ROVIZ_INIT_ITEM(ConfigMessageTest);
 
-    this->output = this->addOutput<Message>("Output");
+    this->output = this->addOutput<roviz::Message>("Output");
 
     std::function<bool (std::string&)> checker = [](std::string &str)
     {
@@ -26,10 +26,10 @@ ConfigMessageTestItem::ConfigMessageTestItem()
     this->conf_list = this->addConfig<std::vector<std::string> >("List (1, Two, 3.0)", 0, this->list_values, false);
     this->conf_bool = this->addConfig<bool>("Bool", false, false);
 
-    this->conf_path_any = this->addConfig<FilePath>("Path Any (*)", {""}, FilePath::AnyFile, "All File (*)", true);
-    this->conf_path_dir = this->addConfig<FilePath>("Path Dir (*)", {""}, FilePath::Directory, "All Files (*)", true);
-    this->conf_path_ex = this->addConfig<FilePath>("Path Ex (*.png)", {""}, FilePath::ExistingFile, "PNG Images (*.png)", true);
-    this->conf_path_mult = this->addConfig<FilePath>("Path Mult (*.c, *.h)", {""}, FilePath::MultipleFiles, "C-Files (*.c, *.h)", true);
+    this->conf_path_any = this->addConfig<roviz::FilePath>("Path Any (*)", {""}, roviz::FilePath::AnyFile, "All File (*)", true);
+    this->conf_path_dir = this->addConfig<roviz::FilePath>("Path Dir (*)", {""}, roviz::FilePath::Directory, "All Files (*)", true);
+    this->conf_path_ex = this->addConfig<roviz::FilePath>("Path Ex (*.png)", {""}, roviz::FilePath::ExistingFile, "PNG roviz::Images (*.png)", true);
+    this->conf_path_mult = this->addConfig<roviz::FilePath>("Path Mult (*.c, *.h)", {""}, roviz::FilePath::MultipleFiles, "C-Files (*.c, *.h)", true);
 }
 
 ConfigMessageTestItem::~ConfigMessageTestItem()
@@ -45,7 +45,7 @@ void ConfigMessageTestItem::thread()
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        MessageMutable msg("Config/Message Test", {}, 9);
+        roviz::MessageMutable msg("Config/Message Test", {}, 9);
 
         msg.append("Int", this->conf_int.value());
         msg.append("Double", this->conf_double.value());

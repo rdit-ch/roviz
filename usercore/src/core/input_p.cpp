@@ -2,6 +2,9 @@
 #include "core/input_p.h"
 #include "core/roviz_item.h"
 
+namespace roviz
+{
+
 InputPrivate::InputPrivate()
 {
     this->last_output = nullptr;
@@ -37,4 +40,6 @@ void InputPrivate::connect(OutputPrivate *output)
 void InputPrivate::disconnect()
 {
     this->last_output = nullptr;
+}
+
 }

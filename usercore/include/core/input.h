@@ -4,7 +4,10 @@
 #include "core/export_handling.h"
 #include "core/input_p.h"
 
-class RovizItem;
+namespace roviz
+{
+
+class Item;
 
 /**
  * @brief Represents the input of an item
@@ -20,7 +23,7 @@ class ROVIZ_EXPORT Input
 {
 // We have to directly access '_this' from the RovizItem bases,
 // there is no way around this at the moment
-friend class RovizItemBase;
+friend class ItemBase;
 
 COPY_DELETE(Input)
 MOVE_DEFAULT(Input)
@@ -29,7 +32,7 @@ public:
     Input() = default;
     ~Input() = default;
 
-    explicit Input(RovizItem *item);
+    explicit Input(Item *item);
 
     /**
      * @brief Returns the next object in the input queue
@@ -75,5 +78,7 @@ public:
 private:
     std::unique_ptr<InputPrivate> _this;
 };
+
+}
 
 #endif // INPUT_H

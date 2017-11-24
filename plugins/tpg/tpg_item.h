@@ -17,7 +17,7 @@
  *
  * \ingroup robot_plugins
  */
-class TPGItem : public RovizItem
+class TPGItem : public roviz::Item
 {
     Q_OBJECT
 
@@ -32,8 +32,8 @@ private:
     QImage test_pattern;
     QTimer timer;
     int timeout;
-    Output<Image> output;
-    Trim trim_fps;
+    roviz::Output<roviz::Image> output;
+    roviz::Trim trim_fps;
     bool timer_expired;
 
 private slots:

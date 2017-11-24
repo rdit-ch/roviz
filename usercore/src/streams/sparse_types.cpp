@@ -1,6 +1,9 @@
 
 #include "streams/sparse_types.h"
 
+namespace roviz
+{
+
 Point2D::Point2D(double _x, double _y, int _g)
     : x(_x), y(_y), group(_g)
 {
@@ -19,4 +22,6 @@ Rect::Rect(double _l, double _t, double _h, double _w, double _g)
 Circle::Circle(double _x, double _y, double _r, double _g)
     : x(_x), y(_y), r(_r), group(_g)
 {
+}
+
 }

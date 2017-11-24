@@ -5,6 +5,9 @@
 
 class QWidget;
 
+namespace roviz
+{
+
 /**
  * @brief Base class of ConfigImplDev that doesn't depend on the type of the
  * config
@@ -50,5 +53,7 @@ public:
      */
     virtual void refresh(void) = 0;
 };
+
+}
 
 #endif // CONFIG_IMPL_BASE_DEV_H

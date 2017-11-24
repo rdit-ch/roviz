@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+namespace roviz
+{
+
 MessageWidget::MessageWidget(OutputPrivate *out)
     : QTreeWidget(nullptr), StreamWidget(out)
 {
@@ -44,4 +47,6 @@ void MessageWidget::newObjectSlot(Message msg)
     this->insertTopLevelItem(0, item);
     this->expandItem(item);
     setUpdatesEnabled(true);
+}
+
 }

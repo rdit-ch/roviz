@@ -2,6 +2,9 @@
 #include "config/config.h"
 #include "core/template_decl.h"
 
+namespace roviz
+{
+
 template<typename T>
 Config<T>::Config(ConfigImpl *impl)
     : impl(impl)
@@ -36,3 +39,5 @@ bool Config<T>::changed()
 #define INSTANTIATE_CONFIG(T) template class Config<T>;
 
 DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG)
+
+}

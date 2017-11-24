@@ -4,6 +4,9 @@
 #include <vector>
 #include "core/template_decl.h"
 
+namespace roviz
+{
+
 template<class T>
 void *ConfigImplCmdline<T>::value()
 {
@@ -75,3 +78,5 @@ bool ConfigImplCmdline<T>::changed()
 #define INSTANTIATE_CONFIG_IMPL(T) template class ConfigImplCmdline<T>;
 
 DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG_IMPL)
+
+}

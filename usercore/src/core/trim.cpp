@@ -1,6 +1,9 @@
 
 #include "core/trim.h"
 
+namespace roviz
+{
+
 Trim::Trim(TrimImpl *impl)
     : impl(impl)
 {
@@ -9,4 +12,6 @@ Trim::Trim(TrimImpl *impl)
 double Trim::value() const
 {
     return impl->value();
+}
+
 }

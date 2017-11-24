@@ -5,6 +5,13 @@
 #include <memory>
 #include "core/template_decl.h"
 
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+    #include "gui/image_widget.h"
+#endif
+
+namespace roviz
+{
+
 Image::Image(const StreamObject &base)
 {
     this->_this_base = base._this_base;
@@ -145,9 +152,10 @@ Image::Image(bool, std::initializer_list<SourceID> sources)
 }
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-#include "gui/image_widget.h"
 StreamWidget *Image::initWidget(OutputPrivate *out)
 {
     return new ImageWidget(out);
 }
 #endif
+
+}

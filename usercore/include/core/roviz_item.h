@@ -27,6 +27,9 @@
 // Include the appropriate base class
 #include ROVIZ_BASE_INCLUDE
 
+namespace roviz
+{
+
 /**
  * @brief Base class for all items that use the roviz framework.
  *
@@ -41,22 +44,22 @@
  * \sa RovizItemBase
  * \sa RovizItemNoExport
  */
-class ROVIZ_EXPORT RovizItem : public RovizItemBase
+class ROVIZ_EXPORT Item : public ItemBase
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     // The moc won't allow a portable name
     Q_OBJECT
 #endif
 
-COPY_DELETE(RovizItem)
-MOVE_DELETE(RovizItem)
+COPY_DELETE(Item)
+MOVE_DELETE(Item)
 
 public:
     /**
      * @param type_name The name of the item
      */
-    explicit RovizItem(std::string type_name);
-    virtual ~RovizItem();
+    explicit Item(std::string type_name);
+    virtual ~Item();
 
     /**
      * @brief Called, when the thread is about to start
@@ -393,7 +396,7 @@ public:
     Config<T> addConfig(const std::string &name, const typename ConfigStorageType<T>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed = false);
 
 private:
-    std::unique_ptr<RovizItemPrivate> _this;
+    std::unique_ptr<ItemPrivate> _this;
 
     /**
      * @name Internal interface functions
@@ -440,5 +443,7 @@ private:
     void unpause(void) override;
     ///@}
 };
+
+}
 
 #endif // ROVIZ_ITEM_H

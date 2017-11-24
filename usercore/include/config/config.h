@@ -6,6 +6,9 @@
 #include "config/config_storage_type.h"
 #include "config/config_impl.h"
 
+namespace roviz
+{
+
 /**
  * @brief Storage for the configuration of an item
  *
@@ -53,5 +56,7 @@ public:
 private:
     std::unique_ptr<ConfigImpl> impl;
 };
+
+}
 
 #endif // CONFIG_H

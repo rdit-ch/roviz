@@ -6,7 +6,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 
-class VideoFileItem : public RovizItem
+class VideoFileItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -20,8 +20,8 @@ protected:
     void thread(void) override;
 
 private:
-    Output<Image> output;
-    Config<FilePath> conf_path;
+    roviz::Output<roviz::Image> output;
+    roviz::Config<roviz::FilePath> conf_path;
 };
 
 #endif // VIDEOFILE_ITEM_H

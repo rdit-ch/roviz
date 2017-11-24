@@ -6,7 +6,10 @@
 #include "streams/stream_object.h"
 #include "core/output_p.h"
 
-class RovizItem;
+namespace roviz
+{
+
+class Item;
 
 /**
  * @brief Private part of the Input class
@@ -21,7 +24,7 @@ class RovizItem;
 class InputPrivate
 {
 public:
-    RovizItem *item;
+    Item *item;
     std::list<StreamObject> objects;
     OutputPrivate::Connection connection;
     OutputPrivate *last_output;
@@ -58,5 +61,7 @@ public:
      */
     void disconnect(void);
 };
+
+}
 
 #endif // INPUT_P_H

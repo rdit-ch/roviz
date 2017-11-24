@@ -2,16 +2,16 @@
 #include "video_file_item.h"
 
 VideoFileItem::VideoFileItem()
-    : RovizItem("VideoFile")
+    : roviz::Item("VideoFile")
 {
     ROVIZ_INIT_ITEM(VideoFile);
 
-    this->output = this->addOutput<Image>("Output");
+    this->output = this->addOutput<roviz::Image>("Output");
 
-    this->conf_path = this->addConfig<FilePath>(
+    this->conf_path = this->addConfig<roviz::FilePath>(
                 "Path to the video",
                 {""},
-                FilePath::ExistingFile,
+                roviz::FilePath::ExistingFile,
                 "Video Files (*.mp4 *.mkv *.flv *.m4a *.avi);;All Files (*)",
                 true);
 }
@@ -44,7 +44,7 @@ void VideoFileItem::thread()
         // Not just using += because that doesn't work well with pauses
         time_next_frame = std::chrono::high_resolution_clock::now() + frame_delay;
         std::this_thread::sleep_until(time_next_frame);
-        this->output.pushOut(Image(out));
+        this->output.pushOut(roviz::Image(out));
     }
     cap.release();
 }

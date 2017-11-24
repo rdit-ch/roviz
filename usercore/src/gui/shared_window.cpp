@@ -19,6 +19,9 @@
 #include "backend_dev/roviz_item_base_dev.h"
 #include "gui/dock_widget_signaling.h"
 
+namespace roviz
+{
+
 QMap<SettingsScope*, SharedWindow*> SharedWindow::inst;
 
 SharedWindow::SharedWindow(QWidget *parent)
@@ -108,7 +111,7 @@ SharedWindow::SharedWindow(QWidget *parent)
             this, &SharedWindow::tabStartRename);
 }
 
-void SharedWindow::addItem(RovizItemBaseDev* item)
+void SharedWindow::addItem(ItemBaseDev* item)
 {
     if(!this->parents.contains(item))
     {
@@ -128,7 +131,7 @@ void SharedWindow::addItem(RovizItemBaseDev* item)
     }
 }
 
-void SharedWindow::removeItem(RovizItemBaseDev *item)
+void SharedWindow::removeItem(ItemBaseDev *item)
 {
     this->parents.removeOne(item);
     QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
@@ -235,10 +238,10 @@ void SharedWindow::start()
 {
     if(this->running)
     {
-        for(RovizItemBaseDev *item : this->parents)
+        for(ItemBaseDev *item : this->parents)
             item->stop();
 
-        for(RovizItemBaseDev *item : this->parents)
+        for(ItemBaseDev *item : this->parents)
             item->start();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -246,7 +249,7 @@ void SharedWindow::start()
     }
     else
     {
-        for(RovizItemBaseDev *item : this->parents)
+        for(ItemBaseDev *item : this->parents)
             item->start();
 
         this->btn_start->setIcon(this->ico_restart);
@@ -259,7 +262,7 @@ void SharedWindow::pause()
 {
     if(this->paused)
     {
-        for(RovizItemBaseDev *item : this->parents)
+        for(ItemBaseDev *item : this->parents)
             item->unpause();
 
         this->btn_pause->setIcon(this->ico_pause);
@@ -267,7 +270,7 @@ void SharedWindow::pause()
     }
     else
     {
-        for(RovizItemBaseDev *item : this->parents)
+        for(ItemBaseDev *item : this->parents)
             item->pause();
 
         this->btn_pause->setIcon(this->ico_unpause);
@@ -277,7 +280,7 @@ void SharedWindow::pause()
 
 void SharedWindow::stop()
 {
-    for(RovizItemBaseDev *item : this->parents)
+    for(ItemBaseDev *item : this->parents)
         item->stop();
 
     this->running = false;
@@ -366,4 +369,6 @@ void SharedWindow::itemClosed()
         else
             this->close();
     }
+}
+
 }

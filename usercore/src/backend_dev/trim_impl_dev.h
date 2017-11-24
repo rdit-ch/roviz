@@ -11,7 +11,11 @@
 class QLayout;
 class QSlider;
 class QLabel;
-class RovizItemBaseDev;
+
+namespace roviz
+{
+
+class ItemBaseDev;
 
 /**
  * @brief roviz backend for a Trim
@@ -38,7 +42,7 @@ public:
      *
      * \sa RovizItem::addTrim
      */
-    TrimImplDev(RovizItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func = [](double){});
+    TrimImplDev(ItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func = [](double){});
 
     /**
      * @return The Qt layout with the sliders inside
@@ -51,7 +55,7 @@ public:
     double value(void) override;
 
 private:
-    RovizItemBaseDev *item;
+    ItemBaseDev *item;
     std::string name;
     double default_value, min, scale_factor;
     bool logarithmic;
@@ -74,5 +78,7 @@ private slots:
      */
     void valueChanged(int int_value);
 };
+
+}
 
 #endif // TRIM_BASE_DEV_H

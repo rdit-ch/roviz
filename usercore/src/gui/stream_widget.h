@@ -6,6 +6,9 @@
 #include "streams/stream_object.h"
 #include "core/output_p.h"
 
+namespace roviz
+{
+
 /**
  * @brief Base class for all widgets representing a StreamObject
  *
@@ -43,5 +46,7 @@ public:
 private:
     OutputPrivate *out;
 };
+
+}
 
 #endif // STREAM_WIDGET_H

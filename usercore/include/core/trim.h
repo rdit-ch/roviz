@@ -5,7 +5,10 @@
 #include "core/export_handling.h"
 #include "core/trim_impl.h"
 
-class RovizItem;
+namespace roviz
+{
+
+class Item;
 
 /**
  * @brief A value that can be trimmed at runtime
@@ -41,5 +44,7 @@ public:
 private:
     std::unique_ptr<TrimImpl> impl;
 };
+
+}
 
 #endif // TRIM_H

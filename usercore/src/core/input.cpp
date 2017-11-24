@@ -6,8 +6,11 @@
 #include "core/template_decl.h"
 #include "streams/all_streams.h"
 
+namespace roviz
+{
+
 template<class T>
-Input<T>::Input(RovizItem *item)
+Input<T>::Input(Item *item)
     : _this(new InputPrivate())
 {
     _this->item = item;
@@ -43,4 +46,6 @@ bool Input<T>::waitForInput()
 
 #define INSTANTIATE_INPUT(T) template class Input<T >;
 
-DO_FOR_ALL_STREAMS(INSTANTIATE_INPUT)
+ROVIZ_DO_FOR_ALL_STREAMS(INSTANTIATE_INPUT)
+
+}

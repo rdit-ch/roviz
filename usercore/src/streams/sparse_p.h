@@ -13,6 +13,9 @@
 #include "streams/image.h"
 #include "streams/sparse.h"
 
+namespace roviz
+{
+
 template<class T>
 class SparsePrivate : public StreamObjectPrivate
 {
@@ -21,5 +24,7 @@ public:
     T default_value;
     Image base_image;
 };
+
+}
 
 #endif // SPARSE_P_H

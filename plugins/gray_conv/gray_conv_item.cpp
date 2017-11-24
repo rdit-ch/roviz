@@ -2,12 +2,12 @@
 #include "gray_conv_item.h"
 
 GrayConvItem::GrayConvItem()
-    : RovizItem("GrayConv")
+    : roviz::Item("GrayConv")
 {
     ROVIZ_INIT_ITEM(GrayConv);
 
-    this->input = this->addInput<Image>("RGB Input");
-    this->output = this->addOutput<Image>("Grayscale Output");
+    this->input = this->addInput<roviz::Image>("RGB roviz::Input");
+    this->output = this->addOutput<roviz::Image>("Grayscale roviz::Output");
 }
 
 GrayConvItem::~GrayConvItem()
@@ -21,7 +21,7 @@ void GrayConvItem::pre_thread()
 
 void GrayConvItem::thread()
 {
-    Image in;
+    roviz::Image in;
 #ifdef OPENCV_PRESENT
     cv::Mat out;
 #endif
@@ -32,35 +32,35 @@ void GrayConvItem::thread()
 
         switch(in.format())
         {
-            case Image::RGB888:
+            case roviz::Image::RGB888:
 
                 this->output.pushOut(GrayConvItem::fromRGB888(in));
                 break;
 
-            case Image::RGB555:
+            case roviz::Image::RGB555:
 
                 this->output.pushOut(GrayConvItem::fromRGB555(in));
                 break;
 
-            case Image::YUV422:
+            case roviz::Image::YUV422:
 
                 this->output.pushOut(GrayConvItem::fromYUV422(in));
                 break;
 
-            case Image::YUV422_Flipped:
+            case roviz::Image::YUV422_Flipped:
 
                 this->output.pushOut(GrayConvItem::fromYUV422_Flipped(in));
                 break;
 
-            case Image::BGR_CV:
+            case roviz::Image::BGR_CV:
 
 #ifdef OPENCV_PRESENT
                 cv::cvtColor(in.toCv(), out, CV_BGR2GRAY);
-                this->output.pushOut(Image(out));
+                this->output.pushOut(roviz::Image(out));
 #endif
                 break;
 
-            case Image::Gray8:
+            case roviz::Image::Gray8:
 
                 this->output.pushOut(in);
                 break;
@@ -71,15 +71,15 @@ void GrayConvItem::thread()
     }
 }
 
-Image GrayConvItem::fromRGB(Image in, int depth)
+roviz::Image GrayConvItem::fromRGB(roviz::Image in, int depth)
 {
     int r, g, b;
     int y;
     unsigned char *dst;
 
-    ImageMutable out(in.width(),
+    roviz::ImageMutable out(in.width(),
                              in.height(),
-                             Image::Gray8,
+                             roviz::Image::Gray8,
                              {in.id()});
 
     const unsigned char *src = in.data();
@@ -105,23 +105,23 @@ Image GrayConvItem::fromRGB(Image in, int depth)
     return out;
 }
 
-Image GrayConvItem::fromRGB555(Image in)
+roviz::Image GrayConvItem::fromRGB555(roviz::Image in)
 {
     return GrayConvItem::fromRGB(in, 5);
 }
 
-Image GrayConvItem::fromRGB888(Image in)
+roviz::Image GrayConvItem::fromRGB888(roviz::Image in)
 {
     return GrayConvItem::fromRGB(in, 8);
 }
 
-Image GrayConvItem::fromYUV422(Image in)
+roviz::Image GrayConvItem::fromYUV422(roviz::Image in)
 {
     unsigned char *dst;
 
-    ImageMutable out(in.width(),
+    roviz::ImageMutable out(in.width(),
                              in.height(),
-                             Image::Gray8,
+                             roviz::Image::Gray8,
                              {in.id()});
 
     const unsigned char *src = in.data();
@@ -137,13 +137,13 @@ Image GrayConvItem::fromYUV422(Image in)
     return out;
 }
 
-Image GrayConvItem::fromYUV422_Flipped(Image in)
+roviz::Image GrayConvItem::fromYUV422_Flipped(roviz::Image in)
 {
     unsigned char *dst;
 
-    ImageMutable out(in.width(),
+    roviz::ImageMutable out(in.width(),
                              in.height(),
-                             Image::Gray8,
+                             roviz::Image::Gray8,
                              {in.id()});
 
     const unsigned char *end = in.data();

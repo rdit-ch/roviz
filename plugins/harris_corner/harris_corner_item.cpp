@@ -5,12 +5,12 @@
 #include "streams/sparse_m.h"
 
 HarrisCornerItem::HarrisCornerItem()
-    : RovizItem("HarrisEdge")
+    : roviz::Item("HarrisEdge")
 {
     ROVIZ_INIT_ITEM(HarrisCorner);
 
-    this->input = this->addInput<Image>("Input");
-    this->output = this->addOutput<Sparse<Point2D> >("Output");
+    this->input = this->addInput<roviz::Image>("Input");
+    this->output = this->addOutput<roviz::Sparse<roviz::Point2D> >("Output");
 
     this->trim_block_size = this->addTrim(
                 "Block Size", 2, 1, 10);
@@ -34,9 +34,9 @@ void HarrisCornerItem::thread()
 {
     while(this->input.waitForInput())
     {
-        Image src = this->input.next();
+        roviz::Image src = this->input.next();
 
-        if(src.format() != Image::Gray8)
+        if(src.format() != roviz::Image::Gray8)
             continue;
 
         cv::Mat dst, dst_norm;
@@ -51,7 +51,7 @@ void HarrisCornerItem::thread()
         // TODO Optimize that by doing it manually in the other loop?
         cv::normalize(dst, dst_norm, 0, 255, cv::NORM_MINMAX, CV_8U);
 
-        SparseMutable<Point2D> out(src, {src.id()});
+        roviz::SparseMutable<roviz::Point2D> out(src, {src.id()});
         unsigned char *p = dst_norm.data;
         int thres = trim_threshold.value();
         int count = 0;
@@ -61,7 +61,7 @@ void HarrisCornerItem::thread()
             {
                 if(*p >= thres)
                 {
-                    out.add(Point2D(x, y));
+                    out.add(roviz::Point2D(x, y));
                     count++;
                 }
 

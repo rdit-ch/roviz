@@ -5,6 +5,9 @@
 #include <string>
 #include "config/file_path.h"
 
+namespace roviz
+{
+
 #define DO_FOR_ALL_CONFIG_TYPES(EXPR) \
     EXPR(int) \
     EXPR(double) \
@@ -35,5 +38,7 @@ class ROVIZ_EXPORT ConfigStorageType<std::vector<std::string> >
 template<>
 class ROVIZ_EXPORT ConfigStorageType<FilePath>
 { public: typedef std::vector<std::string> type; };
+
+}
 
 #endif // CONFIG_STORAGE_TYPE_H

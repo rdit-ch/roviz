@@ -16,12 +16,15 @@
 #include "backend_dev/config_impl_base_dev.h"
 #include "gui/shared_window.h"
 
-RovizItemBaseDevPrivate::RovizItemBaseDevPrivate(RovizItemBaseDev *q)
+namespace roviz
+{
+
+ItemBaseDevPrivate::ItemBaseDevPrivate(ItemBaseDev *q)
 {
     this->_this = q;
 }
 
-void RovizItemBaseDevPrivate::collapseBtnClicked()
+void ItemBaseDevPrivate::collapseBtnClicked()
 {
     QPropertyAnimation *an = new QPropertyAnimation(this->control_base, "maximumWidth");
     an->setDuration(500);
@@ -46,7 +49,7 @@ void RovizItemBaseDevPrivate::collapseBtnClicked()
     an->start();
 }
 
-void RovizItemBaseDevPrivate::parentScopeChanged(SettingsScope *old)
+void ItemBaseDevPrivate::parentScopeChanged(SettingsScope *old)
 {
     if(old != nullptr)
         SharedWindow::instance(old)->removeItem(_this);
@@ -58,7 +61,7 @@ void RovizItemBaseDevPrivate::parentScopeChanged(SettingsScope *old)
         conf->load();
 }
 
-void RovizItemBaseDevPrivate::showConfigWindow()
+void ItemBaseDevPrivate::showConfigWindow()
 {
     // Gets redone everytime the config window is shown to allow
     // inserting/modifying configs on-the-fly
@@ -89,11 +92,13 @@ void RovizItemBaseDevPrivate::showConfigWindow()
             conf->refresh();
 }
 
-void RovizItemBaseDevPrivate::initConfigImpl(ConfigImplBaseDev *impl)
+void ItemBaseDevPrivate::initConfigImpl(ConfigImplBaseDev *impl)
 {
-    connect(_this, &RovizItemBaseDev::parentChanged,
+    connect(_this, &ItemBaseDev::parentChanged,
             [impl](){impl->load();});
 
     this->config_impls.append(impl);
     this->config_present = true;
+}
+
 }

@@ -6,7 +6,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 
-class TEMPLATE_CLASSItem : public RovizItem
+class TEMPLATE_CLASSItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -20,8 +20,8 @@ protected:
     void thread(void) override;
 
 private:
-    Input<Image> input;
-    Output<Image> output;
+    roviz::Input<roviz::Image> input;
+    roviz::Output<roviz::Image> output;
 };
 
 #endif // TEMPLATE_UPPER_ITEM_H

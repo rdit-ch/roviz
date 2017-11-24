@@ -11,6 +11,9 @@
 #include "streams/image.h"
 #include "streams/stream_object_p.h"
 
+namespace roviz
+{
+
 /**
  * @brief Private part of the Image class
  *
@@ -41,5 +44,7 @@ public:
      */
     void init(int w, int h, enum Image::Format f);
 };
+
+}
 
 #endif // IMAGE_PRIVATE_H

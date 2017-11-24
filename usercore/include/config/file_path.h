@@ -3,6 +3,9 @@
 
 #include "core/export_handling.h"
 
+namespace roviz
+{
+
 /**
  * @brief Class used as a tag for file paths
  *
@@ -31,5 +34,7 @@ public:
         Directory
     };
 };
+
+}
 
 #endif // FILE_PATH_H

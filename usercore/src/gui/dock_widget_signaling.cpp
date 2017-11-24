@@ -5,6 +5,9 @@
 #include <QCloseEvent>
 #include <QShowEvent>
 
+namespace roviz
+{
+
 DockWidgetSignaling::DockWidgetSignaling(QString title, QWidget *parent)
     : QDockWidget(title, parent)
 {
@@ -21,4 +24,6 @@ void DockWidgetSignaling::showEvent(QShowEvent *event)
 {
     emit this->shown();
     QDockWidget::showEvent(event);
+}
+
 }

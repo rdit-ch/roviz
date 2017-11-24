@@ -4,6 +4,9 @@
 #include "core/export_handling.h"
 #include "core/trim_impl.h"
 
+namespace roviz
+{
+
 /**
  * @brief Trim implementation for the Cmdline backend
  *
@@ -40,5 +43,7 @@ public:
 private:
     double val;
 };
+
+}
 
 #endif // TRIM_BASE_CMDLINE_H

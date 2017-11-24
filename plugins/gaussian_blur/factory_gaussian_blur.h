@@ -21,7 +21,7 @@ public:
 };
 #else
 extern "C" {
-ROVIZ_EXPORT RovizItemBase ROVIZ_EXPORT *rovizItemFactory(void);
+ROVIZ_EXPORT roviz::ItemBase ROVIZ_EXPORT *rovizItemFactory(void);
 }
 #endif
 

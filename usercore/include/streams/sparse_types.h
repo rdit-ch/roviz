@@ -3,18 +3,21 @@
 
 #include "core/export_handling.h"
 
-#define DO_FOR_ALL_SPARSE_TYPES(EXPR) \
-    EXPR(Point2D) \
-    EXPR(Point3D) \
-    EXPR(Rect) \
-    EXPR(Circle)
+#define ROVIZ_DO_FOR_ALL_SPARSE_TYPES(EXPR) \
+    EXPR(roviz::Point2D) \
+    EXPR(roviz::Point3D) \
+    EXPR(roviz::Rect) \
+    EXPR(roviz::Circle)
 
 // Didn't find a way yet without duplicating it
-#define DO_FOR_ALL_SPARSE(EXPR) \
-    EXPR(Sparse<Point2D>) \
-    EXPR(Sparse<Point3D>) \
-    EXPR(Sparse<Rect>) \
-    EXPR(Sparse<Circle>)
+#define ROVIZ_DO_FOR_ALL_SPARSE(EXPR) \
+    EXPR(roviz::Sparse<roviz::Point2D>) \
+    EXPR(roviz::Sparse<roviz::Point3D>) \
+    EXPR(roviz::Sparse<roviz::Rect>) \
+    EXPR(roviz::Sparse<roviz::Circle>)
+
+namespace roviz
+{
 
 class ROVIZ_EXPORT Point2D
 {
@@ -56,5 +59,7 @@ public:
     ~Circle() = default;
     Circle(double _x, double _y, double _r, double _g = 0);
 };
+
+}
 
 #endif // SPARSE_TYPES_H

@@ -2,12 +2,12 @@
 #include "sobel_item.h"
 
 SobelItem::SobelItem()
-    : RovizItem("Sobel")
+    : roviz::Item("Sobel")
 {
     ROVIZ_INIT_ITEM(Sobel);
 
-    this->input = this->addInput<Image>("Input");
-    this->output = this->addOutput<Image>("Output");
+    this->input = this->addInput<roviz::Image>("Input");
+    this->output = this->addOutput<roviz::Image>("Output");
 }
 
 SobelItem::~SobelItem()
@@ -20,9 +20,9 @@ void SobelItem::thread()
     while(this->input.waitForInput())
     {
         cv::Mat out, grad_x, grad_y, abs_grad_x, abs_grad_y;
-        Image in = this->input.next();
+        roviz::Image in = this->input.next();
 
-        if(in.format() != Image::Gray8)
+        if(in.format() != roviz::Image::Gray8)
             continue;
 
         // Gradient X
@@ -36,6 +36,6 @@ void SobelItem::thread()
         // Total Gradient (approximate)
         cv::addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, out);
 
-        this->output.pushOut(Image(out));
+        this->output.pushOut(roviz::Image(out));
     }
 }

@@ -9,7 +9,7 @@
  *
  * \ingroup robot_plugins
  */
-class SubtractorItem : public RovizItem
+class SubtractorItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -24,8 +24,8 @@ protected:
     void thread(void) override;
 
 private:
-    Input<Image> input1, input2;
-    Output<Image> output;
+    roviz::Input<roviz::Image> input1, input2;
+    roviz::Output<roviz::Image> output;
 };
 
 #endif // SUBTRACTOR_ITEM_H

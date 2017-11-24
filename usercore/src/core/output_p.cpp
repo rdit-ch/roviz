@@ -2,6 +2,9 @@
 #include "core/output_p.h"
 #include "core/input_p.h"
 
+namespace roviz
+{
+
 OutputPrivate::~OutputPrivate()
 {
     for(auto input : this->connected_inputs)
@@ -25,4 +28,6 @@ void OutputPrivate::disconnect(InputPrivate *in, OutputPrivate::Connection conn)
 {
     this->connected_inputs.remove(in);
     this->pushInFuncs.erase(conn);
+}
+
 }

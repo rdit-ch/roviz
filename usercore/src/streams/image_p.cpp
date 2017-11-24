@@ -1,6 +1,9 @@
 
 #include "streams/image_p.h"
 
+namespace roviz
+{
+
 ImagePrivate::~ImagePrivate()
 {
     if(this->is_self_managed)
@@ -45,4 +48,6 @@ void ImagePrivate::init(int w, int h, Image::Format f)
     }
 
     this->len = w * h * this->bytes;
+}
+
 }

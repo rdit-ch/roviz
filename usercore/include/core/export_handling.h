@@ -69,7 +69,7 @@
 
 #elif ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     // We don't use a typedef here because typedefs can't be friends (used in Input/Output)
-    #define RovizItemBase  RovizItemBaseDev
+    #define ItemBase  ItemBaseDev
 
     #define ROVIZ_BASE_INCLUDE     "backend_dev/roviz_item_base_dev.h"
     #define ROVIZ_INVOKABLE        Q_INVOKABLE
@@ -85,8 +85,11 @@
     #include <QObject>
 
     // For simulation-only items
-    class RovizItem;
-    typedef RovizItem RovizItemNoExport;
+    namespace roviz
+    {
+        class Item;
+        typedef Item ItemNoExport;
+    }
 
 #else
     #error It seems like you did not select a proper backend

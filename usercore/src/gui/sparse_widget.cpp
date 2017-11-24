@@ -5,6 +5,9 @@
 #include "core/template_decl.h"
 #include "streams/sparse.h"
 
+namespace roviz
+{
+
 SparseWidget::SparseWidget(std::function<void (SparseWidget *)> draw_func, StreamObject default_item, std::function<Image (StreamObject)> image_fn, OutputPrivate *out)
     : ImageWidget(out),
       sparse_obj(default_item),
@@ -93,4 +96,6 @@ void SparseWidget::updatePenColor(QPainter &painter, T obj)
 
 #define INSTANTIATE_SPARSE_WIDGET(T) template void SparseWidget::draw<T>(void);
 
-DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_WIDGET)
+ROVIZ_DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_WIDGET)
+
+}

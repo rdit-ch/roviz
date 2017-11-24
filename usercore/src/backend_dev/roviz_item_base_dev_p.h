@@ -9,7 +9,11 @@ class QWidget;
 class QPushButton;
 class QHBoxLayout;
 class SettingsScope;
-class RovizItemBaseDev;
+
+namespace roviz
+{
+
+class ItemBaseDev;
 class ConfigImplBaseDev;
 class StreamWidget;
 
@@ -18,12 +22,12 @@ class StreamWidget;
  *
  * \sa RovizItemDevBase
  */
-class RovizItemBaseDevPrivate : public QObject
+class ItemBaseDevPrivate : public QObject
 {
     Q_OBJECT
 
 public:
-    RovizItemBaseDev *_this;
+    ItemBaseDev *_this;
     QWidget *main_widget;
     QPushButton *collapse_btn;
     QHBoxLayout *main_layout, *main_image_layout, *main_control_layout;
@@ -32,7 +36,7 @@ public:
     QList<StreamWidget*> output_widgets;
     bool config_present, conf_loaded;
 
-    RovizItemBaseDevPrivate(RovizItemBaseDev *q);
+    ItemBaseDevPrivate(ItemBaseDev *q);
 
 public slots:
     /**
@@ -62,5 +66,7 @@ public slots:
      */
     void initConfigImpl(ConfigImplBaseDev *impl);
 };
+
+}
 
 #endif // ROVIZ_ITEM_BASE_DEV_PRIVATE_H

@@ -2,7 +2,7 @@
 #include "cv_camera_item.h"
 
 CvCameraItem::CvCameraItem()
-    : RovizItem("CvCamera")
+    : roviz::Item("CvCamera")
 {
     ROVIZ_INIT_ITEM(CvCamera);
 
@@ -20,7 +20,7 @@ CvCameraItem::CvCameraItem()
         480
     };
 
-    this->output = this->addOutput<Image>("Camera Output");
+    this->output = this->addOutput<roviz::Image>("Camera roviz::Output");
 
     this->conf_res = this->addConfig<std::vector<std::string> >
                 ("Resolution",
@@ -54,7 +54,7 @@ void CvCameraItem::thread()
     while(this->wait())
     {
         this->cap >> frame;
-        this->output.pushOut(Image(frame));
+        this->output.pushOut(roviz::Image(frame));
     }
 }
 

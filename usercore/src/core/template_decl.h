@@ -7,14 +7,17 @@
 #include "streams/sparse_types.h"
 
 // Including the header here leads to a circular inclusion
+namespace roviz
+{
 class Image;
 class Message;
 template<class T> class Sparse;
+}
 
 // Make sure all templates for the streams get instantiated
-#define DO_FOR_ALL_STREAMS(EXPR) \
-    EXPR(Image) \
-    EXPR(Message) \
-    DO_FOR_ALL_SPARSE(EXPR)
+#define ROVIZ_DO_FOR_ALL_STREAMS(EXPR) \
+    EXPR(roviz::Image) \
+    EXPR(roviz::Message) \
+    ROVIZ_DO_FOR_ALL_SPARSE(EXPR)
 
 #endif // TEMPLATEDECL_H

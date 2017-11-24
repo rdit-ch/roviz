@@ -13,6 +13,9 @@ class QWidget;
 class QPaintEvent;
 class QResizeEvent;
 
+namespace roviz
+{
+
 // TODO Use native OpenGL (maybe that? https://github.com/Myzhar/QtOpenCVViewerGl),
 // implement BGR display for OpenCV, just switching to QOpenGLWidget doesn't seem to work,
 // don't know why.
@@ -84,5 +87,7 @@ protected:
      */
     void recalcImageRect(double w, double h);
 };
+
+}
 
 #endif // IMAGEWIDGET_H

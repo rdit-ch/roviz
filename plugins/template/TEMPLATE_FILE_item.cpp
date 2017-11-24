@@ -2,12 +2,12 @@
 #include "TEMPLATE_FILE_item.h"
 
 TEMPLATE_CLASSItem::TEMPLATE_CLASSItem()
-    : RovizItem("TEMPLATE_CLASS")
+    : roviz::Item("TEMPLATE_CLASS")
 {
     ROVIZ_INIT_ITEM(TEMPLATE_CLASS);
 
-    this->input = this->addInput<Image>("Input");
-    this->output = this->addOutput<Image>("Output");
+    this->input = this->addInput<roviz::Image>("Input");
+    this->output = this->addOutput<roviz::Image>("Output");
 }
 
 TEMPLATE_CLASSItem::~TEMPLATE_CLASSItem()

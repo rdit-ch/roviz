@@ -3,6 +3,9 @@
 
 #include "core/export_handling.h"
 
+namespace roviz
+{
+
 /**
  * @brief Base class for all config implementations
  *
@@ -54,5 +57,7 @@ public:
      */
     virtual bool changed(void) = 0;
 };
+
+}
 
 #endif // CONFIG_IMPL_H

@@ -9,6 +9,9 @@
 #include "core/template_decl.h"
 #include "streams/all_streams.h"
 
+namespace roviz
+{
+
 /*
  * We use a little trick here to assign the colors. Out macro only gets
  * one argument (the type of the stream) and somehow has to get a color
@@ -22,16 +25,16 @@
 
 static const std::map<std::string, QColor> colors =
 {
-    { "Image",            Qt::green },
-    { "Message",          Qt::red   },
-    { "Sparse<Point2D>",  Qt::blue  },
-    { "Sparse<Point2F>",  Qt::blue  },
-    { "Sparse<Point3D>",  Qt::blue  },
-    { "Sparse<Point3F>",  Qt::blue  },
-    { "Sparse<Rect>",     Qt::blue  },
-    { "Sparse<RectF>",    Qt::blue  },
-    { "Sparse<Circle>",   Qt::blue  },
-    { "Sparse<CircleF>",  Qt::blue  },
+    { "roviz::Image",                   Qt::green },
+    { "roviz::Message",                 Qt::red   },
+    { "roviz::Sparse<roviz::Point2D>",  Qt::blue  },
+    { "roviz::Sparse<roviz::Point2F>",  Qt::blue  },
+    { "roviz::Sparse<roviz::Point3D>",  Qt::blue  },
+    { "roviz::Sparse<roviz::Point3F>",  Qt::blue  },
+    { "roviz::Sparse<roviz::Rect>",     Qt::blue  },
+    { "roviz::Sparse<roviz::RectF>",    Qt::blue  },
+    { "roviz::Sparse<roviz::Circle>",   Qt::blue  },
+    { "roviz::Sparse<roviz::CircleF>",  Qt::blue  },
 };
 
 #define STRINGIFY_P(T)  #T
@@ -45,5 +48,7 @@ STARTUP_ADD_COMPONENT(StartupInit)
 
 void StartupInit::init()
 {
-    DO_FOR_ALL_STREAMS(REGISTER_CONNECTOR_COLOR)
+    ROVIZ_DO_FOR_ALL_STREAMS(REGISTER_CONNECTOR_COLOR)
+}
+
 }

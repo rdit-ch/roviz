@@ -2,12 +2,12 @@
 #include "frame_delayer_item.h"
 
 FrameDelayerItem::FrameDelayerItem()
-    : RovizItem("FrameDelayer")
+    : roviz::Item("FrameDelayer")
 {
     ROVIZ_INIT_ITEM(FrameDelayer);
 
-    this->input = this->addInput<Image>("Input");
-    this->output = this->addOutput<Image>("Output");
+    this->input = this->addInput<roviz::Image>("Input");
+    this->output = this->addOutput<roviz::Image>("Output");
     this->trim_delay = this->addTrim("Delay (Frames)", 3, 1, 10);
 }
 
@@ -37,5 +37,5 @@ void FrameDelayerItem::trimChanged(void *, int)
     std::lock_guard<std::mutex> g(this->mtx);
 
     // Clear queue
-    std::queue<Image>().swap(this->queue);
+    std::queue<roviz::Image>().swap(this->queue);
 }

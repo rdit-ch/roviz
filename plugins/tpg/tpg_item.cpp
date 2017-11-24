@@ -5,14 +5,14 @@
 #include "tpg_item.h"
 
 TPGItem::TPGItem()
-    : RovizItemNoExport("Test Pattern Generator")
+    : roviz::Item("Test Pattern Generator")
 {
     ROVIZ_INIT_ITEM(TPG);
 
     this->test_pattern.load(":/test_pattern.png");
     this->test_pattern = this->test_pattern.convertToFormat(QImage::Format_RGB888);
 
-    this->output = this->addOutput<Image>("Test Pattern Output");
+    this->output = this->addOutput<roviz::Image>("Test Pattern roviz::Output");
     this->trim_fps = this->addTrim("FPS", 30, 1, 120, 0,
         [this](double value)
         {
@@ -56,9 +56,9 @@ void TPGItem::thread()
         this->mutex().unlock();
 
         const unsigned char *src = this->test_pattern.constBits();
-        ImageMutable out_img = ImageMutable(this->test_pattern.width(),
+        roviz::ImageMutable out_img = roviz::ImageMutable(this->test_pattern.width(),
                                      this->test_pattern.height(),
-                                     Image::RGB888);
+                                     roviz::Image::RGB888);
         dst = out_img.data();
 
         for(qint32 i = 0; i < this->test_pattern.byteCount(); i++)

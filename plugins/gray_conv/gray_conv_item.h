@@ -9,7 +9,7 @@
  *
  * \ingroup robot_plugins
  */
-class GrayConvItem : public RovizItem
+class GrayConvItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -24,14 +24,14 @@ protected:
     void thread(void) override;
 
 private:
-    Output<Image> output;
-    Input<Image> input;
+    roviz::Output<roviz::Image> output;
+    roviz::Input<roviz::Image> input;
 
-    static Image fromRGB(Image in, int depth);
-    static Image fromRGB555(Image in);
-    static Image fromRGB888(Image in);
-    static Image fromYUV422(Image in);
-    static Image fromYUV422_Flipped(Image in);
+    static roviz::Image fromRGB(roviz::Image in, int depth);
+    static roviz::Image fromRGB555(roviz::Image in);
+    static roviz::Image fromRGB888(roviz::Image in);
+    static roviz::Image fromYUV422(roviz::Image in);
+    static roviz::Image fromYUV422_Flipped(roviz::Image in);
 };
 
 #endif // GRAYCONV_ITEM_H

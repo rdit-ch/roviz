@@ -6,8 +6,12 @@
 #include "streams/all_streams.h"
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-#include <QWidget>
+    #include <QWidget>
+    #include "gui/message_widget.h"
 #endif
+
+namespace roviz
+{
 
 Message::Message(const StreamObject &base)
 {
@@ -68,7 +72,6 @@ std::vector<Message::Entry>::const_iterator Message::end() const
 }
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-#include "gui/message_widget.h"
 StreamWidget *Message::initWidget(OutputPrivate *out)
 {
     return new MessageWidget(out);
@@ -121,3 +124,5 @@ template int Message::Entry::to<int>(void) const;
 template double Message::Entry::to<double>(void) const;
 template std::string Message::Entry::to<std::string>(void) const;
 template bool Message::Entry::to<bool>(void) const;
+
+}

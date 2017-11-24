@@ -8,6 +8,9 @@
 
 #define MAKE_ALL_STREAMS_A_FRIEND(T) friend class T;
 
+namespace roviz
+{
+
 struct SrcTreeNode;
 class StreamObjectPrivate;
 
@@ -42,7 +45,7 @@ class ROVIZ_EXPORT StreamObject
 {
 // Needed because we have to access the protected members of a StreamObject
 // which is not 'this' in the conversion constructors of the derived classes.
-DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND)
+ROVIZ_DO_FOR_ALL_STREAMS(MAKE_ALL_STREAMS_A_FRIEND)
 
 COPY_DEFAULT(StreamObject)
 MOVE_DEFAULT(StreamObject)
@@ -69,6 +72,8 @@ protected:
 //  virtual static QWidget *initWidget(StreamBase *stream);
 };
 
-DECLARE_STREAM_OBJECT(StreamObject)
+}
+
+DECLARE_STREAM_OBJECT(roviz::StreamObject)
 
 #endif // STREAM_OBJECT_H

@@ -2,16 +2,16 @@
 #include "image_file_item.h"
 
 ImageFileItem::ImageFileItem()
-    : RovizItem("ImageFile")
+    : roviz::Item("ImageFile")
 {
     ROVIZ_INIT_ITEM(ImageFile);
 
-    this->output = this->addOutput<Image>("Output");
+    this->output = this->addOutput<roviz::Image>("Output");
 
-    this->conf_paths = this->addConfig<FilePath>(
+    this->conf_paths = this->addConfig<roviz::FilePath>(
                 "Path to the input images",
                 {""},
-                FilePath::ExistingFile,
+                roviz::FilePath::ExistingFile,
                 "Image files (*.jpg *.png *.bmp);;All files (*)",
                 true);
 
@@ -27,7 +27,7 @@ ImageFileItem::~ImageFileItem()
 
 void ImageFileItem::thread()
 {
-    std::list<Image> images;
+    std::list<roviz::Image> images;
     int load_gray, delay;
     bool repeat;
 
@@ -39,8 +39,8 @@ void ImageFileItem::thread()
     {
         this->wait();
 
-        Image img(cv::imread(path, load_gray));
-        if(img.format() == Image::NoFormat)
+        roviz::Image img(cv::imread(path, load_gray));
+        if(img.format() == roviz::Image::NoFormat)
             continue;
 
         this->output.pushOut(img);

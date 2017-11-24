@@ -6,7 +6,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 
-class CannyItem : public RovizItem
+class CannyItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -20,9 +20,9 @@ protected:
     void thread(void) override;
 
 private:
-    Input<Image> input;
-    Output<Image> output;
-    Trim trim_thres, trim_ratio;
+    roviz::Input<roviz::Image> input;
+    roviz::Output<roviz::Image> output;
+    roviz::Trim trim_thres, trim_ratio;
 };
 
 #endif // CANNY_ITEM_H

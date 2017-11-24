@@ -3,6 +3,9 @@
 
 #include "streams/image.h"
 
+namespace roviz
+{
+
 /**
  * @brief The mutable version Image
  *
@@ -54,5 +57,7 @@ public:
      */
     unsigned char *data(void);
 };
+
+}
 
 #endif // IMAGE_MUTABLE_H

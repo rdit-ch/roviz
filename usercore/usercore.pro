@@ -46,7 +46,6 @@ SOURCES +=  src/usercore.cpp \
             src/core/output.cpp \
             src/core/output_p.cpp \
             src/core/roviz_item.cpp \
-            src/core/template_decl.cpp \
             src/core/trim.cpp \
             src/streams/image.cpp \
             src/streams/image_m.cpp \

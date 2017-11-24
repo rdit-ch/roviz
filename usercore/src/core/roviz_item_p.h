@@ -6,14 +6,17 @@
 #include <condition_variable>
 #include <thread>
 
-class RovizItem;
+namespace roviz
+{
+
+class Item;
 
 /**
  * @brief Private part of RovizItem
  *
  * \sa RovizItem
  */
-class RovizItemPrivate
+class ItemPrivate
 {
 public:
     std::condition_variable cond;
@@ -21,8 +24,10 @@ public:
     std::mutex mtx;
     bool is_paused, is_stopped;
 
-    RovizItemPrivate() = default;
-    ~RovizItemPrivate() = default;
+    ItemPrivate() = default;
+    ~ItemPrivate() = default;
 };
+
+}
 
 #endif // ROVIZ_ITEM_PRIVATE_H

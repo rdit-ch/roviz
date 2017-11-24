@@ -11,7 +11,7 @@
  *
  * \ingroup robot_plugins
  */
-class GaussianBlurItem : public RovizItem
+class GaussianBlurItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -25,9 +25,9 @@ protected:
     void thread(void) override;
 
 private:
-    Input<Image> input;
-    Output<Image> output;
-    Trim trim_sigma, trim_ksize;
+    roviz::Input<roviz::Image> input;
+    roviz::Output<roviz::Image> output;
+    roviz::Trim trim_sigma, trim_ksize;
 };
 
 #endif // GAUSSIANBLUR_ITEM_H

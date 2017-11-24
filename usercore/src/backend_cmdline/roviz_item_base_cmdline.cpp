@@ -3,12 +3,15 @@
 #include "backend_cmdline/trim_impl_cmdline.h"
 #include "backend_cmdline/config_impl_cmdline.h"
 
-RovizItemBaseCmdline::RovizItemBaseCmdline(std::string)
-    : _this_base(new RovizItemBaseCmdlinePrivate())
+namespace roviz
+{
+
+ItemBaseCmdline::ItemBaseCmdline(std::string)
+    : _this_base(new ItemBaseCmdlinePrivate())
 {
 }
 
-bool RovizItemBaseCmdline::connect(int input_index, RovizItemBaseCmdline *from_item, int output_index)
+bool ItemBaseCmdline::connect(int input_index, ItemBaseCmdline *from_item, int output_index)
 {
     // The compiler complains because of signed/unsigned without the typecasts
     if(input_index >= (int)_this_base->inputs.size())
@@ -22,7 +25,7 @@ bool RovizItemBaseCmdline::connect(int input_index, RovizItemBaseCmdline *from_i
     return true;
 }
 
-void RovizItemBaseCmdline::setTrim(std::string name, double value)
+void ItemBaseCmdline::setTrim(std::string name, double value)
 {
     std::map<std::string, TrimImplCmdline*>::iterator trim = _this_base->trims.find(name);
     if(trim != _this_base->trims.end())
@@ -30,7 +33,7 @@ void RovizItemBaseCmdline::setTrim(std::string name, double value)
 }
 
 template<class T>
-Input<T> RovizItemBaseCmdline::addInputBase(std::string , RovizItem *item)
+Input<T> ItemBaseCmdline::addInputBase(std::string , Item *item)
 {
     Input<T> input(item);
 
@@ -40,7 +43,7 @@ Input<T> RovizItemBaseCmdline::addInputBase(std::string , RovizItem *item)
 }
 
 template<class T>
-Output<T> RovizItemBaseCmdline::addOutputBase(std::string )
+Output<T> ItemBaseCmdline::addOutputBase(std::string )
 {
     Output<T> output;
 
@@ -49,7 +52,7 @@ Output<T> RovizItemBaseCmdline::addOutputBase(std::string )
     return output;
 }
 
-TrimImpl *RovizItemBaseCmdline::getTrimImpl(std::string name, double, double, double, int, bool, std::function<void (double)>)
+TrimImpl *ItemBaseCmdline::getTrimImpl(std::string name, double, double, double, int, bool, std::function<void (double)>)
 {
     TrimImplCmdline *impl = new TrimImplCmdline();
 
@@ -58,7 +61,7 @@ TrimImpl *RovizItemBaseCmdline::getTrimImpl(std::string name, double, double, do
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<int>::type &, int, int, bool)
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<int>::type &, int, int, bool)
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<int>();
 
@@ -67,7 +70,7 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<double>::type &, double, double, bool)
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<double>::type &, double, double, bool)
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<double>();
 
@@ -76,7 +79,7 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::string>::type &, std::function<bool (std::string &)>, bool)
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::string>::type &, std::function<bool (std::string &)>, bool)
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<std::string>();
 
@@ -85,7 +88,7 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::vector<std::string> >::type &, const std::vector<std::string> &, bool )
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<std::vector<std::string> >::type &, const std::vector<std::string> &, bool )
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<std::vector<std::string> >();
 
@@ -94,7 +97,7 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<bool>::type &, bool )
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<bool>::type &, bool )
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<bool>();
 
@@ -103,7 +106,7 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<FilePath>::type &, FilePath::Mode, const std::string &, bool)
+ConfigImpl *ItemBaseCmdline::getConfigImpl(const std::string &name, const ConfigStorageType<FilePath>::type &, FilePath::Mode, const std::string &, bool)
 {
     ConfigImplBaseCmdline *impl = new ConfigImplCmdline<FilePath>();
 
@@ -112,11 +115,11 @@ ConfigImpl *RovizItemBaseCmdline::getConfigImpl(const std::string &name, const C
     return impl;
 }
 
-void RovizItemBaseCmdline::start()
+void ItemBaseCmdline::start()
 {
 }
 
-void RovizItemBaseCmdline::stop()
+void ItemBaseCmdline::stop()
 {
 }
 
@@ -124,4 +127,6 @@ void RovizItemBaseCmdline::stop()
     template Input<T> RovizItemBaseCmdline::addInputBase<T>(std::string name, RovizItem *item); \
     template Output<T> RovizItemBaseCmdline::addOutputBase<T>(std::string name);
 
-DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE)
+ROVIZ_DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE)
+
+}

@@ -2,6 +2,9 @@
 #include "streams/message_m.h"
 #include "streams/message_p.h"
 
+namespace roviz
+{
+
 MessageMutable::MessageMutable(std::string msg_type, std::initializer_list<SourceID> sources, int expected_size)
     : Message(msg_type, sources)
 {
@@ -31,4 +34,6 @@ void MessageMutable::append(const std::string &name, bool value)
 void MessageMutable::append(Message::Entry &&entry)
 {
     _this->entries.push_back(std::move(entry));
+}
+
 }

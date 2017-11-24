@@ -9,7 +9,6 @@
 #include <QIcon>
 #include "core/export_handling.h"
 
-class RovizItemBaseDev;
 class QCloseEvent;
 class SettingsScope;
 class QObject;
@@ -18,6 +17,11 @@ class QToolButton;
 class QTabBar;
 class QLineEdit;
 class QWidget;
+
+namespace roviz
+{
+
+class ItemBaseDev;
 
 /**
  * @brief Provides a shared window that displays data from all items
@@ -45,13 +49,13 @@ public:
      * because the shared window also has to handle the start/pause/stop events
      * of the items that are not visible.
      */
-    void addItem(RovizItemBaseDev *item);
+    void addItem(ItemBaseDev *item);
 
     /**
      * @brief Remove an item from the shared window
      * @param item The item to remove
      */
-    void removeItem(RovizItemBaseDev *item);
+    void removeItem(ItemBaseDev *item);
 
     /**
      * @brief Loads the config (if not already done) and shows the window
@@ -83,7 +87,7 @@ private:
 
     QObject *destructor;
     QList<QDockWidget*> dock_items;
-    QList<RovizItemBaseDev*> parents;
+    QList<ItemBaseDev*> parents;
     bool running, paused, initialized;
     SettingsScope *project_settings;
     QToolButton *btn_start, *btn_pause, *btn_stop, *btn_new_tab;
@@ -112,5 +116,7 @@ private slots:
     void tabFinishRename(void);
     void itemClosed(void);
 };
+
+}
 
 #endif // SHARED_WINDOW_H

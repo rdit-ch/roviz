@@ -3,6 +3,9 @@
 
 #include "stream_object.h"
 
+namespace roviz
+{
+
 /**
  * @brief Private part of the StreamObject class
  *
@@ -16,5 +19,7 @@ public:
     StreamObjectPrivate() = default;
     virtual ~StreamObjectPrivate() = default;
 };
+
+}
 
 #endif // STREAM_OBJECT_P_H

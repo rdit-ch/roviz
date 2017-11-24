@@ -5,6 +5,9 @@
 #include "streams/stream_object_p.h"
 #include "streams/message.h"
 
+namespace roviz
+{
+
 /**
  * @brief Private part of the Message class
  *
@@ -17,5 +20,7 @@ public:
     Message::Entry default_entry;
     std::string type;
 };
+
+}
 
 #endif // MESSAGEPRIVATE_H

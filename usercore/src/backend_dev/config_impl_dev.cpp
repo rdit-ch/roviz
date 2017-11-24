@@ -21,8 +21,11 @@
 #include "core/template_decl.h"
 #include "core/roviz_item.h"
 
+namespace roviz
+{
+
 template<>
-ConfigImplDev<int>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
+ConfigImplDev<int>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
@@ -42,7 +45,7 @@ ConfigImplDev<int>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &n
 }
 
 template<>
-ConfigImplDev<double>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
+ConfigImplDev<double>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
@@ -62,7 +65,7 @@ ConfigImplDev<double>::ConfigImplDev(RovizItemBaseDev *parent, const std::string
 }
 
 template<>
-ConfigImplDev<std::string>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
+ConfigImplDev<std::string>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QLineEdit *edit = new QLineEdit();
@@ -89,7 +92,7 @@ ConfigImplDev<std::string>::ConfigImplDev(RovizItemBaseDev *parent, const std::s
 }
 
 template<>
-ConfigImplDev<std::vector<std::string> >::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::vector<std::string > >::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed)
+ConfigImplDev<std::vector<std::string> >::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::vector<std::string > >::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QComboBox *combo = new QComboBox();
@@ -110,7 +113,7 @@ ConfigImplDev<std::vector<std::string> >::ConfigImplDev(RovizItemBaseDev *parent
 }
 
 template<>
-ConfigImplDev<bool>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
+ConfigImplDev<bool>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QCheckBox *box = new QCheckBox();
@@ -128,7 +131,7 @@ ConfigImplDev<bool>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &
 }
 
 template<>
-ConfigImplDev<FilePath>::ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
+ConfigImplDev<FilePath>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
     QFileDialog::FileMode mode;
@@ -349,3 +352,5 @@ void ConfigImplDev<FilePath>::save()
 #define INSTANTIATE_CONFIG_IMPL(T) template class ConfigImplDev<T>;
 
 DO_FOR_ALL_CONFIG_TYPES(INSTANTIATE_CONFIG_IMPL)
+
+}

@@ -4,6 +4,9 @@
 #include <vector>
 #include "streams/sparse.h"
 
+namespace roviz
+{
+
 template<class T>
 class ROVIZ_EXPORT SparseMutable : public Sparse<T>
 {
@@ -19,5 +22,7 @@ public:
     typename std::vector<T>::iterator begin(void);
     typename std::vector<T>::iterator end(void);
 };
+
+}
 
 #endif // SPARSE_M_H

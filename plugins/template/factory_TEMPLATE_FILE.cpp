@@ -19,7 +19,7 @@ extern "C" {
 // This is not in the header to prevent a name-clash
 ROVIZ_EXPORT const char *rovizItemName = "TEMPLATE_CLASSItem";
 
-RovizItemBase *rovizItemFactory(void)
+roviz::ItemBase *rovizItemFactory(void)
 {
     return new TEMPLATE_CLASSItem();
 }

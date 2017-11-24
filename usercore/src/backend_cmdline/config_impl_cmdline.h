@@ -6,6 +6,9 @@
 #include "config/config_storage_type.h"
 #include "backend_cmdline/config_impl_base_cmdline.h"
 
+namespace roviz
+{
+
 /**
  * @brief The Config implementation for the Cmdline backend
  *
@@ -83,5 +86,7 @@ public:
 private:
     typename ConfigStorageType<T>::type val;
 };
+
+}
 
 #endif // CONFIG_IMPL_CMDLINE_H

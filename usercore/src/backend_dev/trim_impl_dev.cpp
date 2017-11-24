@@ -12,7 +12,10 @@
 #include "core/roviz_item.h"
 #include "backend_dev/roviz_item_base_dev.h"
 
-TrimImplDev::TrimImplDev(RovizItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
+namespace roviz
+{
+
+TrimImplDev::TrimImplDev(ItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
     : item(item), name(name), default_value(default_value), min(min), logarithmic(logarithmic), notifier_func(notifier_func)
 {
     // steps == 0 means a step size of 1
@@ -96,4 +99,6 @@ void TrimImplDev::valueChanged(int int_value)
     // It is probably faster to just call an empty function than to first check if it's empty
     // and only call it if it's not.
     this->notifier_func(this->val);
+}
+
 }

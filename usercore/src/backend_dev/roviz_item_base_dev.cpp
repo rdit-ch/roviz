@@ -19,9 +19,12 @@
 #include "opencv/cv.h"
 #include "streams/all_streams.h"
 
-RovizItemBaseDev::RovizItemBaseDev(std::string type_name)
+namespace roviz
+{
+
+ItemBaseDev::ItemBaseDev(std::string type_name)
     : AbstractItem(QString::fromStdString(type_name)),
-      _this(new RovizItemBaseDevPrivate(this))
+      _this(new ItemBaseDevPrivate(this))
 {
     // Each item can display a widget in the shared window.
     // That's prepared here.
@@ -42,7 +45,7 @@ RovizItemBaseDev::RovizItemBaseDev(std::string type_name)
     hlayout->addWidget(_this->control_base);
     _this->main_layout->addLayout(hlayout);
     connect(_this->collapse_btn, &QPushButton::clicked,
-            _this.data(), &RovizItemBaseDevPrivate::collapseBtnClicked);
+            _this.data(), &ItemBaseDevPrivate::collapseBtnClicked);
 
     _this->main_layout->addLayout(_this->main_image_layout);
     _this->main_widget->setLayout(_this->main_layout);
@@ -56,13 +59,13 @@ RovizItemBaseDev::RovizItemBaseDev(std::string type_name)
     // Hide the collapse button as long as there is nothing to collapse
     _this->collapse_btn->hide();
     connect(this->settingsScope(), &SettingsScope::parentScopeChanged,
-            _this.data(), &RovizItemBaseDevPrivate::parentScopeChanged);
+            _this.data(), &ItemBaseDevPrivate::parentScopeChanged);
     _this->main_widget->hide();
     _this->config_present = false;
     cv::setBreakOnError(true);
 }
 
-RovizItemBaseDev::~RovizItemBaseDev()
+ItemBaseDev::~ItemBaseDev()
 {
     if(this->settingsScope()->parentScope() != nullptr)
         SharedWindow::instance(this->settingsScope()->parentScope())->removeItem(this);
@@ -72,14 +75,14 @@ RovizItemBaseDev::~RovizItemBaseDev()
         widget->qwidget()->deleteLater();
 }
 
-QWidget *RovizItemBaseDev::widget()
+QWidget *ItemBaseDev::widget()
 {
     // The main widget contains the trims as well as all output stream widgets
     return _this->main_widget;
 }
 
 template<class T>
-Input<T> RovizItemBaseDev::addInputBase(std::string name, RovizItem *item)
+Input<T> ItemBaseDev::addInputBase(std::string name, Item *item)
 {
     ItemInput *in;
     Input<T> input(item);
@@ -100,7 +103,7 @@ Input<T> RovizItemBaseDev::addInputBase(std::string name, RovizItem *item)
 }
 
 template<class T>
-Output<T> RovizItemBaseDev::addOutputBase(std::string name)
+Output<T> ItemBaseDev::addOutputBase(std::string name)
 {
     ItemOutput *item_output;
     StreamWidget *widget;
@@ -126,7 +129,7 @@ Output<T> RovizItemBaseDev::addOutputBase(std::string name)
     return output;
 }
 
-TrimImpl *RovizItemBaseDev::getTrimImpl(std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
+TrimImpl *ItemBaseDev::getTrimImpl(std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
 {
     TrimImplDev *impl = new TrimImplDev(this, name, default_value, min, max, steps, logarithmic, notifier_func);
 
@@ -136,7 +139,7 @@ TrimImpl *RovizItemBaseDev::getTrimImpl(std::string name, double default_value, 
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
 {
     ConfigImplDev<int> *impl = new ConfigImplDev<int>(this, name, default_value, min, max, restart_when_changed);
 
@@ -145,7 +148,7 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
 {
     ConfigImplDev<double> *impl = new ConfigImplDev<double>(this, name, default_value, min, max, restart_when_changed);
 
@@ -154,7 +157,7 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
 {
     ConfigImplDev<std::string> *impl = new ConfigImplDev<std::string>(this, name, default_value, checker, restart_when_changed);
 
@@ -163,7 +166,7 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::vector<std::string> >::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<std::vector<std::string> >::type &default_index, const std::vector<std::string> &possibilities, bool restart_when_changed)
 {
     ConfigImplDev<std::vector<std::string> > *impl = new ConfigImplDev<std::vector<std::string> >(this, name, default_index, possibilities, restart_when_changed);
 
@@ -172,7 +175,7 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
 {
     ConfigImplDev<bool> *impl = new ConfigImplDev<bool>(this, name, default_value, restart_when_changed);
 
@@ -181,7 +184,7 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
+ConfigImpl *ItemBaseDev::getConfigImpl(const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
 {
     ConfigImplDev<FilePath> *impl = new ConfigImplDev<FilePath>(this, name, default_value, file_mode, filter, restart_when_changed);
 
@@ -190,17 +193,17 @@ ConfigImpl *RovizItemBaseDev::getConfigImpl(const std::string &name, const typen
     return impl;
 }
 
-void RovizItemBaseDev::start()
+void ItemBaseDev::start()
 {
 }
 
-void RovizItemBaseDev::stop()
+void ItemBaseDev::stop()
 {
     for(StreamWidget* widget : _this->output_widgets)
         widget->resetWidget();
 }
 
-void RovizItemBaseDev::restart()
+void ItemBaseDev::restart()
 {
     // Restarting doesn't mean starting it when it was stopped before
     if(this->running())
@@ -210,7 +213,7 @@ void RovizItemBaseDev::restart()
     }
 }
 
-void RovizItemBaseDev::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+void ItemBaseDev::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     // In case AbstractItem also implements this
     AbstractItem::mouseDoubleClickEvent(event);
@@ -220,14 +223,16 @@ void RovizItemBaseDev::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     _this->main_widget->show();
 }
 
-void RovizItemBaseDev::contextMenuPrepare(QMenu &menu) const
+void ItemBaseDev::contextMenuPrepare(QMenu &menu) const
 {
     if(_this->config_present)
         menu.addAction("Configure", [this]{_this->showConfigWindow();});
 }
 
 #define INSTANTIATE_ROVIZ_ITEM_BASE_DEV(T) \
-    template Input<T> RovizItemBaseDev::addInputBase<T>(std::string name, RovizItem *item); \
-    template Output<T> RovizItemBaseDev::addOutputBase<T>(std::string name);
+    template Input<T> ItemBaseDev::addInputBase<T>(std::string name, Item *item); \
+    template Output<T> ItemBaseDev::addOutputBase<T>(std::string name);
 
-DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_DEV)
+ROVIZ_DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_DEV)
+
+}

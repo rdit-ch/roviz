@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+namespace roviz
+{
+
 /**
  * @brief This class assigns each stream a color so they are easily
  * distinguishable.
@@ -23,5 +26,7 @@ public:
      */
     static void init(void);
 };
+
+}
 
 #endif // STARTUP_INIT_H

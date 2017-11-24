@@ -11,6 +11,9 @@
 #include "core/input.h"
 #include "core/output.h"
 
+namespace roviz
+{
+
 class TrimImpl;
 class ConfigImpl;
 
@@ -19,18 +22,18 @@ class ConfigImpl;
  *
  * \sa RovizItem
  */
-class ROVIZ_EXPORT RovizItemBaseCmdline
+class ROVIZ_EXPORT ItemBaseCmdline
 {
-COPY_DELETE(RovizItemBaseCmdline)
-MOVE_DELETE(RovizItemBaseCmdline)
+COPY_DELETE(ItemBaseCmdline)
+MOVE_DELETE(ItemBaseCmdline)
 
 public:
     /**
      * @brief Constructor
      * @param name Ignored for this backend
      */
-    explicit RovizItemBaseCmdline(std::string name);
-    virtual ~RovizItemBaseCmdline() = default;
+    explicit ItemBaseCmdline(std::string name);
+    virtual ~ItemBaseCmdline() = default;
 
     /**
      * @brief Connect an input of this item to an output of another item
@@ -42,7 +45,7 @@ public:
      * \sa Input::connect
      * \sa Output::connect
      */
-    bool connect(int input_index, RovizItemBaseCmdline *from_item, int output_index);
+    bool connect(int input_index, ItemBaseCmdline *from_item, int output_index);
 
     /**
      * @brief Set the value of a Trim
@@ -68,7 +71,7 @@ public:
 
 protected:
     template<class T>
-    Input<T> addInputBase(std::string name, RovizItem *item);
+    Input<T> addInputBase(std::string name, Item *item);
 
     template<class T>
     Output<T> addOutputBase(std::string name);
@@ -88,7 +91,9 @@ public:
     ///@}
 
     // This is public to allow the starter (ProjectParser) access
-    std::unique_ptr<RovizItemBaseCmdlinePrivate> _this_base;
+    std::unique_ptr<ItemBaseCmdlinePrivate> _this_base;
 };
+
+}
 
 #endif // ROVIZ_ITEM_BASE_CMDLINE_H

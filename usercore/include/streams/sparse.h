@@ -21,8 +21,11 @@ class StreamWidget;
 
 // TODO Make this dynamic
 // If we do this within Sparse<T>, it will get instantiated multiple times
-extern const QColor SparseColor[10];
+namespace roviz { extern const QColor SparseColor[10]; }
 #endif
+
+namespace roviz
+{
 
 template<class T> class SparsePrivate;
 
@@ -64,7 +67,9 @@ public:
 #endif
 };
 
-DO_FOR_ALL_SPARSE_TYPES(DECLARE_STREAM_OBJECT)
-DO_FOR_ALL_SPARSE(DECLARE_STREAM_OBJECT)
+}
+
+ROVIZ_DO_FOR_ALL_SPARSE_TYPES(DECLARE_STREAM_OBJECT)
+ROVIZ_DO_FOR_ALL_SPARSE(DECLARE_STREAM_OBJECT)
 
 #endif // SPARSE_H

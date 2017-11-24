@@ -6,7 +6,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/imgproc.hpp"
 
-class HarrisCornerItem : public RovizItem
+class HarrisCornerItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -20,9 +20,9 @@ protected:
     void thread(void) override;
 
 private:
-    Input<Image> input;
-    Output<Sparse<Point2D> > output;
-    Trim trim_block_size, trim_aperture_size, trim_threshold, trim_k_param;
+    roviz::Input<roviz::Image> input;
+    roviz::Output<roviz::Sparse<roviz::Point2D> > output;
+    roviz::Trim trim_block_size, trim_aperture_size, trim_threshold, trim_k_param;
 };
 
 #endif // HARRISEDGE_ITEM_H

@@ -13,6 +13,10 @@
 #include "config/config_storage_type.h"
 
 class QGraphicsSceneMouseEvent;
+
+namespace roviz
+{
+
 class ConfigImpl;
 class TrimImpl;
 
@@ -22,20 +26,20 @@ class TrimImpl;
  * \sa RovizItem
  * \sa RovizItemDevBasePrivate
  */
-class ROVIZ_EXPORT RovizItemBaseDev : public AbstractItem
+class ROVIZ_EXPORT ItemBaseDev : public AbstractItem
 {
 Q_OBJECT
-friend class RovizItemBaseDevPrivate;
+friend class ItemBaseDevPrivate;
 
-COPY_DELETE(RovizItemBaseDev)
-MOVE_DELETE(RovizItemBaseDev)
+COPY_DELETE(ItemBaseDev)
+MOVE_DELETE(ItemBaseDev)
 
 public:
     /**
      * @param type_name Name of the item
      */
-    explicit RovizItemBaseDev(std::string type_name);
-    virtual ~RovizItemBaseDev();
+    explicit ItemBaseDev(std::string type_name);
+    virtual ~ItemBaseDev();
 
     /**
      * @return The main widget of the item
@@ -62,7 +66,7 @@ public:
 
 protected:
     template<class T>
-    Input<T> addInputBase(std::string name, RovizItem *item);
+    Input<T> addInputBase(std::string name, Item *item);
 
     template<class T>
     Output<T> addOutputBase(std::string name);
@@ -103,7 +107,9 @@ protected:
     void contextMenuPrepare(QMenu &menu) const override;
 
 private:
-    QScopedPointer<RovizItemBaseDevPrivate> _this;
+    QScopedPointer<ItemBaseDevPrivate> _this;
 };
+
+}
 
 #endif // ROVIZ_ITEM_BASE_DEV_H

@@ -6,6 +6,9 @@
 #include "gui/stream_widget.h"
 #include "streams/message.h"
 
+namespace roviz
+{
+
 class MessageWidget : public QTreeWidget, public StreamWidget
 {
 Q_OBJECT
@@ -51,5 +54,7 @@ private slots:
      */
     void newObjectSlot(Message msg);
 };
+
+}
 
 #endif // MESSAGE_WIDGET_H

@@ -8,6 +8,9 @@ class QWidget;
 class QCloseEvent;
 class QShowEvent;
 
+namespace roviz
+{
+
 /**
  * @brief QDockWidget that emits signals
  *
@@ -50,5 +53,7 @@ signals:
      */
     void shown(void);
 };
+
+}
 
 #endif // DOCKWIDGETSIGNALING_H

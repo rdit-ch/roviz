@@ -3,6 +3,9 @@
 
 #include "streams/message.h"
 
+namespace roviz
+{
+
 /**
  * @brief The mutable version of Message
  *
@@ -59,5 +62,7 @@ public:
      */
     void append(Entry &&entry);
 };
+
+}
 
 #endif // MESSAGE_M_H

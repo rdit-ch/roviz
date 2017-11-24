@@ -2,6 +2,9 @@
 #include "streams/image_m.h"
 #include "streams/image_p.h"
 
+namespace roviz
+{
+
 #ifdef QT_PRESENT
 ImageMutable::ImageMutable(QImage img, std::initializer_list<SourceID> sources)
     : Image(img, sources)
@@ -37,4 +40,6 @@ ImageMutable::ImageMutable(int w, int h, Image::Format f, std::initializer_list<
 unsigned char *ImageMutable::data()
 {
     return _this->data_ptr;
+}
+
 }

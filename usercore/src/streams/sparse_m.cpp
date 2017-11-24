@@ -5,6 +5,9 @@
 // If I just use '_this' instead of 'this->_this', the compiler complains.
 // No idea why.
 
+namespace roviz
+{
+
 template<class T>
 SparseMutable<T>::SparseMutable(Image base_image, std::initializer_list<SourceID> sources)
     : Sparse<T>(base_image, sources)
@@ -40,4 +43,6 @@ typename std::vector<T>::iterator SparseMutable<T>::end()
 
 #define INSTANTIATE_SPARSE_MUTABLE(T) template class SparseMutable<T>;
 
-DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_MUTABLE)
+ROVIZ_DO_FOR_ALL_SPARSE_TYPES(INSTANTIATE_SPARSE_MUTABLE)
+
+}

@@ -11,7 +11,7 @@
  *
  * \ingroup robot_plugins
  */
-class FrameDelayerItem : public RovizItem
+class FrameDelayerItem : public roviz::Item
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT
@@ -26,10 +26,10 @@ protected:
     void trimChanged(void *trim, int value);
 
 private:
-    Input<Image> input;
-    Output<Image> output;
-    Trim trim_delay;
-    std::queue<Image> queue;
+    roviz::Input<roviz::Image> input;
+    roviz::Output<roviz::Image> output;
+    roviz::Trim trim_delay;
+    std::queue<roviz::Image> queue;
     std::mutex mtx;
 };
 

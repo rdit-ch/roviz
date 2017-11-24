@@ -1,6 +1,9 @@
 #ifndef TRIM_IMPL_H
 #define TRIM_IMPL_H
 
+namespace roviz
+{
+
 /**
  * @brief The interface of a Trim implementation
  */
@@ -16,5 +19,7 @@ public:
      */
     virtual double value(void) = 0;
 };
+
+}
 
 #endif // TRIM_IMPL_H

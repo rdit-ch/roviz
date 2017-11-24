@@ -4,6 +4,9 @@
 #include "core/export_handling.h"
 #include "config/config_impl.h"
 
+namespace roviz
+{
+
 /**
  * @brief Base class for ConfigImplCmdline
  *
@@ -31,5 +34,7 @@ public:
      */
     virtual void load(std::string value) = 0;
 };
+
+}
 
 #endif // CONFIG_IMPL_BASE_CMDLINE_H

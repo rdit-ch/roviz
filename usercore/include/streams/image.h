@@ -13,6 +13,9 @@
     #include <opencv2/imgproc.hpp>
 #endif
 
+namespace roviz
+{
+
 class ImagePrivate;
 class OutputPrivate;
 class StreamWidget;
@@ -180,6 +183,8 @@ public:
 #endif
 };
 
-DECLARE_STREAM_OBJECT(Image)
+}
+
+DECLARE_STREAM_OBJECT(roviz::Image)
 
 #endif // IMAGE_H

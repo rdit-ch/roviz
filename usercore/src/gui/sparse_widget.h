@@ -5,6 +5,9 @@
 #include <functional>
 #include "gui/image_widget.h"
 
+namespace roviz
+{
+
 /**
  * @brief A widget to show sparse data
  *
@@ -50,5 +53,7 @@ private:
     template<class T>
     void updatePenColor(QPainter &painter, T obj);
 };
+
+}
 
 #endif // SPARSE_WIDGET_H

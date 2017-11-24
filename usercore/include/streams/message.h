@@ -8,6 +8,9 @@
 #include "core/export_handling.h"
 #include "streams/stream_object.h"
 
+namespace roviz
+{
+
 class OutputPrivate;
 class StreamWidget;
 class MessageWidget;
@@ -132,6 +135,8 @@ private:
     std::string value_var;
 };
 
-DECLARE_STREAM_OBJECT(Message)
+}
+
+DECLARE_STREAM_OBJECT(roviz::Message)
 
 #endif // MESSAGE_H
