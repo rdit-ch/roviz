@@ -20,7 +20,7 @@ class Item;
 template<class T>
 class ROVIZ_EXPORT Output
 {
-// We have to directly access '_this' from the RovizItem bases,
+// We have to directly access '_this' from the Item bases,
 // there is no way around this at the moment
 friend class ItemBase;
 

@@ -18,9 +18,9 @@ class TrimImpl;
 class ConfigImpl;
 
 /**
- * @brief The RovizItem implementation for the Cmdline backend
+ * @brief The Item implementation for the Cmdline backend
  *
- * \sa RovizItem
+ * \sa Item
  */
 class ROVIZ_EXPORT ItemBaseCmdline
 {
@@ -57,11 +57,11 @@ public:
     /**
      * @name Interface implementation
      *
-     * Implementation of the interface that RovizItem demands.
-     * See the documentation of RovizItem to see what these functions
+     * Implementation of the interface that Item demands.
+     * See the documentation of Item to see what these functions
      * do.
      *
-     * \sa RovizItem
+     * \sa Item
      */
     ///@{
     virtual void pause(void) = 0;

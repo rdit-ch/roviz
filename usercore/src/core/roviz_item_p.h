@@ -12,9 +12,9 @@ namespace roviz
 class Item;
 
 /**
- * @brief Private part of RovizItem
+ * @brief Private part of Item
  *
- * \sa RovizItem
+ * \sa Item
  */
 class ItemPrivate
 {

@@ -40,7 +40,7 @@ public:
     /**
      * @brief Constructs an implementation
      *
-     * \sa RovizItem::addTrim
+     * \sa Item::addTrim
      */
     TrimImplDev(ItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func = [](double){});
 

@@ -43,7 +43,7 @@ bool ItemLoader::load(std::string path, bool silent)
         if(name_ptr == nullptr)
             goto fail;
 
-        RovizItemBaseCmdline *(*fn)();
+        roviz::ItemBaseCmdline *(*fn)();
         *(void**)(&fn) = dlsym(lib_handle, "rovizItemFactory");
         if(fn == nullptr)
             goto fail;
@@ -63,7 +63,7 @@ fail:   dlclose(lib_handle);
     return true;
 }
 
-RovizItemBaseCmdline *ItemLoader::newItem(const std::string type) const
+roviz::ItemBaseCmdline *ItemLoader::newItem(const std::string type) const
 {
     auto factory = this->factories.find(type);
     if(factory == this->factories.end())

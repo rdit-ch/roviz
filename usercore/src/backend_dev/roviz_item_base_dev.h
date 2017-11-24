@@ -21,10 +21,10 @@ class ConfigImpl;
 class TrimImpl;
 
 /**
- * @brief Base class that binds RovizItem to the itemframework/Qt
+ * @brief Base class that binds Item to the itemframework/Qt
  *
- * \sa RovizItem
- * \sa RovizItemDevBasePrivate
+ * \sa Item
+ * \sa ItemDevBasePrivate
  */
 class ROVIZ_EXPORT ItemBaseDev : public AbstractItem
 {
@@ -54,8 +54,8 @@ public:
     /**
      * @name Interface implementation
      *
-     * Implementation of the interface that RovizItem demands.
-     * See the documentation of RovizItem to see what these functions
+     * Implementation of the interface that Item demands.
+     * See the documentation of Item to see what these functions
      * do.
      */
     ///@{
@@ -74,7 +74,7 @@ protected:
     TrimImpl *getTrimImpl(std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func);
 
     // Note: The signatures of the getConfigImpl() functions is distinct for every type,
-    // so we don't really need a template here. We also wouldn't need one in RovizItem
+    // so we don't really need a template here. We also wouldn't need one in Item
     // in the first place, but in the future, there might come more configs with the same
     // signature and introducing templates at that point would mean rewriting all plugins.
     // If a config with the same signature comes up in the futere, we can safely switch to

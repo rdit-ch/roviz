@@ -21,11 +21,11 @@ public:
     void signalChecker(void);
 
 private:
-    std::map<int, RovizItemBaseCmdline*> items;
+    std::map<int, roviz::ItemBaseCmdline*> items;
 
     bool loadItems(tinyxml2::XMLElement *project, const ItemLoader &loader);
     bool loadConnections(tinyxml2::XMLElement *project);
-    bool loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemBaseCmdline *item);
+    bool loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, roviz::ItemBaseCmdline *item);
 };
 
 #endif // PROJECT_PARSER_H

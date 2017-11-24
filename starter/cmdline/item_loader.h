@@ -6,7 +6,10 @@
 #include <map>
 #include <functional>
 
-class RovizItemBaseCmdline;
+namespace roviz
+{
+    class ItemBaseCmdline;
+}
 
 class ItemLoader
 {
@@ -14,10 +17,10 @@ public:
     ItemLoader() = default;
     ~ItemLoader();
     bool load(std::string path, bool silent = false);
-    RovizItemBaseCmdline *newItem(const std::string type) const;
+    roviz::ItemBaseCmdline *newItem(const std::string type) const;
 
 private:
-    std::map<std::string, RovizItemBaseCmdline *(*)()> factories;
+    std::map<std::string, roviz::ItemBaseCmdline *(*)()> factories;
     std::list<void*> lib_handles;
 };
 

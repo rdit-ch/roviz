@@ -18,9 +18,9 @@ class ConfigImplBaseDev;
 class StreamWidget;
 
 /**
- * @brief Private part of RovizItemDevBase
+ * @brief Private part of ItemDevBase
  *
- * \sa RovizItemDevBase
+ * \sa ItemDevBase
  */
 class ItemBaseDevPrivate : public QObject
 {

@@ -41,8 +41,8 @@ namespace roviz
  * Examples might be Image or Message. You can also implement your own
  * stream-type. Look at StreamObject for more information.
  *
- * \sa RovizItemBase
- * \sa RovizItemNoExport
+ * \sa ItemBase
+ * \sa ItemNoExport
  */
 class ROVIZ_EXPORT Item : public ItemBase
 {

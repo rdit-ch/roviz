@@ -16,9 +16,9 @@ class Item;
  * A Trim is a value that can be adjusted at runtime. If you're using the
  * itemframework as a backend, this will be implemented with sliders.
  *
- * Do not use this class directly, always use RovizItem::addTrim!
+ * Do not use this class directly, always use Item::addTrim!
  *
- * \sa RovizItem
+ * \sa Item
  * \sa Config
  */
 class ROVIZ_EXPORT Trim
@@ -32,7 +32,7 @@ public:
     ~Trim() = default;
 
     /**
-     * @brief See RovizItem::addTrim
+     * @brief See Item::addTrim
      */
     explicit Trim(TrimImpl *impl);
 

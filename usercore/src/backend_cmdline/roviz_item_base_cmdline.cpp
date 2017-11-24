@@ -62,8 +62,6 @@ Input<T> ItemBaseCmdline::addInputBase(std::string , Item *item)
 template<class T>
 Output<T> ItemBaseCmdline::addOutputBase(std::string )
 {
-    logger->critical_if(item == nullptr, "Trying to add an output to the base of a null-item");
-
     Output<T> output;
 
     _this_base->outputs.push_back(output._this.get());
@@ -143,8 +141,8 @@ void ItemBaseCmdline::stop()
 }
 
 #define INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE(T) \
-    template Input<T> RovizItemBaseCmdline::addInputBase<T>(std::string name, RovizItem *item); \
-    template Output<T> RovizItemBaseCmdline::addOutputBase<T>(std::string name);
+    template Input<T> ItemBaseCmdline::addInputBase<T>(std::string name, Item *item); \
+    template Output<T> ItemBaseCmdline::addOutputBase<T>(std::string name);
 
 ROVIZ_DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_CMDLINE)
 

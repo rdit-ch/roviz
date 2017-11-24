@@ -9,9 +9,9 @@
  * The roviz framework is optimized to easily manipulate image/video streams
  * within the itemframework. It is completely decoupled from Qt and items that
  * are carefully written can therefore directly run on e.g. embedded hardware.
- * To achieve this portability, the base class of all items, RovizItem, is
+ * To achieve this portability, the base class of all items, Item, is
  * written portably in pure C++. Depending on how the user compiles the program,
- * RovizItem gets a different base class and a different backend. Currently there
+ * Item gets a different base class and a different backend. Currently there
  * are two supported backends: Dev and Cmdline. Dev is the default itemframework
  * implementation mainly intended for devlopment and testing of solutions. The
  * Cmdline backend on the other hand has no graphical interface anymore and is
@@ -57,7 +57,7 @@
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Cmdline
     // We don't use a typedef here because typedefs can't be friends (used in Input/Output)
-    #define RovizItemBase  RovizItemBaseCmdline
+    #define ItemBase  ItemBaseCmdline
 
     #define ROVIZ_BASE_INCLUDE    "backend_cmdline/roviz_item_base_cmdline.h"
     #define ROVIZ_INVOKABLE

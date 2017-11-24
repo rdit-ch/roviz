@@ -37,9 +37,9 @@ public:
     /**
      * @name Config interface implementation
      *
-     * These are the same parameters that are used in RovizItem.
+     * These are the same parameters that are used in Item.
      *
-     * \sa RovizItem
+     * \sa Item
      */
     ///@{
     // Int

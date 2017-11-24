@@ -14,9 +14,9 @@ class InputPrivate;
 class OutputPrivate;
 
 /**
- * @brief Private part of RovizItemBaseCmdline
+ * @brief Private part of ItemBaseCmdline
  *
- * \sa RovizItemBaseCmdline
+ * \sa ItemBaseCmdline
  */
 class ItemBaseCmdlinePrivate
 {

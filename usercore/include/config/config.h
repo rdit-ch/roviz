@@ -13,7 +13,7 @@ namespace roviz
  * @brief Storage for the configuration of an item
  *
  * You can store configurations that you rarely change using this class. Always
- * use the RovizItem::addConfig functions to construct a Config!
+ * use the Item::addConfig functions to construct a Config!
  *
  * \sa ConfigBase
  * \sa Trim
@@ -35,8 +35,8 @@ public:
     /**
      * @name Config interface
      *
-     * Look at RovizItem::addConfig for an explanation of the parameters.
-     * Never use those directly, always use RovizItem::addConfig!
+     * Look at Item::addConfig for an explanation of the parameters.
+     * Never use those directly, always use Item::addConfig!
      */
     Config(ConfigImpl *impl);
 

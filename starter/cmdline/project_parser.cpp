@@ -7,6 +7,7 @@
 #include <thread>
 #include "backend_cmdline/roviz_item_base_cmdline.h"
 #include "backend_cmdline/config_impl_base_cmdline.h"
+#include "core/logger.h"
 
 bool ProjectParser::parseProject(const std::string &pro_file, const ItemLoader &loader)
 {
@@ -66,7 +67,7 @@ void ProjectParser::signalChecker()
 bool ProjectParser::loadItems(tinyxml2::XMLElement *project, const ItemLoader &loader)
 {
     int id;
-    RovizItemBaseCmdline *item;
+    roviz::ItemBaseCmdline *item;
     tinyxml2::XMLElement *xml_item = project->FirstChildElement("GraphicsItem");
     tinyxml2::XMLElement *xml_top_item = xml_item;
 
@@ -85,7 +86,7 @@ bool ProjectParser::loadItems(tinyxml2::XMLElement *project, const ItemLoader &l
 
         if(type_cstr == nullptr)
         {
-            roviz::logger->cirtical("Projcet file is invalid (item without type)");
+            roviz::logger->critical("Projcet file is invalid (item without type)");
             return false;
         }
 
@@ -185,7 +186,7 @@ bool ProjectParser::loadConnections(tinyxml2::XMLElement *project)
     return true;
 }
 
-bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemBaseCmdline *item)
+bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, roviz::ItemBaseCmdline *item)
 {
     tinyxml2::XMLElement *xml_setting = xml_ss->FirstChildElement("Setting");
     if(xml_setting == nullptr)

@@ -7,7 +7,7 @@
 
 namespace roviz
 {
-    extern std::shared_ptr<spdlog::logger> logger;
+    ROVIZ_EXPORT extern std::shared_ptr<spdlog::logger> logger;
 
     void ROVIZ_EXPORT initLogger(void);
 }
