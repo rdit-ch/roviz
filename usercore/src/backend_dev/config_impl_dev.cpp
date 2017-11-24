@@ -20,6 +20,7 @@
 #include "gui/gui_manager.h"
 #include "core/template_decl.h"
 #include "core/roviz_item.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -28,6 +29,8 @@ template<>
 ConfigImplDev<int>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<int>::type &default_value, int min, int max, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QLineEdit *edit = new QLineEdit();
     QIntValidator *valid = new QIntValidator(min, max);
 
@@ -48,6 +51,8 @@ template<>
 ConfigImplDev<double>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<double>::type &default_value, double min, double max, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QLineEdit *edit = new QLineEdit();
     QDoubleValidator *valid = new QDoubleValidator(min, max, 1000); // 1000 is the default
 
@@ -68,6 +73,8 @@ template<>
 ConfigImplDev<std::string>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::string>::type &default_value, std::function<bool (std::string &)> checker, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QLineEdit *edit = new QLineEdit();
 
     QObject::connect(edit, &QLineEdit::textEdited,
@@ -95,6 +102,8 @@ template<>
 ConfigImplDev<std::vector<std::string> >::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<std::vector<std::string > >::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QComboBox *combo = new QComboBox();
 
     for(const auto &entry : possibilities)
@@ -116,6 +125,8 @@ template<>
 ConfigImplDev<bool>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<bool>::type &default_value, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QCheckBox *box = new QCheckBox();
 
     QObject::connect(box, &QCheckBox::toggled,
@@ -134,6 +145,8 @@ template<>
 ConfigImplDev<FilePath>::ConfigImplDev(ItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<FilePath>::type &default_value, FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed)
     : parent(parent), name(name), val(default_value), restart_after_change(restart_when_changed), has_changed(false), tmp_changed(false)
 {
+    logger->critical_if(parent == nullptr, "Trying to construct a config implementation with a null-parent");
+
     QFileDialog::FileMode mode;
 
     switch(file_mode)

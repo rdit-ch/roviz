@@ -6,6 +6,7 @@
 #include <chrono>
 #include <condition_variable>
 #include "streams/all_streams.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -43,6 +44,8 @@ void Item::stop()
     }
     this->post_thread();
     ItemBase::stop();
+
+    logger->debug("Item stopped");
 }
 
 void Item::post_thread()
@@ -176,6 +179,8 @@ void Item::start()
     ItemBase::start();
     _this->is_stopped = false;
     _this->th = new std::thread(&Item::thread, this);
+
+    logger->debug("Item started");
 }
 
 void Item::pause()

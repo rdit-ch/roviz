@@ -19,6 +19,7 @@ USERCORE_NAME   = roviz_$$lower($$BACKEND)
 
 INCLUDEPATH += $$PROJECT_ROOT/usercore/include
 INCLUDEPATH += $$PROJECT_ROOT/usercore/src
+INCLUDEPATH += $$PROJECT_ROOT/spdlog/include
 
 # Propagate the selected backend to the code
 DEFINES += ROVIZ_SELECTED_BACKEND=$$BACKEND

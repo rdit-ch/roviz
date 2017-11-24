@@ -18,6 +18,7 @@
 #include "backend_dev/config_impl_dev.h"
 #include "opencv/cv.h"
 #include "streams/all_streams.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -84,6 +85,8 @@ QWidget *ItemBaseDev::widget()
 template<class T>
 Input<T> ItemBaseDev::addInputBase(std::string name, Item *item)
 {
+    logger->critical_if(item == nullptr, "Trying to add an input to the base of a null-item");
+
     ItemInput *in;
     Input<T> input(item);
     InputPrivate *in_p = input._this.get();
@@ -112,9 +115,13 @@ Output<T> ItemBaseDev::addOutputBase(std::string name)
 
     widget = T::initWidget(output_p);
 
-    // TODO Throw some kind of error here
+    // This is critical! We connect the items via their widget, so if an
+    // item has no widget, it is absolutely useless.
     if(widget == nullptr)
-        return output;
+    {
+        logger->critical("Trying to use an item with a null-widget");
+        exit(EINVAL);
+    }
 
     _this->main_image_layout->addWidget(widget->qwidget());
     _this->output_widgets.append(widget);

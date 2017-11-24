@@ -1,6 +1,7 @@
 
 #include "streams/image_m.h"
 #include "streams/image_p.h"
+#include "core/logger.h"
 
 namespace roviz
 {

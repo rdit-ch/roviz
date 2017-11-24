@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "core/template_decl.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -54,7 +55,9 @@ void ConfigImplCmdline<FilePath>::load(std::string value)
         list.push_back(value.substr(0, delim));
         value.erase(0, delim + 1);
     }
-    list.push_back(value);
+
+    if(!value.empty())
+        list.push_back(value);
 
     this->val = list;
 }

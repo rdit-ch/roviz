@@ -1,6 +1,7 @@
 
 #include "streams/sparse.h"
 #include "core/template_decl.h"
+#include "core/logger.h"
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     #include "gui/sparse_widget.h"
@@ -41,6 +42,7 @@ Sparse<T>::Sparse(const StreamObject &base)
 {
     this->_this_base = base._this_base;
     _this = dynamic_cast<SparsePrivate<T>*>(this->_this_base.get());
+    logger->critical_if(_this == nullptr, "Trying to construct a Sparse form a StreamObject that isn't a Sparse or has the wrong type");
 }
 
 template<class T>
@@ -74,10 +76,11 @@ std::size_t Sparse<T>::size()
 template<class T>
 const T &Sparse<T>::at(unsigned int index)
 {
-    if(index >= this->size())
-        return _this->default_value;
-    else
+    if(index < this->size())
         return _this->data[index];
+
+    logger->error("Sparse entry index out of bounds ({})", index);
+    return _this->default_value;
 }
 
 template<class T>

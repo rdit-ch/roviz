@@ -2,6 +2,7 @@
 #include "item_loader.h"
 #include <iostream>
 #include "core/roviz_item.h"
+#include "core/logger.h"
 
 #ifdef _WIN32
     #error Windows not supported yet
@@ -27,7 +28,7 @@ bool ItemLoader::load(std::string path, bool silent)
     if(dir == nullptr)
     {
         if(!silent)
-            std::cout << "Error: Could not open plugin directory (" + path + ")" << std::endl;
+            roviz::logger->critical("Could not open plugin directory ({})", path);
         return false;
     }
 
@@ -55,7 +56,7 @@ bool ItemLoader::load(std::string path, bool silent)
         continue;
 
 fail:   dlclose(lib_handle);
-        std::cout << "Warning: Invalid plugin (" + libpath + ")" << std::endl;
+        roviz::logger->warn("Invalid plugin ({})", libpath);
     }
 #endif
 

@@ -1,6 +1,7 @@
 
 #include "streams/sparse_m.h"
 #include "streams/all_streams.h"
+#include "core/logger.h"
 
 // If I just use '_this' instead of 'this->_this', the compiler complains.
 // No idea why.
@@ -18,9 +19,10 @@ template<class T>
 T &SparseMutable<T>::at(unsigned int index)
 {
     if(index >= this->size())
-        return this->_this->default_value;
-    else
         return this->_this->data[index];
+
+    logger->error("Sparse entry index out of bounds ({})", index);
+    return this->_this->default_value;
 }
 
 template<class T>

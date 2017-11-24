@@ -15,14 +15,14 @@ bool ProjectParser::parseProject(const std::string &pro_file, const ItemLoader &
     doc.LoadFile(pro_file.c_str());
     if(doc.ErrorID())
     {
-        std::cout << "Error: Cannot open file " << pro_file << std::endl;
+        roviz::logger->critical("Cannot open file {}", pro_file);
         return false;
     }
 
     tinyxml2::XMLElement *project = doc.RootElement();
     if(project == nullptr)
     {
-        std::cout << "Error: Project file is not in XML format" << std::endl;
+        roviz::logger->critical("Project file is not in XML format", pro_file);
         return false;
     }
 
@@ -78,21 +78,21 @@ bool ProjectParser::loadItems(tinyxml2::XMLElement *project, const ItemLoader &l
 
         if(id_cstr == nullptr)
         {
-            std::cout << "Error: Project file is invalid (item without ID)" << std::endl;
+            roviz::logger->critical("Project file is invalid (item without ID)");
             return false;
         }
         id = atoi(id_cstr);
 
         if(type_cstr == nullptr)
         {
-            std::cout << "Error: Projcet file is invalid (item without type)" << std::endl;
+            roviz::logger->cirtical("Projcet file is invalid (item without type)");
             return false;
         }
 
         item = loader.newItem(type_cstr);
         if(item == nullptr)
         {
-            std::cout << "Error: Plugin not found (" << type_cstr << ")" << std::endl;
+            roviz::logger->critical("Plugin not found ({})", type_cstr);
             return false;
         }
 
@@ -106,7 +106,7 @@ bool ProjectParser::loadItems(tinyxml2::XMLElement *project, const ItemLoader &l
             {
                 if(!this->loadTrimsAndConfigs(xml_item, item))
                 {
-                    std::cout << "Error: Failed to load trims and configs for item " << type_cstr << std::endl;
+                    roviz::logger->critical("Failed to load trims and configs for item ",type_cstr);
                     return false;
                 }
             }
@@ -124,7 +124,7 @@ bool ProjectParser::loadConnections(tinyxml2::XMLElement *project)
     tinyxml2::XMLElement *item = project->FirstChildElement("GraphicsItemConnector");
     if(item == nullptr)
     {
-        std::cout << "Error: No connections found (this is kinda useless)" << std::endl;
+        roviz::logger->warn("No connections found");
         return false;
     }
 
@@ -133,7 +133,7 @@ bool ProjectParser::loadConnections(tinyxml2::XMLElement *project)
         const char *from_cstr = item->Attribute("fromItem");
         if(from_cstr == nullptr)
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
         int from = atoi(from_cstr);
@@ -141,7 +141,7 @@ bool ProjectParser::loadConnections(tinyxml2::XMLElement *project)
         const char *to_cstr = item->Attribute("toItem");
         if(to_cstr == nullptr)
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
         int to = atoi(to_cstr);
@@ -149,34 +149,34 @@ bool ProjectParser::loadConnections(tinyxml2::XMLElement *project)
         const char *output_cstr = item->Attribute("fromIndex");
         if(output_cstr == nullptr)
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
 
         int output = atoi(output_cstr);
         if(output >= (int)items.size())
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
 
         const char *input_cstr = item->Attribute("toIndex");
         if(input_cstr == nullptr)
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
 
         int input = atoi(input_cstr);
         if(input >= (int)items.size())
         {
-            std::cout << "Error: Malformed connection" << std::endl;
+            roviz::logger->critical("Malformed connection");
             return false;
         }
 
         if(!items[to]->connect(input, items[from], output))
         {
-            std::cout << "Error: Connection failed" << std::endl;
+            roviz::logger->critical("Connection failed");
             return false;
         }
 
@@ -190,7 +190,7 @@ bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemB
     tinyxml2::XMLElement *xml_setting = xml_ss->FirstChildElement("Setting");
     if(xml_setting == nullptr)
     {
-        std::cout << "Error: Malformed setting" << std::endl;
+        roviz::logger->critical("Malformed setting");
         return false;
     }
 
@@ -199,7 +199,7 @@ bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemB
         const char *name_cstr = xml_setting->Attribute("name");
         if(name_cstr == nullptr)
         {
-            std::cout << "Error: Malformed settings (no name)" << std::endl;
+            roviz::logger->critical("Malformed settings (no name)");
             return false;
         }
         std::string name = name_cstr;
@@ -211,7 +211,7 @@ bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemB
             const char *value_cstr = xml_setting->Attribute("value");
             if(value_cstr == nullptr)
             {
-                std::cout << "Error: Malformed trim (no value)" << std::endl;
+                roviz::logger->critical("Malformed trim (no value)");
                 return false;
             }
 
@@ -226,7 +226,7 @@ bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemB
             const char *value_cstr = xml_setting->Attribute("value");
             if(value_cstr == nullptr)
             {
-                std::cout << "Error: Malformed config (no value)" << std::endl;
+                roviz::logger->critical("Malformed config (no value)");
                 return false;
             }
 
@@ -236,7 +236,7 @@ bool ProjectParser::loadTrimsAndConfigs(tinyxml2::XMLElement *xml_ss, RovizItemB
             auto config = item->_this_base->configs.find(name);
             if(config == item->_this_base->configs.cend())
             {
-                std::cout << "Error: Config not found for item" << std::endl;
+                roviz::logger->critical("Config not found for item");
                 return false;
             }
 

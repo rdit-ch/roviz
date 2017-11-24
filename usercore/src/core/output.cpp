@@ -2,6 +2,7 @@
 #include "core/output.h"
 
 #include "core/template_decl.h"
+#include "core/logger.h"
 #include "streams/all_streams.h"
 
 namespace roviz

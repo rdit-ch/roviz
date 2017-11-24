@@ -11,6 +11,7 @@
 #include "helper/settings_scope.h"
 #include "core/roviz_item.h"
 #include "backend_dev/roviz_item_base_dev.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -18,9 +19,18 @@ namespace roviz
 TrimImplDev::TrimImplDev(ItemBaseDev *item, std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func)
     : item(item), name(name), default_value(default_value), min(min), logarithmic(logarithmic), notifier_func(notifier_func)
 {
+    logger->critical_if(item == nullptr, "Trying to construct a trim implementation with a null-item parent ({})", name);
+
     // steps == 0 means a step size of 1
     if(steps <= 0)
         steps = max - min;
+
+    // min == max might happen
+    if(steps == 0)
+    {
+        logger->critical("Trying to create a trim with min==max, which is not allowed ({})", name);
+        exit(EINVAL);
+    }
 
     QLabel *label_name = new QLabel(QString::fromStdString(name));
     this->label_value = new QLabel();

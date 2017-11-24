@@ -15,12 +15,14 @@
 #include "gui/gui_manager.h"
 #include "backend_dev/config_impl_base_dev.h"
 #include "gui/shared_window.h"
+#include "core/logger.h"
 
 namespace roviz
 {
 
 ItemBaseDevPrivate::ItemBaseDevPrivate(ItemBaseDev *q)
 {
+    logger->critical("Trying to construct private item with a null-parent");
     this->_this = q;
 }
 

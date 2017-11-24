@@ -4,6 +4,7 @@
 #include <QPaintEvent>
 #include "core/template_decl.h"
 #include "streams/sparse.h"
+#include "core/logger.h"
 
 namespace roviz
 {

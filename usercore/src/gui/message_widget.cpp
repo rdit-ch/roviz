@@ -2,6 +2,7 @@
 #include "message_widget.h"
 
 #include <cstdint>
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -9,6 +10,8 @@ namespace roviz
 MessageWidget::MessageWidget(OutputPrivate *out)
     : QTreeWidget(nullptr), StreamWidget(out)
 {
+    logger->critical_if(out == nullptr, "Trying to construct an message widget with a null-output");
+
     QTreeWidgetItem *item = new QTreeWidgetItem({"Name", "Value"});
     this->setHeaderItem(item);
     connect(this, &MessageWidget::newObjectSignal,

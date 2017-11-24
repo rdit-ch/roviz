@@ -3,6 +3,7 @@
 #include <QSettings>
 #include "helper/startup_helper.h"
 #include "usercore.h"
+#include "core/logger.h"
 
 int main(int argc, char* argv[])
 {
@@ -13,6 +14,8 @@ int main(int argc, char* argv[])
     QApplication::setApplicationName("roviz");
     QApplication::setApplicationDisplayName("roviz 0.7");
     QApplication::setApplicationVersion("0.7");
+
+    roviz::initLogger();
 
     // We need to do this because the itemframework won't find
     // the plugins otherwise

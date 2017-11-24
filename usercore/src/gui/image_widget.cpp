@@ -6,6 +6,7 @@
 #include <QResizeEvent>
 #include <QPainter>
 #include <iostream>
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -17,6 +18,8 @@ ImageWidget::ImageWidget(OutputPrivate *out)
       scale_factor(1),
       scale_pixmap(true)
 {
+    logger->critical_if(out == nullptr, "Trying to construct an image widget with a null-output");
+
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
                         QSizePolicy::Expanding);

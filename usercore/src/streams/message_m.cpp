@@ -1,6 +1,7 @@
 
 #include "streams/message_m.h"
 #include "streams/message_p.h"
+#include "core/logger.h"
 
 namespace roviz
 {

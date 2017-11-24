@@ -3,9 +3,6 @@
 
 #include "core/export_handling.h"
 
-// This is a simulation only item
-#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-
 #include <QImage>
 #include <QTimer>
 #include <atomic>
@@ -41,5 +38,4 @@ private slots:
 
 };
 
-#endif
 #endif // TPG_H

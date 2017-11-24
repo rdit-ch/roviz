@@ -3,6 +3,7 @@
 #include "streams/message_p.h"
 
 #include "core/template_decl.h"
+#include "core/logger.h"
 #include "streams/all_streams.h"
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
@@ -17,6 +18,7 @@ Message::Message(const StreamObject &base)
 {
     _this_base = base._this_base;
     _this = dynamic_cast<MessagePrivate*>(this->_this_base.get());
+    logger->critical_if(_this == nullptr, "Trying to construct an Message form a StreamObject that isn't a Message");
 }
 
 Message::Message(std::string msg_type, std::initializer_list<SourceID> sources)
@@ -34,6 +36,7 @@ const Message::Entry &Message::entry(const std::string &name) const
             return entry;
 
     // Return something invalid if nothing's found
+    logger->info("Message entry not found ({})", name);
     return _this->default_entry;
 }
 
@@ -43,6 +46,7 @@ const Message::Entry &Message::at(int index) const
         return _this->entries[index];
 
     // Return something invalid if the index is out of bounds
+    logger->error("Message entry index out of bounds ({})", index);
     return _this->default_entry;
 }
 

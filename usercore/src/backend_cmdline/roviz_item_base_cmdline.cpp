@@ -2,6 +2,7 @@
 #include "backend_cmdline/roviz_item_base_cmdline.h"
 #include "backend_cmdline/trim_impl_cmdline.h"
 #include "backend_cmdline/config_impl_cmdline.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -15,10 +16,22 @@ bool ItemBaseCmdline::connect(int input_index, ItemBaseCmdline *from_item, int o
 {
     // The compiler complains because of signed/unsigned without the typecasts
     if(input_index >= (int)_this_base->inputs.size())
+    {
+        logger->error("Trying to connect to a non-existing input");
         return false;
+    }
+
+    if(from_item == nullptr)
+    {
+        logger->error("Trying to connect from a non-existing item");
+        return false;
+    }
 
     if(output_index >= (int)from_item->_this_base->outputs.size())
+    {
+        logger->error("Trying to connect from a non-existing output");
         return false;
+    }
 
     _this_base->inputs[input_index]->connect(from_item->_this_base->outputs[output_index]);
 
@@ -30,11 +43,15 @@ void ItemBaseCmdline::setTrim(std::string name, double value)
     std::map<std::string, TrimImplCmdline*>::iterator trim = _this_base->trims.find(name);
     if(trim != _this_base->trims.end())
         trim->second->setValue(value);
+    else
+        logger->error("Trying to acces a non-existing Trim ({})", name);
 }
 
 template<class T>
 Input<T> ItemBaseCmdline::addInputBase(std::string , Item *item)
 {
+    logger->critical_if(item == nullptr, "Trying to add an input to the base of a null-item");
+
     Input<T> input(item);
 
     _this_base->inputs.push_back(input._this.get());
@@ -45,6 +62,8 @@ Input<T> ItemBaseCmdline::addInputBase(std::string , Item *item)
 template<class T>
 Output<T> ItemBaseCmdline::addOutputBase(std::string )
 {
+    logger->critical_if(item == nullptr, "Trying to add an output to the base of a null-item");
+
     Output<T> output;
 
     _this_base->outputs.push_back(output._this.get());

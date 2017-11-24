@@ -9,9 +9,9 @@
 // Including the header here leads to a circular inclusion
 namespace roviz
 {
-class Image;
-class Message;
-template<class T> class Sparse;
+    class Image;
+    class Message;
+    template<class T> class Sparse;
 }
 
 // Make sure all templates for the streams get instantiated

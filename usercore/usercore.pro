@@ -43,6 +43,7 @@ SOURCES +=  src/usercore.cpp \
             src/config/config.cpp \
             src/core/input.cpp \
             src/core/input_p.cpp \
+            src/core/logger.cpp \
             src/core/output.cpp \
             src/core/output_p.cpp \
             src/core/roviz_item.cpp \
@@ -62,6 +63,7 @@ HEADERS +=  include/usercore.h \
             include/config/file_path.h \
             include/core/export_handling.h \
             include/core/input.h \
+            include/core/logger.h \
             include/core/output.h \
             include/core/roviz_item.h \
             include/core/trim.h \

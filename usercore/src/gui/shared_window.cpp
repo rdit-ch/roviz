@@ -18,6 +18,7 @@
 #include "helper/settings_scope.h"
 #include "backend_dev/roviz_item_base_dev.h"
 #include "gui/dock_widget_signaling.h"
+#include "core/logger.h"
 
 namespace roviz
 {
@@ -113,6 +114,8 @@ SharedWindow::SharedWindow(QWidget *parent)
 
 void SharedWindow::addItem(ItemBaseDev* item)
 {
+    logger->error_if(item == nullptr, "Trying to add a null-item to the shared window");
+
     if(!this->parents.contains(item))
     {
         DockWidgetSignaling *dock = new DockWidgetSignaling(item->name(), this->main_window);
@@ -133,8 +136,16 @@ void SharedWindow::addItem(ItemBaseDev* item)
 
 void SharedWindow::removeItem(ItemBaseDev *item)
 {
+    logger->error_if(item == nullptr, "Trying to remove a null-item to the shared window");
+
     this->parents.removeOne(item);
     QDockWidget *d = qobject_cast<QDockWidget*>(item->widget()->parentWidget());
+    if(d == nullptr)
+    {
+        logger->error("Trying to remove an invalid item from the shared window");
+        return;
+    }
+
     this->dock_items.removeOne(d);
     d->deleteLater();
     item->widget()->deleteLater();

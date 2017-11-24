@@ -4,6 +4,7 @@
 
 #include <memory>
 #include "core/template_decl.h"
+#include "core/logger.h"
 
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     #include "gui/image_widget.h"
@@ -16,6 +17,7 @@ Image::Image(const StreamObject &base)
 {
     this->_this_base = base._this_base;
     _this = dynamic_cast<ImagePrivate*>(this->_this_base.get());
+    logger->critical_if(_this == nullptr, "Trying to construct an Image form a StreamObject that isn't an Image");
 }
 
 Image::Image(std::initializer_list<SourceID> sources)
