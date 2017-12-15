@@ -78,6 +78,11 @@ QWidget *RovizItemBaseDev::widget()
     return _this->main_widget;
 }
 
+SettingsScope *RovizItemBaseDev::getSettingsScope()
+{
+    return this->settingsScope();
+}
+
 template<class T>
 Input<T> RovizItemBaseDev::addInputBase(std::string name, RovizItem *item)
 {

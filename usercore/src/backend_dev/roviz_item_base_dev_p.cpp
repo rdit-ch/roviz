@@ -53,40 +53,11 @@ void RovizItemBaseDevPrivate::parentScopeChanged(SettingsScope *old)
 
     if(_this->settingsScope()->parentScope() != nullptr)
         SharedWindow::instance(_this->settingsScope()->parentScope())->addItem(_this);
-
-    for(const auto &conf : this->config_impls)
-        conf->load();
 }
 
 void RovizItemBaseDevPrivate::showConfigWindow()
 {
-    // Gets redone everytime the config window is shown to allow
-    // inserting/modifying configs on-the-fly
-    QDialog *dialog = new QDialog(GuiManager::instance()->widgetReference());
-    QVBoxLayout *main_layout = new QVBoxLayout();
-    QVBoxLayout *conf_layout = new QVBoxLayout();
-    QHBoxLayout *button_layout = new QHBoxLayout();
-    QPushButton *btn_ok = new QPushButton("Ok");
-    QPushButton *btn_cancel = new QPushButton("Cancel");
-
-    for(auto &conf : this->config_impls)
-        conf_layout->addWidget(conf->widget());
-
-    button_layout->addWidget(btn_ok);
-    button_layout->addWidget(btn_cancel);
-    main_layout->addLayout(conf_layout);
-    main_layout->addLayout(button_layout);
-    dialog->setLayout(main_layout);
-
-    connect(btn_ok, &QPushButton::clicked,
-            dialog, &QDialog::accept);
-
-    connect(btn_cancel, &QPushButton::clicked,
-            dialog, &QDialog::reject);
-
-    if(dialog->exec() == QDialog::Accepted)
-        for(auto &conf : this->config_impls)
-            conf->refresh();
+    this->config_dialog.showDialog();
 }
 
 void RovizItemBaseDevPrivate::initConfigImpl(ConfigImplBaseDev *impl)
@@ -94,6 +65,6 @@ void RovizItemBaseDevPrivate::initConfigImpl(ConfigImplBaseDev *impl)
     connect(_this, &RovizItemBaseDev::parentChanged,
             [impl](){impl->load();});
 
-    this->config_impls.append(impl);
+    this->config_dialog.addConfig(impl);
     this->config_present = true;
 }

@@ -8,6 +8,7 @@
 #include "item/abstract_item.h"
 #include "core/export_handling.h"
 #include "backend_dev/roviz_item_base_dev_p.h"
+#include "backend_dev/config_parent.h"
 #include "core/input.h"
 #include "core/output.h"
 #include "config/config_storage_type.h"
@@ -22,7 +23,7 @@ class TrimImpl;
  * \sa RovizItem
  * \sa RovizItemDevBasePrivate
  */
-class ROVIZ_EXPORT RovizItemBaseDev : public AbstractItem
+class ROVIZ_EXPORT RovizItemBaseDev : public AbstractItem, public ConfigParent
 {
 Q_OBJECT
 friend class RovizItemBaseDevPrivate;
@@ -60,6 +61,8 @@ public:
     virtual bool running(void) const = 0;
     virtual void join(void) = 0;
 
+    virtual SettingsScope *getSettingsScope(void) override;
+
 protected:
     template<class T>
     Input<T> addInputBase(std::string name, RovizItem *item);
@@ -86,7 +89,7 @@ protected:
 public slots:
     virtual void start(void);
     virtual void stop(void);
-    void restart(void);
+    virtual void restart(void) override;
     ///@}
 
 protected:

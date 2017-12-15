@@ -17,7 +17,9 @@
 #include <QCloseEvent>
 #include "helper/settings_scope.h"
 #include "backend_dev/roviz_item_base_dev.h"
+#include "backend_dev/global_config.h"
 #include "gui/dock_widget_signaling.h"
+#include "backend_dev/config_impl_dev.h"
 
 QMap<SettingsScope*, SharedWindow*> SharedWindow::inst;
 
@@ -172,6 +174,20 @@ void SharedWindow::load()
         this->btn_new_tab->setFixedSize(this->tab->tabRect(0).height(), this->tab->tabRect(0).height());
         this->main_window->restoreState(this->states[this->active_tab]);
         this->initialized = true;
+
+        // Global configs
+        this->global_config.reset(new GlobalConfig(this->project_settings));
+
+        this->configs.push_back(std::unique_ptr<ConfigImplBaseDev>(new ConfigImplDev<int>(
+                                this->global_config.get(),
+                                "Max input queue size",
+                                16, 2, 512, false)));
+
+        for(const auto &conf : this->configs)
+        {
+            conf->load();
+            this->config_dialog.addConfig(conf.get());
+        }
     }
 
     this->show();
@@ -218,9 +234,9 @@ void SharedWindow::closeEvent(QCloseEvent *)
     for(QByteArray state : this->states)
         state_list.append(state.toBase64());
 
-//    this->project_settings->setValue("roviz/SharedWindow/Tabs", tab_names);
-//    this->project_settings->setValue("roviz/SharedWindow/ActiveTab", this->active_tab);
-//    this->project_settings->setValue("roviz/SharedWindow/States", state_list);
+    this->project_settings->setValue("roviz/SharedWindow/Tabs", tab_names);
+    this->project_settings->setValue("roviz/SharedWindow/ActiveTab", this->active_tab);
+    this->project_settings->setValue("roviz/SharedWindow/States", state_list);
 
     // We don't want to close the window to preserve it's state for when it's
     // opened the next time.
@@ -299,7 +315,7 @@ void SharedWindow::stop()
 
 void SharedWindow::showSettings()
 {
-
+    this->config_dialog.showDialog();
 }
 
 void SharedWindow::addTab()

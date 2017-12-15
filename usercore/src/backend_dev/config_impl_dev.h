@@ -13,6 +13,7 @@
 
 class QWidget;
 class RovizItemBaseDev;
+class ConfigParent;
 
 /**
  * @brief Dev implementation of the config interface
@@ -39,22 +40,22 @@ public:
      */
     ///@{
     // Int
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, int min, int max, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, int min, int max, bool restart_when_changed);
 
     // Double
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, double min, double max, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, double min, double max, bool restart_when_changed);
 
     // String
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, std::function<bool (std::string&)> checker, bool restart_when_changed);
 
     // List
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, const std::vector<std::string> &possibilities, bool restart_when_changed);
 
     // Bool
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, bool restart_when_changed);
 
     // Path
-    ConfigImplDev(RovizItemBaseDev *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed);
+    ConfigImplDev(ConfigParent *parent, const std::string &name, const typename ConfigStorageType<T>::type &default_value, enum FilePath::Mode file_mode, const std::string &filter, bool restart_when_changed);
     ///}
 
     /**
@@ -115,7 +116,7 @@ public:
     void *value(void) override;
 
 private:
-    RovizItemBaseDev *parent;
+    ConfigParent *parent;
     std::string name;
     typename ConfigStorageType<T>::type val, tmp_val;
     QWidget *main_widget, *data_widget;

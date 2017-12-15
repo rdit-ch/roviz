@@ -7,7 +7,10 @@
 #include <QMap>
 #include <QByteArray>
 #include <QIcon>
+#include <memory>
 #include "core/export_handling.h"
+#include "backend_dev/global_config.h"
+#include "backend_dev/config_impl_base_dev.h"
 
 class RovizItemBaseDev;
 class QCloseEvent;
@@ -81,7 +84,6 @@ private:
 
     const QIcon ico_start, ico_restart, ico_pause, ico_unpause, ico_stop, ico_new_tab, ico_settings;
 
-    QObject *destructor;
     QList<QDockWidget*> dock_items;
     QList<RovizItemBaseDev*> parents;
     bool running, paused, initialized;
@@ -93,6 +95,9 @@ private:
     QVector<QByteArray> states;
     QLineEdit *rename_edit;
     int rename_index;
+    std::unique_ptr<GlobalConfig> global_config;
+    ConfigDialog config_dialog;
+    std::list<std::unique_ptr<ConfigImplBaseDev> > configs;
 
     // Singleton
     SharedWindow(QWidget *parent);

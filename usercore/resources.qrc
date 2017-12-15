@@ -7,5 +7,6 @@
         <file>res/unpause.png</file>
         <file>res/stop.png</file>
         <file>res/new_tab.png</file>
+        <file>res/settings.png</file>
     </qresource>
 </RCC>

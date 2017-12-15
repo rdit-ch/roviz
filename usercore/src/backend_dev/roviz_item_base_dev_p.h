@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QList>
 #include <QImage>
+#include "gui/config_dialog.h"
 
 class QWidget;
 class QPushButton;
@@ -27,9 +28,9 @@ public:
     QWidget *main_widget;
     QPushButton *collapse_btn;
     QHBoxLayout *main_layout, *main_image_layout, *main_control_layout;
-    QList<ConfigImplBaseDev*> config_impls;
     QWidget *control_base;
     QList<StreamWidget*> output_widgets;
+    ConfigDialog config_dialog;
     bool config_present, conf_loaded;
 
     RovizItemBaseDevPrivate(RovizItemBaseDev *q);

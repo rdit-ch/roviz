@@ -14,7 +14,8 @@ SOURCES +=  src/backend_dev/config_impl_dev.cpp \
             src/gui/stream_widget.cpp
 
 HEADERS +=  src/backend_dev/config_impl_dev.h \
-            src/backend_dev/config_impl_base_dev.h \
+            src/backend_dev/config_impl_base_dev.h \ \
+            src/backend_dev/config_parent.h \
             src/backend_dev/roviz_item_base_dev.h \
             src/backend_dev/roviz_item_base_dev_p.h \
             src/backend_dev/startup_init.h \
@@ -56,7 +57,9 @@ SOURCES +=  src/usercore.cpp \
             src/streams/stream_object.cpp \
             src/streams/sparse.cpp \
             src/streams/sparse_m.cpp \
-            src/streams/sparse_types.cpp
+            src/streams/sparse_types.cpp \
+    src/backend_dev/global_config.cpp \
+    src/gui/config_dialog.cpp
 
 HEADERS +=  include/usercore.h \
             include/config/config.h \ \
@@ -85,7 +88,9 @@ HEADERS +=  include/usercore.h \
             src/streams/message_p.h \
             src/streams/stream_object.h \
             src/streams/stream_object_p.h \
-            src/streams/sparse_p.h
+            src/streams/sparse_p.h \
+    src/backend_dev/global_config.h \
+    src/gui/config_dialog.h
 
 UI_DIR       = $$BUILDDIR/usercore/ui_header/
 OBJECTS_DIR  = $$BUILDDIR/usercore/obj/
