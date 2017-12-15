@@ -1,7 +1,4 @@
 
-// This is a simulation only item
-#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
-
 #include "tpg_item.h"
 
 TPGItem::TPGItem()
@@ -83,5 +80,3 @@ void TPGItem::timerExpired()
     this->timer_expired = true;
     this->wake();
 }
-
-#endif

@@ -13,7 +13,7 @@ SUBDIRS += config_message_test
 SUBDIRS += image_file
 SUBDIRS += video_file
 
-# Simulation only items
+# Dev only items
 equals(BACKEND, "Dev") {
 SUBDIRS += tpg
 }
