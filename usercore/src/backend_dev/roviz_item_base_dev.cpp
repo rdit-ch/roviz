@@ -105,11 +105,11 @@ Input<T> RovizItemBaseDev::addInputBase(std::string name, RovizItem *item)
 }
 
 template<class T>
-Output<T> RovizItemBaseDev::addOutputBase(std::string name)
+Output<T> RovizItemBaseDev::addOutputBase(std::string name, RovizItem *item)
 {
     ItemOutput *item_output;
     StreamWidget *widget;
-    Output<T> output;
+    Output<T> output(item);
     OutputPrivate *output_p = output._this.get();
 
     widget = T::initWidget(output_p);
@@ -233,6 +233,6 @@ void RovizItemBaseDev::contextMenuPrepare(QMenu &menu) const
 
 #define INSTANTIATE_ROVIZ_ITEM_BASE_DEV(T) \
     template Input<T> RovizItemBaseDev::addInputBase<T>(std::string name, RovizItem *item); \
-    template Output<T> RovizItemBaseDev::addOutputBase<T>(std::string name);
+    template Output<T> RovizItemBaseDev::addOutputBase<T>(std::string name, RovizItem *item);
 
 DO_FOR_ALL_STREAMS(INSTANTIATE_ROVIZ_ITEM_BASE_DEV)

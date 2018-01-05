@@ -25,6 +25,7 @@ public:
     std::list<StreamObject> objects;
     OutputPrivate::Connection connection;
     OutputPrivate *last_output;
+    unsigned int current_seq_nr;
 
     InputPrivate();
     ~InputPrivate();

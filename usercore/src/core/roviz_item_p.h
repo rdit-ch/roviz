@@ -5,6 +5,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <thread>
+#include <list>
 
 class RovizItem;
 
@@ -17,9 +18,9 @@ class RovizItemPrivate
 {
 public:
     std::condition_variable cond;
-    std::thread *th;
+    std::list<std::thread*> threads;
     std::mutex mtx;
-    bool is_paused, is_stopped;
+    bool is_paused, is_stopped, parallelizable;
 
     RovizItemPrivate() = default;
     ~RovizItemPrivate() = default;

@@ -73,6 +73,8 @@ protected:
     Image image; // To keep a reference, prevents deletion
     QRectF image_rect;
     QImage default_image;
+    std::list<StreamObject> object_queue;
+    unsigned int current_seq_nr;
 
     /**
      * @brief Recalculates the image dimensions after a resize

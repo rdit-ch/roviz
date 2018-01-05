@@ -21,6 +21,8 @@ public:
 
     std::list<std::function<void (StreamObject)> > pushInFuncs;
     std::list<InputPrivate*> connected_inputs;
+    RovizItem *parent_item;
+    unsigned int next_new_seq_nr;
 
     OutputPrivate() = default;
     ~OutputPrivate();

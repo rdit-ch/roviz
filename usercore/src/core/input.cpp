@@ -11,6 +11,7 @@ Input<T>::Input(RovizItem *item)
     : _this(new InputPrivate())
 {
     _this->item = item;
+    _this->current_seq_nr = 0;
 }
 
 template<class T>
@@ -18,10 +19,31 @@ T Input<T>::next()
 {
     std::lock_guard<std::mutex> g(_this->item->mutex());
 
-    StreamObject obj = _this->objects.front();
-    _this->objects.pop_front();
+    if(_this->last_output != nullptr
+       && (!_this->last_output->parent_item->isParallelizable()
+           || _this->item->isParallelizable()))
+    {
+        if(_this->objects.empty())
+            return T();
 
-    return T(obj);
+        StreamObject obj = _this->objects.front();
+        _this->objects.pop_front();
+        return T(obj);
+    }
+    else
+    {
+        auto obj = _this->objects.begin();
+        while(obj != _this->objects.end())
+        {
+            if(obj->id()->seq_nr == _this->current_seq_nr)
+            {
+                _this->current_seq_nr++;
+                return T(*_this->objects.erase(obj));
+            }
+        }
+    }
+
+    return T();
 }
 
 template<class T>

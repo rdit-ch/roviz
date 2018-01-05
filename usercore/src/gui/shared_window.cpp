@@ -153,20 +153,21 @@ void SharedWindow::load()
 {
     if(!this->initialized)
     {
-        QStringList state_list = this->project_settings->value("roviz/SharedWindow/States").toStringList();
-        for(QString var : state_list)
-        {
-            QByteArray ba;
-            ba.append(var);
-            this->states.append(QByteArray::fromBase64(ba));
-        }
-        QStringList tab_names = this->project_settings->value("roviz/SharedWindow/Tabs").toStringList();
-        this->active_tab = this->project_settings->value("roviz/SharedWindow/ActiveTab").toInt();
-        for(QString t : tab_names)
-            this->tab->addTab(t);
+//        QStringList state_list = this->project_settings->value("roviz/SharedWindow/States").toStringList();
+//        for(QString var : state_list)
+//        {
+//            QByteArray ba;
+//            ba.append(var);
+//            this->states.append(QByteArray::fromBase64(ba));
+//        }
+//        QStringList tab_names = this->project_settings->value("roviz/SharedWindow/Tabs").toStringList();
+//        this->active_tab = this->project_settings->value("roviz/SharedWindow/ActiveTab").toInt();
+//        for(QString t : tab_names)
+//            this->tab->addTab(t);
         this->tab->setCurrentIndex(this->active_tab);
         if(this->tab->count() == 0)
         {
+            this->active_tab = 0;
             this->states.append(this->main_window->saveState());
             this->tab->addTab("Tab #1");
         }

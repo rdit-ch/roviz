@@ -25,7 +25,8 @@ COPY_DELETE(Output)
 MOVE_DEFAULT(Output)
 
 public:
-    Output();
+    Output(RovizItem *item);
+    Output() = default;
     ~Output() = default;
 
     /**

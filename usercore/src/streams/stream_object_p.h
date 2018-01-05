@@ -12,6 +12,7 @@ class StreamObjectPrivate
 {
 public:
     SourceID id;
+    unsigned int sequence;
 
     StreamObjectPrivate() = default;
     virtual ~StreamObjectPrivate() = default;

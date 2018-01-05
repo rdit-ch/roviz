@@ -33,6 +33,8 @@ typedef std::shared_ptr<SrcTreeNode> SourceID;
 struct SrcTreeNode
 {
     std::vector<SourceID> sources;
+    RovizItem *item;
+    unsigned int seq_nr;
 };
 
 /**
@@ -56,6 +58,25 @@ public:
      * @return The SourceID
      */
     SourceID id(void) const;
+
+    /**
+     * @brief Set the sequence number for the object
+     * @param seq_nr The new sequence number
+     *
+     * You can use this to re-arrange objects or generate them in a particular
+     * order from multiple threads.
+     */
+    void setSequenceNumber(unsigned int seq_nr);
+
+    /**
+     * @brief Initializes the source tree with the relations
+     * @param item The item that currently handles the object
+     * @param seq_nr The sequence number for the object
+     *
+     * IMPORTANT: You should never have to use this directly. This is used
+     * internally by the Output class.
+     */
+    void initRelations(RovizItem *item, unsigned int seq_nr);
 
 protected:
     std::shared_ptr<StreamObjectPrivate> _this_base;

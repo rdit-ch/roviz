@@ -9,7 +9,7 @@
  *
  * \ingroup robot_plugins
  */
-class GrayConvItem : public RovizItem
+class GrayConvItem : public RovizItemParallelizable
 {
 #if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
     Q_OBJECT

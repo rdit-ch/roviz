@@ -2,7 +2,7 @@
 #include "gray_conv_item.h"
 
 GrayConvItem::GrayConvItem()
-    : RovizItem("GrayConv")
+    : RovizItemParallelizable("GrayConv")
 {
     ROVIZ_INIT_ITEM(GrayConv);
 

@@ -55,7 +55,7 @@ public:
     /**
      * @param type_name The name of the item
      */
-    explicit RovizItem(std::string type_name);
+    explicit RovizItem(std::string type_name, bool parallelizable = false);
     virtual ~RovizItem();
 
     /**
@@ -219,15 +219,24 @@ public:
     bool running(void) const override;
 
     /**
-     * @brief Wake the possibly waiting thread
+     * @brief Wake a possibly waiting thread
      *
-     * If you know the thread is waiting for a condidion and e.g. an event
+     * If you know that the thread is waiting for a condidion and e.g. an event
      * handler sees that the condidion has changed, it's a good idea to
      * notify the thread and wake it up.
+     *
+     * Note: If the item is parallelizable, this wakes up only ONE thread to
+     * prevent multiple threads from wanting to react to the same event.
      *
      * \sa waitFor
      */
     void wake(void) const;
+
+    /**
+     * @brief Check whether the item parallelizable
+     * @return True, if the item is parallelizable, false otherwise
+     */
+    bool isParallelizable(void);
 
     /**
      * @brief Mutex that waitFor() locks to check the condidion
@@ -439,6 +448,16 @@ private:
      */
     void unpause(void) override;
     ///@}
+};
+
+class ROVIZ_EXPORT RovizItemParallelizable : public RovizItem
+{
+#if ROVIZ_BACKEND == ROVIZ_BACKEND_Dev
+    Q_OBJECT
+#endif
+public:
+    explicit RovizItemParallelizable(std::string type_name) : RovizItem(type_name, true){}
+    virtual ~RovizItemParallelizable(){}
 };
 
 #endif // ROVIZ_ITEM_H

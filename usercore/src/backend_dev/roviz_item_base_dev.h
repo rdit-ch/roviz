@@ -68,7 +68,7 @@ protected:
     Input<T> addInputBase(std::string name, RovizItem *item);
 
     template<class T>
-    Output<T> addOutputBase(std::string name);
+    Output<T> addOutputBase(std::string name, RovizItem *item);
 
     TrimImpl *getTrimImpl(std::string name, double default_value, double min, double max, int steps, bool logarithmic, std::function<void (double)> notifier_func);
 

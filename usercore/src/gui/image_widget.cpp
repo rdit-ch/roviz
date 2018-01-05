@@ -9,6 +9,7 @@
 ImageWidget::ImageWidget(OutputPrivate *out)
     : QLabel(nullptr), StreamWidget(out), default_image(":/usercore/res/default_image.png")
 {
+    this->current_seq_nr = 0;
     this->setMinimumSize(1, 1);
     this->setSizePolicy(QSizePolicy::Expanding,
                         QSizePolicy::Expanding);
@@ -17,6 +18,29 @@ ImageWidget::ImageWidget(OutputPrivate *out)
 
 void ImageWidget::newObject(StreamObject obj)
 {
+    this->object_queue.push_back(obj);
+
+    // Object re-ordering
+    bool found = false;
+    auto iter = this->object_queue.begin();
+    while(iter != this->object_queue.end())
+    {
+        if(iter->id()->seq_nr == this->current_seq_nr)
+        {
+            obj = *iter;
+            this->current_seq_nr++;
+            this->object_queue.erase(iter);
+            iter = this->object_queue.begin();
+            found = true;
+        }
+        else
+        {
+            iter++;
+        }
+    }
+    if(!found)
+        return;
+
     Image img = this->image;
     this->image = Image(obj);
 

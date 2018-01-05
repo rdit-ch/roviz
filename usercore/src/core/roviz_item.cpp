@@ -7,13 +7,13 @@
 #include <condition_variable>
 #include "streams/all_streams.h"
 
-RovizItem::RovizItem(std::string type_name)
+RovizItem::RovizItem(std::string type_name, bool parallelizable)
     : RovizItemBase(type_name),
       _this(new RovizItemPrivate())
 {
-    _this->th = nullptr;
     _this->is_stopped = true;
     _this->is_paused = false;
+    _this->parallelizable = parallelizable;
 }
 
 RovizItem::~RovizItem()
@@ -27,16 +27,19 @@ void RovizItem::pre_thread()
 
 void RovizItem::stop()
 {
-    if(_this->th != nullptr)
+    if(!_this->threads.empty())
     {
         _this->mtx.lock();
         _this->is_stopped = true;
         _this->is_paused = false;
         _this->mtx.unlock();
         _this->cond.notify_all();
-        _this->th->join();
-        delete _this->th;
-        _this->th = nullptr;
+        for(auto &th : _this->threads)
+        {
+            th->join();
+            delete th;
+        }
+        _this->threads.clear();
     }
     this->post_thread();
     RovizItemBase::stop();
@@ -55,7 +58,7 @@ Input<T> RovizItem::addInput(std::string name)
 template<class T>
 Output<T> RovizItem::addOutput(std::string name)
 {
-    return this->addOutputBase<T>(name);
+    return this->addOutputBase<T>(name, this);
 }
 
 bool RovizItem::waitForCond(std::function<bool ()> cond)
@@ -95,7 +98,12 @@ bool RovizItem::running() const
 
 void RovizItem::wake() const
 {
-    _this->cond.notify_all();
+    _this->cond.notify_one();
+}
+
+bool RovizItem::isParallelizable()
+{
+    return _this->parallelizable;
 }
 
 std::mutex &RovizItem::mutex() const
@@ -172,7 +180,10 @@ void RovizItem::start()
     this->pre_thread();
     RovizItemBase::start();
     _this->is_stopped = false;
-    _this->th = new std::thread(&RovizItem::thread, this);
+
+    // TODO Make max dynamic
+    for(int i = 0; i < 4; i++)
+        _this->threads.push_back(new std::thread(&RovizItem::thread, this));
 }
 
 void RovizItem::pause()
@@ -184,7 +195,8 @@ void RovizItem::pause()
 
 void RovizItem::join()
 {
-    _this->th->join();
+    for(auto &th : _this->threads)
+        th->join();
 }
 
 void RovizItem::unpause()
