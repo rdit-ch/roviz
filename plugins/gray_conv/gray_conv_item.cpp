@@ -26,9 +26,12 @@ void GrayConvItem::thread()
     cv::Mat out;
 #endif
 
+    OUT_LOCKED("Grey Conv Item started")
+
     while(this->input.waitForInput())
     {
         in = this->input.next();
+        OUT_LOCKED("Grey Conv Item got input")
 
         switch(in.format())
         {
@@ -68,6 +71,7 @@ void GrayConvItem::thread()
             default:
                 break;
         }
+        OUT_LOCKED("Grey Conv Item pushed frame out")
     }
 }
 

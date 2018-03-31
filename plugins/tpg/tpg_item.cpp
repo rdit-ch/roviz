@@ -2,7 +2,7 @@
 #include "tpg_item.h"
 
 TPGItem::TPGItem()
-    : RovizItemNoExport("Test Pattern Generator")
+    : RovizItem("Test Pattern Generator")
 {
     ROVIZ_INIT_ITEM(TPG);
 

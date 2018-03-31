@@ -27,6 +27,8 @@ class StreamObjectPrivate;
  */
 typedef std::shared_ptr<SrcTreeNode> SourceID;
 
+class RovizItem;
+
 /**
  * @brief A node of the source-tree
  */

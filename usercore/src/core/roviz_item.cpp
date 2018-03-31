@@ -7,6 +7,8 @@
 #include <condition_variable>
 #include "streams/all_streams.h"
 
+std::mutex ROVIZ_EXPORT __global_mutex;
+
 RovizItem::RovizItem(std::string type_name, bool parallelizable)
     : RovizItemBase(type_name),
       _this(new RovizItemPrivate())
@@ -182,7 +184,8 @@ void RovizItem::start()
     _this->is_stopped = false;
 
     // TODO Make max dynamic
-    for(int i = 0; i < 4; i++)
+    int max_th = _this->parallelizable ? 4 : 1;
+    for(int i = 0; i < max_th; i++)
         _this->threads.push_back(new std::thread(&RovizItem::thread, this));
 }
 

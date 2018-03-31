@@ -59,7 +59,8 @@ SOURCES +=  src/usercore.cpp \
             src/streams/sparse_m.cpp \
             src/streams/sparse_types.cpp \
     src/backend_dev/global_config.cpp \
-    src/gui/config_dialog.cpp
+    src/gui/config_dialog.cpp \
+    src/config/project_config.cpp
 
 HEADERS +=  include/usercore.h \
             include/config/config.h \ \
@@ -90,7 +91,8 @@ HEADERS +=  include/usercore.h \
             src/streams/stream_object_p.h \
             src/streams/sparse_p.h \
     src/backend_dev/global_config.h \
-    src/gui/config_dialog.h
+    src/gui/config_dialog.h \
+    src/config/project_config.h
 
 UI_DIR       = $$BUILDDIR/usercore/ui_header/
 OBJECTS_DIR  = $$BUILDDIR/usercore/obj/

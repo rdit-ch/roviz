@@ -23,6 +23,11 @@ VideoFileItem::~VideoFileItem()
 
 void VideoFileItem::thread()
 {
+    OUT_LOCKED("Video File Item started")
+
+    if(this->conf_path.value().empty() || this->conf_path.value().front().empty())
+        return;
+
     std::chrono::high_resolution_clock::time_point time_next_frame;
     cv::Mat out;
     cv::VideoCapture cap(this->conf_path.value().front());
@@ -45,6 +50,7 @@ void VideoFileItem::thread()
         time_next_frame = std::chrono::high_resolution_clock::now() + frame_delay;
         std::this_thread::sleep_until(time_next_frame);
         this->output.pushOut(Image(out));
+        OUT_LOCKED("Video File Item pushed item out")
     }
     cap.release();
 }

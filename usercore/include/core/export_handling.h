@@ -84,10 +84,6 @@
     // of them.
     #include <QObject>
 
-    // For simulation-only items
-    class RovizItem;
-    typedef RovizItem RovizItemNoExport;
-
 #else
     #error It seems like you did not select a proper backend
 #endif

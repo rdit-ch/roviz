@@ -9,8 +9,10 @@
 #include <QIcon>
 #include <memory>
 #include "core/export_handling.h"
-#include "backend_dev/global_config.h"
+#include "config/project_config.h"
 #include "backend_dev/config_impl_base_dev.h"
+#include "gui/config_dialog.h"
+#include "config/project_config.h"
 
 class RovizItemBaseDev;
 class QCloseEvent;
@@ -95,9 +97,8 @@ private:
     QVector<QByteArray> states;
     QLineEdit *rename_edit;
     int rename_index;
-    std::unique_ptr<GlobalConfig> global_config;
+    std::unique_ptr<ProjectConfig> project_configs;
     ConfigDialog config_dialog;
-    std::list<std::unique_ptr<ConfigImplBaseDev> > configs;
 
     // Singleton
     SharedWindow(QWidget *parent);

@@ -27,6 +27,10 @@
 // Include the appropriate base class
 #include ROVIZ_BASE_INCLUDE
 
+#include <iostream>
+extern std::mutex __global_mutex;
+#define OUT_LOCKED(str) __global_mutex.lock(); std::cout << std::this_thread::get_id() << ": " << str << std::endl; __global_mutex.unlock();
+
 /**
  * @brief Base class for all items that use the roviz framework.
  *

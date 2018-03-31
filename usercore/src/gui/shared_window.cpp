@@ -17,7 +17,6 @@
 #include <QCloseEvent>
 #include "helper/settings_scope.h"
 #include "backend_dev/roviz_item_base_dev.h"
-#include "backend_dev/global_config.h"
 #include "gui/dock_widget_signaling.h"
 #include "backend_dev/config_impl_dev.h"
 
@@ -177,14 +176,11 @@ void SharedWindow::load()
         this->initialized = true;
 
         // Global configs
-        this->global_config.reset(new GlobalConfig(this->project_settings));
+        this->project_configs.reset(new ProjectConfig<ConfigImplDev>(this->project_settings));
+        this->project_configs->loadAll();
 
-        this->configs.push_back(std::unique_ptr<ConfigImplBaseDev>(new ConfigImplDev<int>(
-                                this->global_config.get(),
-                                "Max input queue size",
-                                16, 2, 512, false)));
-
-        for(const auto &conf : this->configs)
+        auto all_configs = this->project_configs->getAll();
+        for(const auto &conf : all_configs)
         {
             conf->load();
             this->config_dialog.addConfig(conf.get());
